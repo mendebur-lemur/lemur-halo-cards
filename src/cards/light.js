@@ -62,7 +62,8 @@ class LemurLightCard extends LemurCard {
     else sec.push(t(lang, on ? 'li_on' : 'st_off'));
     if (on && dimmable) sec.push(pct(bri, lang));
     if (on && lead.color_mode === 'color_temp' && kelvin) sec.push(Math.round(kelvin) + 'K');
-    if (on && lead.effect && lead.effect !== 'none' && lead.effect !== 'None') sec.push(String(lead.effect));
+    // "none" / "off" efekt yok demektir, alt yazıya yazılmaz
+    if (on && lead.effect && ['none', 'off'].indexOf(String(lead.effect).toLowerCase()) < 0) sec.push(String(lead.effect));
     const boxes = [];
     if (c.show_brightness && dimmable) boxes.push({ type: 'step', id: 'bri', value: on ? pct(bri, lang) : '—' });
     if (c.show_color_temp && modes.indexOf('color_temp') >= 0) boxes.push({ type: 'step', id: 'ct', value: kelvin && on ? Math.round(kelvin) + 'K' : '—' });

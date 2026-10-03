@@ -738,7 +738,7 @@ addText({
   very_cold: 'Çok soğuk', cool: 'Serin', comfortable: 'Konforlu', humid: 'Nemli', dry: 'Kuru', warm: 'Biraz sıcak', hot: 'Sıcak',
   st_heating: 'Isıtıyor', st_cooling: 'Soğutuyor', st_idle: 'Bekliyor',
   mode: 'Mod', fan: 'Fan', target: 'Hedef',
-  m_off: 'Kapalı', m_heat: 'Isıtma', m_cool: 'Soğutma', m_heat_cool: 'Otomatik', m_auto: 'Otomatik',
+  m_off: 'Kapalı', m_heat: 'Isıtma', m_cool: 'Soğutma', m_heat_cool: 'Isıtma/Soğutma', m_auto: 'Otomatik',
   m_dry: 'Nem alma', m_fan_only: 'Fan', m_unavailable: 'Bağlantı yok', m_unknown: 'Bilinmiyor',
   k_auto: 'Otomatik', k_ac: 'Klima', k_radiator: 'Petek', rs_panel: 'Panel', rs_sectional: 'Dilimli',
   ed_kind: 'Kart tipi', ed_radiator_style: 'Petek simgesi',
@@ -754,7 +754,7 @@ addText({
   very_cold: 'Very cold', cool: 'Cool', comfortable: 'Comfortable', humid: 'Humid', dry: 'Dry', warm: 'A bit warm', hot: 'Hot',
   st_heating: 'Heating', st_cooling: 'Cooling', st_idle: 'Idle',
   mode: 'Mode', fan: 'Fan', target: 'Target',
-  m_off: 'Off', m_heat: 'Heat', m_cool: 'Cool', m_heat_cool: 'Auto', m_auto: 'Auto',
+  m_off: 'Off', m_heat: 'Heat', m_cool: 'Cool', m_heat_cool: 'Heat/Cool', m_auto: 'Auto',
   m_dry: 'Dry', m_fan_only: 'Fan', m_unavailable: 'No connection', m_unknown: 'Unknown',
   k_auto: 'Automatic', k_ac: 'Air conditioner', k_radiator: 'Radiator', rs_panel: 'Panel', rs_sectional: 'Sectional',
   ed_kind: 'Card type', ed_radiator_style: 'Radiator icon',
@@ -1692,7 +1692,8 @@ class LemurLightCard extends LemurCard {
     else sec.push(t(lang, on ? 'li_on' : 'st_off'));
     if (on && dimmable) sec.push(pct(bri, lang));
     if (on && lead.color_mode === 'color_temp' && kelvin) sec.push(Math.round(kelvin) + 'K');
-    if (on && lead.effect && lead.effect !== 'none' && lead.effect !== 'None') sec.push(String(lead.effect));
+    // "none" / "off" efekt yok demektir, alt yazıya yazılmaz
+    if (on && lead.effect && ['none', 'off'].indexOf(String(lead.effect).toLowerCase()) < 0) sec.push(String(lead.effect));
     const boxes = [];
     if (c.show_brightness && dimmable) boxes.push({ type: 'step', id: 'bri', value: on ? pct(bri, lang) : '—' });
     if (c.show_color_temp && modes.indexOf('color_temp') >= 0) boxes.push({ type: 'step', id: 'ct', value: kelvin && on ? Math.round(kelvin) + 'K' : '—' });
