@@ -32,17 +32,22 @@ class LemurAirCard extends LemurCard {
     ];
   }
   ids() { const c = this._config; return [c.entity, c.sensor].concat(c.extra || []); }
+  static toneList(lang, cfg, hass) {
+    const zones = cfg.sensor ? zoneTones(lang, presetOf(hass, cfg.sensor, cfg.preset), levelsOf(presetOf(hass, cfg.sensor, cfg.preset), cfg.levels)) : [];
+    return zones.concat([{ key: 'on', label: t(lang, 'st_on'), band: 'green' }, { key: 'off', label: t(lang, 'st_off'), band: null },
+      { key: 'lost', label: t(lang, 'st_lost'), band: 'alarm', effect: 'blink' }]);
+  }
 
   view(lang) {
     const c = this._config, h = this._hass, st = this.st(c.entity), a = st ? st.attributes : {};
     const on = !isOff(st), lost = this.isLost(c.entity);
     const sec = [];
-    let bnd = on ? BANDS.green : BANDS.grey;
+    let bnd = on ? BANDS.green : BANDS.grey, zk = '';
     if (c.sensor) {
       const preset = presetOf(h, c.sensor, c.preset), v = stateNum(h, c.sensor);
       if (v !== null) {
         const z = zoneOf(lang, preset, levelsOf(preset, c.levels), v);
-        bnd = z.band;
+        bnd = z.band; zk = 'zone' + z.zone;
         if (c.show_zone) sec.push(z.label);
       }
       sec.push(fmtState(h, c.sensor, null, lang));
@@ -61,7 +66,8 @@ class LemurAirCard extends LemurCard {
         options: a.preset_modes.map((x) => ({ value: x, label: fanLabel(lang, x), icon: fanIcon(x) })) });
     }
     (c.extra || []).forEach((id) => { if (boxes.length < 3) boxes.push({ type: 'info', icon: entityIcon(h, id), text: fmtState(h, id, null, lang), entity: id, title: friendly(h, id) }); });
-    return { name: a.friendly_name || c.entity, sec: sec, icon: { mdi: on ? 'mdi:air-purifier' : 'mdi:air-purifier-off' }, state: lost ? 'lost' : (on ? 'on' : 'off'), band: bnd, on: on, disabled: lost, boxes: boxes };
+    const tone = lost ? ['lost'] : (zk ? (on ? [zk] : ['off', zk]) : [on ? 'on' : 'off']);
+    return { name: a.friendly_name || c.entity, sec: sec, icon: { mdi: on ? 'mdi:air-purifier' : 'mdi:air-purifier-off' }, state: lost ? 'lost' : (on ? 'on' : 'off'), tone: tone, band: bnd, on: on, disabled: lost, boxes: boxes };
   }
 
   power() { this.call('fan', isOff(this.st(this._config.entity)) ? 'turn_on' : 'turn_off', { entity_id: this._config.entity }); }

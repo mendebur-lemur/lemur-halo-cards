@@ -107,6 +107,16 @@ class LemurClimateCard extends LemurCard {
     return [c.entity].concat(c.entities || [], [c.temperature_sensor, c.humidity_sensor, c.outdoor_sensor]);
   }
 
+  // Renk ve hale ayarlarında gösterilen durumlar
+  static toneList(lang, cfg, hass) {
+    const st = hass && cfg.entity ? hass.states[cfg.entity] : null;
+    const kind = cfg.kind && cfg.kind !== 'auto' ? cfg.kind : ((st && st.attributes.hvac_modes || []).indexOf('cool') >= 0 ? 'ac' : 'radiator');
+    const L = (k, b, e) => ({ key: k, label: t(lang, k === 'off' ? 'st_off' : k === 'lost' ? 'st_lost' : 'tn_' + k), band: b, effect: e || 'auto' });
+    const zones = kind === 'ac' ? [L('cold', 'blue'), L('comfort', 'green'), L('warm', 'yellow'), L('hot', 'red')]
+      : [L('very_cold', 'ice'), L('cold', 'blue'), L('comfort', 'green'), L('warm', 'yellow'), L('hot', 'red'), L('heating', null)];
+    return zones.concat([L('off', null), L('lost', 'alarm', 'blink')]);
+  }
+
   _model() {
     const c = this._config, h = this._hass;
     const ents = [c.entity].concat(c.entities || []);
@@ -129,12 +139,16 @@ class LemurClimateCard extends LemurCard {
     const m = { kind: kind, t: tmp, unit: unit, rh: rh, isOn: onList.length > 0, lost: lost, allDead: allDead, main: main, a: a, ents: ents };
     if (kind === 'ac') {
       m.band = lost ? BANDS.alarm : acBand(tc === null ? 22 : tc, rh, c.comfort);
+      const zk = BAND_TONE[acBand(tc === null ? 22 : tc, rh, c.comfort).name];
+      m.tone = lost ? ['lost'] : (m.isOn ? [zk] : ['off', zk]);
       m.icon = { mdi: lost ? 'mdi:air-conditioner' : modeIcon(main ? main.state : '') };
       m.label = lost ? 'st_lost' : (tc === null ? '' : comfortKey(tc, rh, c.comfort));
     } else {
       let st = !m.isOn ? 'st_off' : (busy ? 'st_heating' : 'st_idle');
       if (lost) st = 'st_lost'; else if (sensorLost) st = 'st_sensor';
       m.band = radiatorBand(tc === null ? 20 : tc, toC(outdoor, unit), c.radiator_bands, lost || sensorLost);
+      const zk = BAND_TONE[radiatorBand(tc === null ? 20 : tc, toC(outdoor, unit), c.radiator_bands, false).name];
+      m.tone = (lost || sensorLost) ? ['lost'] : (!m.isOn ? ['off', zk] : (busy ? ['heating', zk] : [zk]));
       const base = c.radiator_style === 'sectional' ? 'sectional' : 'panel';
       m.icon = st === 'st_heating' ? { mdi: 'mdi:fire' } : { svg: base + (st === 'st_off' ? '-off' : (st === 'st_lost' || st === 'st_sensor') ? '-lost' : '') };
       m.label = st;
@@ -164,7 +178,7 @@ class LemurClimateCard extends LemurCard {
     }
     // Simge eşlemesi anahtarı: klimada mod (cool, heat...), petekte durum (heating, idle, off, lost, sensor)
     const state = m.kind === 'ac' ? (m.lost ? 'lost' : (main ? main.state : '')) : m.label.replace('st_', '');
-    return { name: a.friendly_name || c.entity, sec: sec, icon: m.icon, state: state, band: m.band, on: m.isOn,
+    return { name: a.friendly_name || c.entity, sec: sec, icon: m.icon, state: state, tone: m.tone, band: m.band, on: m.isOn,
       disabled: m.kind === 'ac' ? m.lost : m.allDead, boxes: boxes };
   }
 

@@ -11,7 +11,7 @@ Home Assistant için hareketli, renkli haleli sekiz kartlık bir aile. Her kartt
 - **Renk her şeyi anlatır.** Klimada hissedilen sıcaklık, sensörde hava kalitesi, enerjide şebekeden ne kadar çektiğin, güvenlikte açık kapı ya da su sızıntısı. Yeşil her şey yolunda, sarı dikkat, kırmızı sorun demek.
 - **Başka eklenti gerekmez.** HACS'tan tek seferde kurulur; mushroom, card-mod ya da başka bir kart istemez. Sekiz kartın hepsi tek dosyada gelir.
 - **Her şey kart ayarlarından.** Cihazları ve sensörleri görsel düzenleyicide seçersin, YAML yazman gerekmez. Eşikler ve renkler hazır gelir.
-- **Simgeler senin.** Büyük simge, sağ üstteki düğme ve alttaki kutuların simgeleri duruma göre değiştirilebilir.
+- **Renkler ve simgeler senin.** Her durumun rengini ve halenin nasıl hareket edeceğini (yavaş nefes, hızlı nabız, yanıp sönme, sabit) sen seçebilirsin; istersen kartı tek renge sabitlersin. Simgeler de duruma göre değiştirilebilir.
 - **Türkçe ve İngilizce.** Kart, Home Assistant'ın diline göre konuşur.
 - **Eski tabletlerde de akıcı.** Animasyon hafiftir, eski iPad'lerde (iOS 12) de çalışır. Cihazda hareket azaltma açıksa hale durur.
 - **Bağlantı kopunca haber verir.** Cihaz erişilemez olduğunda kart "Bağlantı yok" yazar, hale kırmızı yanıp söner.
@@ -29,6 +29,7 @@ Home Assistant için hareketli, renkli haleli sekiz kartlık bir aile. Her kartt
   - [Robot süpürge ve oda](#robot-süpürge-ve-oda)
   - [Enerji ve güvenlik](#enerji-ve-güvenlik)
   - [Işık ve kilit](#işık-ve-kilit)
+- [Renkler ve hale](#renkler-ve-hale)
 - [Bütün kartlarda ortak](#bütün-kartlarda-ortak)
 - [Simgeler](#simgeler)
 - [Güncelleme](#güncelleme)
@@ -219,6 +220,51 @@ type: custom:lemur-security-card
 entity: lock.on_kapi
 ```
 
+## Renkler ve hale
+
+Her kartın rengi ve halenin hareketi değiştirilebilir. Kart düzenleyicisinde **Renkler ve hale** bölümü:
+
+- **Kartın rengi:** kartı tek renge sabitler (boşsa renk duruma göre değişir).
+- **Hale hareketi:** *Yavaş nefes* (varsayılan), *Hızlı nabız*, *Yanıp söner*, *Sabit* ya da *Hale yok*.
+- **Durumlara göre renk ve hale:** kartın her durumu için ayrı renk ve hareket. Örneğin klima konforluyken mor ve hızlı, çok sıcakken pembe yanıp sönsün.
+
+Renk seçicide Home Assistant'ın renkleri hazır; aramaya `#ff8800` gibi bir renk yazarsan o da olur. Boş bıraktığın her şey kartın kendi seçiminde kalır.
+
+![Özel renkler](https://raw.githubusercontent.com/mendebur-lemur/lemur-halo-cards/main/docs/images/tr/custom.webp)
+
+Ayarlamak bir dakika sürer:
+
+![Renkleri ayarlama](https://raw.githubusercontent.com/mendebur-lemur/lemur-halo-cards/main/docs/images/tr/step-colors.webp)
+
+YAML ile:
+
+```yaml
+type: custom:lemur-climate-card
+entity: climate.salon_klima
+color: teal                  # isteğe bağlı: kartın tek rengi
+effect: still                # isteğe bağlı: auto, breathe, pulse, blink, still, none
+tones:
+  comfort: { color: deep-purple, effect: pulse }
+  hot: { color: '#ff3b6b', effect: blink }
+  off: { color: grey }
+```
+
+Öncelik: durumun kendi ayarı → kartın rengi / hareketi → kartın varsayılanı. "Bağlantı yok" uyarısı kartın tek renginden etkilenmez (görünür kalsın diye); istersen `tones.lost` ile değiştirebilirsin.
+
+Renk olarak Home Assistant renk adları (`red`, `pink`, `purple`, `deep-purple`, `indigo`, `blue`, `light-blue`, `cyan`, `teal`, `green`, `light-green`, `lime`, `yellow`, `amber`, `orange`, `deep-orange`, `brown`, `grey`, `blue-grey`, `black`, `white`, `primary`, `accent`), `#rrggbb` ya da `[r, g, b]` yazılabilir.
+
+| Kart | `tones` anahtarları |
+|---|---|
+| İklim (klima) | `cold`, `comfort`, `warm`, `hot`, `off`, `lost` |
+| İklim (petek) | `very_cold`, `cold`, `comfort`, `warm`, `hot`, `heating`, `off`, `lost` |
+| Sensör | `zone0` … `zone4` (sensörün bölgeleri), `lost` |
+| Hava | `zone0` … `zone4` (sensör varsa), `on`, `off`, `lost` |
+| Robot süpürge | `cleaning`, `returning`, `charging`, `docked`, `paused`, `idle`, `error`, `lost` |
+| Enerji | `export`, `self`, `import_low`, `import_mid`, `import_high`, `producing`, `nodata`, `lost` |
+| Güvenlik | sensörler: `clear`, `open`, `motion`, `danger`; alarm: `disarmed`, `armed`, `arming`, `triggered`; kilit: `locked`, `unlocked`, `moving`, `jammed`; hepsinde `lost` |
+| Oda | `cold`, `comfort`, `warm`, `hot` (sıcaklık varsa), `on`, `off`, `lost` |
+| Işık | `on` (boşsa lambanın kendi rengi), `off`, `lost` |
+
 ## Bütün kartlarda ortak
 
 İkona ya da isme dokununca Home Assistant'ın ayrıntı penceresi açılır. Sıcaklıklar Home Assistant'ın birimiyle (°C / °F) gösterilir.
@@ -230,6 +276,9 @@ entity: lock.on_kapi
 | `show_power` | `true` | Sağ üstteki düğme |
 | `show_halo` | `true` | Hale (parıltı) |
 | `show_labels` | `false` | Alttaki kutularda simgenin yanında adı da yaz |
+| `color` | — | Kartın tek rengi ([Renkler ve hale](#renkler-ve-hale)) |
+| `effect` | `auto` | Hale hareketi: `auto`, `breathe`, `pulse`, `blink`, `still`, `none` |
+| `tones` | — | Durum başına renk ve hareket |
 | `last_seen_sensor` | — | Son görülme zamanını tutan sensör (örneğin Zigbee2MQTT'nin `sensor.xxx_last_seen`); 2 saatten eskiyse "Bağlantı yok" |
 | `stale_after` | `0` | Son görülme sınırı (saniye). Son görülme sensörü yoksa: cihazın durumu bu kadar süre hiç değişmezse "Bağlantı yok" (sadece sürekli değişen cihazlarda kullan) |
 | `language` | `auto` | `auto`, `tr`, `en` |

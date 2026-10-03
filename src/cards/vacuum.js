@@ -28,6 +28,11 @@ class LemurVacuumCard extends LemurCard {
   static get TYPE() { return 'lemur-vacuum-card'; }
   static get DOMAINS() { return ['vacuum']; }
   static get DEFAULTS() { return { battery_sensor: '', show_stop: true, show_return: true, show_fan_speed: true, show_locate: true }; }
+  static toneList(lang) {
+    const L = (k, b, e) => ({ key: k, label: k === 'lost' ? t(lang, 'st_lost') : t(lang, 'v_' + k), band: b, effect: e || 'auto' });
+    return [L('cleaning', 'green'), L('returning', 'blue'), L('charging', 'ice'), L('docked', 'grey'), L('paused', 'yellow'), L('idle', 'yellow'),
+      L('error', 'alarm', 'blink'), L('lost', 'alarm', 'blink')];
+  }
   static schema(lang) {
     return [
       Object.assign(SCH.entity('entity', ['vacuum']), { required: true }),
@@ -71,7 +76,7 @@ class LemurVacuumCard extends LemurCard {
     } else if (c.show_locate && (f & VF.LOCATE)) {
       boxes.push({ type: 'button', id: 'locate', icon: 'mdi:map-marker-radius', label: t(lang, 'v_locate') });
     }
-    return { name: a.friendly_name || c.entity, sec: sec, icon: { mdi: s === 'error' ? 'mdi:robot-vacuum-alert' : 'mdi:robot-vacuum' }, state: lost ? 'lost' : s,
+    return { name: a.friendly_name || c.entity, sec: sec, icon: { mdi: s === 'error' ? 'mdi:robot-vacuum-alert' : 'mdi:robot-vacuum' }, state: lost ? 'lost' : s, tone: lost ? 'lost' : s,
       band: bnd, on: cleaning, disabled: lost, powerIcon: pw ? VAC_PWR[pw][0] : null, powerTitle: pw ? t(lang, VAC_PWR[pw][1]) : '', boxes: boxes };
   }
 

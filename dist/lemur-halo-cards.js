@@ -1,8 +1,8 @@
-/*! Lemur Halo Cards v0.1.0 | MIT | https://github.com/mendebur-lemur/lemur-halo-cards */
+/*! Lemur Halo Cards v0.2.0 | MIT | https://github.com/mendebur-lemur/lemur-halo-cards */
 (() => {
 if (window.__lemurCardsLoaded) return;
 window.__lemurCardsLoaded = true;
-const CSS = ":host { display: block; }\nha-card { position: relative; padding: 0; overflow: hidden; isolation: isolate;\nborder-radius: var(--ha-card-border-radius, 12px);\nbackground: var(--ha-card-background, var(--card-background-color)); }\n.halo { position: absolute; left: 14px; top: 14px; width: 460px; height: 460px; margin: -230px 0 0 -230px;\npointer-events: none; z-index: 0; mix-blend-mode: screen; opacity: var(--halo-k, 1);\n-webkit-mask-image: radial-gradient(circle closest-side, transparent 52px, #000 53px);\nmask-image: radial-gradient(circle closest-side, transparent 52px, #000 53px); }\n.halo::before, .halo::after { content: ''; position: absolute; left: 0; top: 0; width: 100%; height: 100%; border-radius: 50%;\nwill-change: transform, opacity; }\n.halo::before { background: radial-gradient(circle closest-side,\nrgba(var(--temp-rgb), 0.416) 52px,\nrgba(var(--temp-rgb), 0.399) 70px,\nrgba(var(--temp-rgb), 0.353) 88px,\nrgba(var(--temp-rgb), 0.288) 105px,\nrgba(var(--temp-rgb), 0.216) 123px,\nrgba(var(--temp-rgb), 0.150) 141px,\nrgba(var(--temp-rgb), 0.095) 159px,\nrgba(var(--temp-rgb), 0.056) 177px,\nrgba(var(--temp-rgb), 0.030) 194px,\nrgba(var(--temp-rgb), 0.015) 212px,\nrgba(var(--temp-rgb), 0.000) 230px);\nanimation: lc-glow var(--halo-dur, 4.4s) cubic-bezier(0.45, 0, 0.55, 1) infinite; }\n.halo::after { background: radial-gradient(circle closest-side,\nrgba(var(--tint-rgb), 0.272) 52px,\nrgba(var(--tint-rgb), 0.250) 70px,\nrgba(var(--tint-rgb), 0.196) 88px,\nrgba(var(--tint-rgb), 0.130) 105px,\nrgba(var(--tint-rgb), 0.073) 123px,\nrgba(var(--tint-rgb), 0.034) 141px,\nrgba(var(--tint-rgb), 0.014) 159px,\nrgba(var(--tint-rgb), 0.005) 177px,\nrgba(var(--tint-rgb), 0.002) 194px,\nrgba(var(--tint-rgb), 0.000) 212px,\nrgba(var(--tint-rgb), 0.000) 230px);\nanimation: lc-sheen var(--halo-dur, 4.4s) cubic-bezier(0.45, 0, 0.55, 1) infinite;\nanimation-delay: calc(var(--halo-dur, 4.4s) * -0.12); }\n@keyframes lc-glow { 0%, 100% { transform: scale(0.84); opacity: 0.72; } 50% { transform: scale(1.06); opacity: 1; } }\n@keyframes lc-sheen { 0%, 100% { transform: translateY(8px) scale(0.86); opacity: 0.55; } 50% { transform: translateY(16px) scale(1.04); opacity: 1; } }\n.alarm .halo { animation: lc-alarm var(--halo-dur, 1.2s) ease-in-out infinite; }\n@keyframes lc-alarm { 0%, 100% { opacity: 0.3; } 50% { opacity: 1; } }\n.light .halo { mix-blend-mode: normal; }\n@media (prefers-reduced-motion: reduce) {\n.halo::before, .halo::after, .alarm .halo { animation: none; }\n}\n.top { position: relative; z-index: 1; height: 70px; }\n.ic { position: absolute; left: -18px; top: -18px; box-sizing: border-box; width: 64px; height: 64px; border-radius: 50%;\ndisplay: flex; align-items: center; justify-content: center;\nbackground: rgba(127, 127, 127, 0.08); border: 1px solid rgba(255, 255, 255, 0.07);\ncolor: rgb(var(--temp-rgb, 140,140,140)); --mdc-icon-size: 38px; }\n.ic svg { width: 38px; height: 38px; }\n.txt { position: absolute; left: 76px; top: 12px; right: 90px; min-width: 0; }\n.name { font-size: 14px; line-height: 21px; font-weight: 500; color: var(--primary-text-color);\nwhite-space: nowrap; overflow: hidden; text-overflow: ellipsis; }\n.sec { font-size: 12px; line-height: 16px; color: var(--secondary-text-color); overflow: hidden;\ndisplay: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; max-height: 32px; word-wrap: break-word; }\n.pwr { position: absolute; top: 12px; right: 12px; width: 56px; height: 56px; border-radius: 14px; border: none; cursor: pointer; padding: 0;\ndisplay: flex; align-items: center; justify-content: center; --mdc-icon-size: 26px;\nbackground: var(--lc-box, rgba(255, 255, 255, 0.05)); color: var(--secondary-text-color); }\n.pwr.on { background: rgba(40, 190, 100, 0.18); color: rgb(40, 190, 100); }\n.nopwr .txt { right: 14px; }\n.compact .top { height: 80px; }\n.compact .txt { top: 50%; -webkit-transform: translateY(-50%); transform: translateY(-50%); }\n.bottom { position: relative; z-index: 1; display: flex; padding: 12px 12px 14px; }\n.bottom > .box + .box { margin-left: 10px; }\n.box { box-sizing: border-box; flex: 1 1 0; min-width: 0; height: 42px; border-radius: 12px; background: var(--lc-box, rgba(255, 255, 255, 0.05));\ndisplay: flex; align-items: center; justify-content: space-between; padding: 0 4px; color: var(--primary-text-color); overflow: hidden; }\n.box button { border: none; background: transparent; color: inherit; font-size: 1.2rem; flex: 0 1 30px; min-width: 14px; height: 32px;\ncursor: pointer; border-radius: 8px; padding: 0; }\n.box .val { font-size: 14px; font-weight: 600; font-variant-numeric: tabular-nums; white-space: nowrap; }\n.box.sel { position: relative; justify-content: flex-start; }\n.box.sel .lead { flex: 0 0 auto; display: flex; margin-left: 6px; --mdc-icon-size: 20px; color: var(--primary-text-color); }\n.box.sel .lbl { flex: 0 1 auto; min-width: 0; margin-left: 5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 14px; }\n.box.sel .chev { flex: 0 1000000 20px; min-width: 0; margin-left: auto; overflow: hidden; display: flex; justify-content: flex-end;\n--mdc-icon-size: 20px; color: var(--primary-text-color); margin-right: 5px; }\n.box.sel select { position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; padding: 0; margin: 0; border: 0; cursor: pointer; font-size: 16px; }\n.box.sel:focus-within { box-shadow: inset 0 0 0 2px rgba(var(--temp-rgb, 140,140,140), 0.55); }\n.box.sel select option { color: var(--primary-text-color); background: var(--card-background-color, #1c1c1c); }\nbutton.box { border: none; font: inherit; margin: 0; cursor: pointer; -webkit-appearance: none; appearance: none; }\n.box.btn { justify-content: center; --mdc-icon-size: 20px; }\n.box.btn ha-icon, .box.info ha-icon { flex: 0 0 auto; display: flex; }\n.box.btn .lbl, .box.info .lbl { flex: 0 1 auto; min-width: 0; margin-left: 6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 13px; font-weight: 500; }\n.box.btn.active { background: rgba(var(--temp-rgb), 0.2); color: rgb(var(--temp-rgb)); }\n.box.btn.ask { background: rgba(255, 55, 55, 0.22); color: rgb(255, 95, 95); }\n.box.btn:active { -webkit-transform: scale(0.97); transform: scale(0.97); }\n.box.info { justify-content: center; --mdc-icon-size: 18px; }\n.box.info ha-icon { color: var(--secondary-text-color); }\n.box.btn.tight .lbl, .box.sel.tight .lbl { display: none; }\n.box.info.tight ha-icon { display: none; }\n.box.info.tight .lbl { margin-left: 0; }\n.bottom.dis { opacity: 0.38; pointer-events: none; }\n.pwr:disabled { opacity: 0.38; cursor: default; }\n.ic[data-more], .txt[data-more] { -webkit-tap-highlight-color: transparent; }\n.light { --lc-box: rgba(0, 0, 0, 0.05); }\n.light .ic { border-color: rgba(0, 0, 0, 0.07); }";
+const CSS = ":host { display: block; }\nha-card { position: relative; padding: 0; overflow: hidden; isolation: isolate;\nborder-radius: var(--ha-card-border-radius, 12px);\nbackground: var(--ha-card-background, var(--card-background-color)); }\n.halo { position: absolute; left: 14px; top: 14px; width: 460px; height: 460px; margin: -230px 0 0 -230px;\npointer-events: none; z-index: 0; mix-blend-mode: screen; opacity: var(--halo-k, 1);\n-webkit-mask-image: radial-gradient(circle closest-side, transparent 52px, #000 53px);\nmask-image: radial-gradient(circle closest-side, transparent 52px, #000 53px); }\n.halo::before, .halo::after { content: ''; position: absolute; left: 0; top: 0; width: 100%; height: 100%; border-radius: 50%;\nwill-change: transform, opacity; }\n.halo::before { background: radial-gradient(circle closest-side,\nrgba(var(--temp-rgb), 0.416) 52px,\nrgba(var(--temp-rgb), 0.399) 70px,\nrgba(var(--temp-rgb), 0.353) 88px,\nrgba(var(--temp-rgb), 0.288) 105px,\nrgba(var(--temp-rgb), 0.216) 123px,\nrgba(var(--temp-rgb), 0.150) 141px,\nrgba(var(--temp-rgb), 0.095) 159px,\nrgba(var(--temp-rgb), 0.056) 177px,\nrgba(var(--temp-rgb), 0.030) 194px,\nrgba(var(--temp-rgb), 0.015) 212px,\nrgba(var(--temp-rgb), 0.000) 230px);\nanimation: lc-glow var(--halo-dur, 4.4s) cubic-bezier(0.45, 0, 0.55, 1) infinite; }\n.halo::after { background: radial-gradient(circle closest-side,\nrgba(var(--tint-rgb), 0.272) 52px,\nrgba(var(--tint-rgb), 0.250) 70px,\nrgba(var(--tint-rgb), 0.196) 88px,\nrgba(var(--tint-rgb), 0.130) 105px,\nrgba(var(--tint-rgb), 0.073) 123px,\nrgba(var(--tint-rgb), 0.034) 141px,\nrgba(var(--tint-rgb), 0.014) 159px,\nrgba(var(--tint-rgb), 0.005) 177px,\nrgba(var(--tint-rgb), 0.002) 194px,\nrgba(var(--tint-rgb), 0.000) 212px,\nrgba(var(--tint-rgb), 0.000) 230px);\nanimation: lc-sheen var(--halo-dur, 4.4s) cubic-bezier(0.45, 0, 0.55, 1) infinite;\nanimation-delay: calc(var(--halo-dur, 4.4s) * -0.12); }\n@keyframes lc-glow { 0%, 100% { transform: scale(0.84); opacity: 0.72; } 50% { transform: scale(1.06); opacity: 1; } }\n@keyframes lc-sheen { 0%, 100% { transform: translateY(8px) scale(0.86); opacity: 0.55; } 50% { transform: translateY(16px) scale(1.04); opacity: 1; } }\n.alarm .halo { animation: lc-alarm var(--halo-dur, 1.2s) ease-in-out infinite; }\n@keyframes lc-alarm { 0%, 100% { opacity: 0.3; } 50% { opacity: 1; } }\n.still .halo::before { animation: none; transform: scale(1); opacity: 0.95; }\n.still .halo::after { animation: none; transform: translateY(12px) scale(1); opacity: 0.9; }\n.light .halo { mix-blend-mode: normal; }\n@media (prefers-reduced-motion: reduce) {\n.halo::before, .halo::after, .alarm .halo { animation: none; }\n}\n.top { position: relative; z-index: 1; height: 70px; }\n.ic { position: absolute; left: -18px; top: -18px; box-sizing: border-box; width: 64px; height: 64px; border-radius: 50%;\ndisplay: flex; align-items: center; justify-content: center;\nbackground: rgba(127, 127, 127, 0.08); border: 1px solid rgba(255, 255, 255, 0.07);\ncolor: rgb(var(--temp-rgb, 140,140,140)); --mdc-icon-size: 38px; }\n.ic svg { width: 38px; height: 38px; }\n.txt { position: absolute; left: 76px; top: 12px; right: 90px; min-width: 0; }\n.name { font-size: 14px; line-height: 21px; font-weight: 500; color: var(--primary-text-color);\nwhite-space: nowrap; overflow: hidden; text-overflow: ellipsis; }\n.sec { font-size: 12px; line-height: 16px; color: var(--secondary-text-color); overflow: hidden;\ndisplay: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; max-height: 32px; word-wrap: break-word; }\n.pwr { position: absolute; top: 12px; right: 12px; width: 56px; height: 56px; border-radius: 14px; border: none; cursor: pointer; padding: 0;\ndisplay: flex; align-items: center; justify-content: center; --mdc-icon-size: 26px;\nbackground: var(--lc-box, rgba(255, 255, 255, 0.05)); color: var(--secondary-text-color); }\n.pwr.on { background: rgba(40, 190, 100, 0.18); color: rgb(40, 190, 100); }\n.nopwr .txt { right: 14px; }\n.compact .top { height: 80px; }\n.compact .txt { top: 50%; -webkit-transform: translateY(-50%); transform: translateY(-50%); }\n.bottom { position: relative; z-index: 1; display: flex; padding: 12px 12px 14px; }\n.bottom > .box + .box { margin-left: 10px; }\n.box { box-sizing: border-box; flex: 1 1 0; min-width: 0; height: 42px; border-radius: 12px; background: var(--lc-box, rgba(255, 255, 255, 0.05));\ndisplay: flex; align-items: center; justify-content: space-between; padding: 0 4px; color: var(--primary-text-color); overflow: hidden; }\n.box button { border: none; background: transparent; color: inherit; font-size: 1.2rem; flex: 0 1 30px; min-width: 14px; height: 32px;\ncursor: pointer; border-radius: 8px; padding: 0; }\n.box .val { font-size: 14px; font-weight: 600; font-variant-numeric: tabular-nums; white-space: nowrap; }\n.box.sel { position: relative; justify-content: flex-start; }\n.box.sel .lead { flex: 0 0 auto; display: flex; margin-left: 6px; --mdc-icon-size: 20px; color: var(--primary-text-color); }\n.box.sel .lbl { flex: 0 1 auto; min-width: 0; margin-left: 5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 14px; }\n.box.sel .chev { flex: 0 1000000 20px; min-width: 0; margin-left: auto; overflow: hidden; display: flex; justify-content: flex-end;\n--mdc-icon-size: 20px; color: var(--primary-text-color); margin-right: 5px; }\n.box.sel select { position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; padding: 0; margin: 0; border: 0; cursor: pointer; font-size: 16px; }\n.box.sel:focus-within { box-shadow: inset 0 0 0 2px rgba(var(--temp-rgb, 140,140,140), 0.55); }\n.box.sel select option { color: var(--primary-text-color); background: var(--card-background-color, #1c1c1c); }\nbutton.box { border: none; font: inherit; margin: 0; cursor: pointer; -webkit-appearance: none; appearance: none; }\n.box.btn { justify-content: center; --mdc-icon-size: 20px; }\n.box.btn ha-icon, .box.info ha-icon { flex: 0 0 auto; display: flex; }\n.box.btn .lbl, .box.info .lbl { flex: 0 1 auto; min-width: 0; margin-left: 6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 13px; font-weight: 500; }\n.box.btn.active { background: rgba(var(--temp-rgb), 0.2); color: rgb(var(--temp-rgb)); }\n.box.btn.ask { background: rgba(255, 55, 55, 0.22); color: rgb(255, 95, 95); }\n.box.btn:active { -webkit-transform: scale(0.97); transform: scale(0.97); }\n.box.info { justify-content: center; --mdc-icon-size: 18px; }\n.box.info ha-icon { color: var(--secondary-text-color); }\n.box.btn.tight .lbl, .box.sel.tight .lbl { display: none; }\n.box.info.tight ha-icon { display: none; }\n.box.info.tight .lbl { margin-left: 0; }\n.bottom.dis { opacity: 0.38; pointer-events: none; }\n.pwr:disabled { opacity: 0.38; cursor: default; }\n.ic[data-more], .txt[data-more] { -webkit-tap-highlight-color: transparent; }\n.light { --lc-box: rgba(0, 0, 0, 0.05); }\n.light .ic { border-color: rgba(0, 0, 0, 0.07); }";
 const DOCS_URL = "https://github.com/mendebur-lemur/lemur-halo-cards";
 // Metinler. Her metin hem tr hem en. Arayüzde marka adı geçmez.
 // Ortak metinler burada; her kart kendi metinlerini addText() ile ekler.
@@ -21,7 +21,12 @@ const TXT = {
     ed_appearance: 'Görünüm', ed_advanced: 'Gelişmiş', ed_show_power: 'Sağ üstteki düğme', ed_show_halo: 'Hale (parıltı)',
     ed_show_labels: 'Kutularda adları da yaz', ed_language: 'Dil', ed_stale_after: 'Bu kadar saniye haber gelmezse "Bağlantı yok" (0: kapalı; son görülme sensörüyle varsayılan 7200)',
     ed_last_seen_sensor: 'Son görülme sensörü (isteğe bağlı; ör. Zigbee2MQTT last_seen)',
-    ed_lang_auto: 'Otomatik', ed_reset: 'Varsayılana dön'
+    ed_lang_auto: 'Otomatik', ed_reset: 'Varsayılana dön',
+    // renk ve hale ayarları
+    ed_colors: 'Renkler ve hale', ed_color: 'Kartın rengi (boşsa duruma göre)', ed_effect: 'Hale hareketi',
+    ed_tones: 'Durumlara göre renk ve hale', ed_tone_color: 'renk', ed_tone_effect: 'hale',
+    ef_auto: 'Varsayılan', ef_breathe: 'Yavaş nefes', ef_pulse: 'Hızlı nabız', ef_blink: 'Yanıp söner', ef_still: 'Sabit', ef_none: 'Hale yok',
+    tn_very_cold: 'Çok soğuk', tn_cold: 'Serin', tn_comfort: 'Konforlu', tn_warm: 'Sıcak', tn_hot: 'Çok sıcak', tn_heating: 'Isıtırken'
   },
   en: {
     st_off: 'Off', st_on: 'On', st_lost: 'No connection', st_sensor: 'No sensor', st_unknown: 'Unknown',
@@ -34,6 +39,10 @@ const TXT = {
     ed_appearance: 'Appearance', ed_advanced: 'Advanced', ed_show_power: 'Top-right button', ed_show_halo: 'Halo (glow)',
     ed_show_labels: 'Show names in the boxes', ed_language: 'Language', ed_stale_after: 'Show "No connection" after this many seconds without news (0: off; 7200 by default with a last seen sensor)',
     ed_last_seen_sensor: 'Last seen sensor (optional; e.g. Zigbee2MQTT last_seen)',
+    ed_colors: 'Colours and halo', ed_color: 'Card colour (by state if empty)', ed_effect: 'Halo motion',
+    ed_tones: 'Colour and halo by state', ed_tone_color: 'colour', ed_tone_effect: 'halo',
+    ef_auto: 'Default', ef_breathe: 'Slow breath', ef_pulse: 'Fast pulse', ef_blink: 'Blinking', ef_still: 'Still', ef_none: 'No halo',
+    tn_very_cold: 'Very cold', tn_cold: 'Cool', tn_comfort: 'Comfortable', tn_warm: 'Warm', tn_hot: 'Hot', tn_heating: 'Heating',
     ed_lang_auto: 'Automatic', ed_reset: 'Reset to defaults'
   }
 };
@@ -83,6 +92,36 @@ const BANDS = {
 const BAND_NAMES = ['ice', 'blue', 'green', 'yellow', 'orange', 'red', 'alarm', 'purple', 'grey'];
 
 function band(name) { return BANDS[name] || BANDS.green; }
+
+// Home Assistant renk seçicisinin adları (temadan okunamazsa bu değerler kullanılır)
+const UI_COLORS = { primary: '3,169,244', accent: '255,152,0', pink: '233,30,99', purple: '146,107,199', 'deep-purple': '110,65,171',
+  indigo: '63,81,181', 'light-blue': '3,169,244', cyan: '0,188,212', teal: '0,150,136', 'light-green': '139,195,74', lime: '205,220,57',
+  amber: '255,193,7', 'deep-orange': '255,111,34', brown: '121,85,72', 'light-grey': '189,189,189', 'dark-grey': '96,96,96',
+  'blue-grey': '96,125,139', black: '0,0,0', white: '255,255,255' };
+
+// Kullanıcının yazdığı rengi "r,g,b" yapar: [r,g,b], "#rgb", "#rrggbb", "r,g,b" ya da renk adı (green, red...). Anlaşılmazsa null.
+function parseColor(v) {
+  if (v === null || v === undefined || v === '') return null;
+  const ok = (a) => a.length === 3 && a.every((x) => isFinite(x) && x >= 0 && x <= 255);
+  if (Array.isArray(v)) { const a = v.map(Number); return ok(a) ? a.map(Math.round).join(',') : null; }
+  const s = String(v).trim().toLowerCase();
+  if (BANDS[s]) return BANDS[s].rgb;
+  if (UI_COLORS[s]) return UI_COLORS[s];
+  let m = /^#?([0-9a-f]{6})$/.exec(s);
+  if (m) return [0, 2, 4].map((i) => parseInt(m[1].substr(i, 2), 16)).join(',');
+  m = /^#?([0-9a-f]{3})$/.exec(s);
+  if (m) return [0, 1, 2].map((i) => parseInt(m[1][i] + m[1][i], 16)).join(',');
+  const a = s.split(',').map((x) => Number(x.trim()));
+  return a.length === 3 && ok(a) ? a.join(',') : null;
+}
+// "r,g,b" → "#rrggbb" (editördeki renk seçici için)
+function rgbHex(rgb) { return '#' + String(rgb).split(',').map((x) => ('0' + Number(x).toString(16)).slice(-2)).join(''); }
+
+// Hale hareketleri. auto: kartın kendi seçimi (normalde yavaş nefes, alarm durumunda yanıp söner)
+const EFFECTS = ['auto', 'breathe', 'pulse', 'blink', 'still', 'none'];
+
+// Konfor bandından durum anahtarı (renk ve hale ayarlarında kullanılır)
+const BAND_TONE = { ice: 'very_cold', blue: 'cold', green: 'comfort', yellow: 'warm', orange: 'warm', red: 'hot', alarm: 'lost' };
 
 // Değeri dört sınırla beş bölgeye ayırır: < s1 → r1, < s2 → r2, < s3 → r3, < s4 → r4, üstü → r5.
 // Boş (null) sınır atlanır, o bölge bir sonrakiyle birleşir. Dönen değer renk adıdır.
@@ -341,8 +380,11 @@ function svgIcon(name) {
 //   static schema(lang, cfg, hass)  editör şeması (ha-form)
 //   static stub(hass)      kart ilk eklendiğinde örnek ayar
 //   ids()                  yeniden çizimi tetikleyen varlıklar
-//   view(lang)             { name, sec:[...], icon:{mdi|svg}, state, band, on, powerIcon, disabled, boxes:[...], haloK, moreInfo }
+//   view(lang)             { name, sec:[...], icon:{mdi|svg}, state, tone, band, on, powerIcon, disabled, boxes:[...], haloK, moreInfo }
 //                          state: simge eşlemesinde (icons) kullanılan durum anahtarı (ör. 'cool', 'cleaning', 'zone2')
+//                          tone:  renk ve hale ayarlarında (tones) kullanılan durum anahtarı ya da öncelik sırasıyla anahtar listesi
+//                                 (ör. ['off', 'comfort']: kullanıcı "kapalı" için renk seçtiyse o, yoksa "konforlu")
+//   static toneList(lang, cfg, hass)  editörde gösterilecek durumlar: [{ key, label, band (renk adı ya da null), effect }]
 //   power()                sağ üst düğmeye basılınca
 //   onStep(id, dir) / onSelect(id, value) / onButton(id)   alt satır kutuları
 //
@@ -357,7 +399,7 @@ function svgIcon(name) {
 //   stale_after       > 0 ise cihazın durumu bu kadar saniye hiç değişmezse. Dikkat: HA, değer aynı kaldıkça zamanı güncellemez;
 //                     sadece sürekli değişen cihazlarda kullan.
 
-const CARD_VERSION = '0.1.0';
+const CARD_VERSION = '0.2.0';
 
 const BASE_DEFAULTS = {
   name: '',
@@ -371,7 +413,10 @@ const BASE_DEFAULTS = {
   show_labels: false,
   last_seen_sensor: '',
   stale_after: 0,
-  language: 'auto'
+  language: 'auto',
+  color: '',           // kartın tek rengi (boşsa duruma göre); [r,g,b], #rrggbb ya da renk adı
+  effect: 'auto',      // hale hareketi: auto, breathe, pulse, blink, still, none
+  tones: {}            // durum → { color, effect } (ör. hot: { color: '#ff0000', effect: blink })
 };
 
 class LemurCard extends HTMLElement {
@@ -382,6 +427,7 @@ class LemurCard extends HTMLElement {
   static allDefaults() { return Object.assign({}, BASE_DEFAULTS, this.DEFAULTS); }
   static nested() { return {}; }
   static schema() { return []; }
+  static toneList() { return []; }
   static stub(hass) {
     const d = this.DOMAINS;
     return d ? { entity: firstEntity(hass, d) || (d[0] + '.example') } : {};
@@ -407,6 +453,7 @@ class LemurCard extends HTMLElement {
       else if (!Array.isArray(c[k])) c[k] = [];
     });
     if (!c.icons || typeof c.icons !== 'object') c.icons = {};
+    if (!c.tones || typeof c.tones !== 'object' || Array.isArray(c.tones)) c.tones = {};
     this._config = c;
     this._sig = '';
     this._timer();
@@ -529,6 +576,40 @@ class LemurCard extends HTMLElement {
     return o;
   }
 
+  // Hale rengi ve hareketi. Öncelik: durumun kendi ayarı (tones) > kartın tek rengi / hareketi > kartın kendi seçimi.
+  // "Bağlantı yok" durumunda kartın tek rengi uygulanmaz (uyarı görünür kalsın), ama tones.lost ile değiştirilebilir.
+  _haloStyle(v, bnd) {
+    const c = this._config, keys = Array.isArray(v.tone) ? v.tone : (v.tone ? [v.tone] : []);
+    const isAlarm = bnd === BANDS.alarm;
+    let rgb = bnd.rgb, eff = isAlarm ? 'blink' : 'breathe';
+    if (keys[0] !== 'lost') {
+      const fc = this._color(c.color); if (fc) rgb = fc;
+      if (c.effect && c.effect !== 'auto' && EFFECTS.indexOf(c.effect) >= 0) eff = c.effect;
+    }
+    const T = c.tones || {};
+    for (let i = 0; i < keys.length; i++) {
+      const o = T[keys[i]];
+      if (!o || typeof o !== 'object') continue;
+      const oc = this._color(o.color), oe = o.effect && o.effect !== 'auto' && EFFECTS.indexOf(o.effect) >= 0 ? o.effect : null;
+      if (!oc && !oe) continue;
+      if (oc) rgb = oc;
+      if (oe) eff = oe;
+      break;
+    }
+    const dur = eff === 'blink' ? (isAlarm ? bnd.duration : 1.2) : eff === 'pulse' ? 1.6 : (isAlarm ? 4.4 : bnd.duration);
+    return { rgb: rgb, eff: eff, dur: dur };
+  }
+
+  // Renk adı temada tanımlıysa (--rgb-red-color gibi) temanın rengi, değilse parseColor
+  _color(v) {
+    if (typeof v === 'string' && /^[a-z-]+$/.test(v.trim()) && window.getComputedStyle) {
+      const css = window.getComputedStyle(this).getPropertyValue('--rgb-' + v.trim() + '-color').trim();
+      const p = css && parseColor(css.replace(/\s+/g, ''));
+      if (p) return p;
+    }
+    return parseColor(v);
+  }
+
   _boxHtml(b, showLabels) {
     const id = esc(b.id || '');
     const lbl = (txt, force) => (txt && (showLabels || force)) ? '<span class="lbl" id="' + id + '-lbl">' + esc(txt) + '</span>' : '';
@@ -578,7 +659,8 @@ class LemurCard extends HTMLElement {
     let v;
     try { v = this.view(lang); } catch (e) { v = { name: c.name || this.constructor.TYPE, sec: [String(e && e.message || e)], icon: { mdi: 'mdi:alert' }, band: BANDS.alarm, boxes: [] }; }
     const bnd = v.band || BANDS.green;
-    const alarm = bnd === BANDS.alarm;
+    const hs = this._haloStyle(v, bnd);
+    const alarm = hs.eff === 'blink';
     const light = this._hass.themes && this._hass.themes.darkMode === false;
     const icon = this._icon(v);
     const iconHtml = icon.svg ? svgIcon(icon.svg) : '<ha-icon icon="' + esc(icon.mdi) + '"></ha-icon>';
@@ -589,9 +671,9 @@ class LemurCard extends HTMLElement {
     const haloK = v.haloK !== undefined ? v.haloK : 1;
     const hasPwr = c.show_power && v.powerIcon !== null;
     this._compact = !boxes.length;
-    this._card.className = (v.on ? 'on' : 'off') + (alarm ? ' alarm' : '') + (light ? ' light' : '') + (hasPwr ? '' : ' nopwr') + (boxes.length ? '' : ' compact');
-    this._card.setAttribute('style', '--temp-rgb:' + bnd.rgb + ';--tint-rgb:' + tint(bnd.rgb) + ';--halo-dur:' + bnd.duration + 's;--halo-k:' + haloK);
-    this._halo.style.display = c.show_halo ? '' : 'none';
+    this._card.className = (v.on ? 'on' : 'off') + (alarm ? ' alarm' : '') + (hs.eff === 'still' ? ' still' : '') + (light ? ' light' : '') + (hasPwr ? '' : ' nopwr') + (boxes.length ? '' : ' compact');
+    this._card.setAttribute('style', '--temp-rgb:' + hs.rgb + ';--tint-rgb:' + tint(hs.rgb) + ';--halo-dur:' + hs.dur + 's;--halo-k:' + haloK);
+    this._halo.style.display = c.show_halo && hs.eff !== 'none' ? '' : 'none';
     this._content.innerHTML =
       '<div class="top"><div class="ic" data-more="1">' + iconHtml + '</div>' +
       '<div class="txt" data-more="1"><div class="name">' + esc(c.name || v.name || '') + '</div><div class="sec">' + esc(sec) + '</div></div>' +
@@ -647,11 +729,35 @@ class LemurEditor extends HTMLElement {
   setConfig(config) { this._config = Object.assign({}, config); this._render(); }
   set hass(h) { this._hass = h; if (this._form) this._form.hass = h; else this._render(); }
 
+  // İç içe ayar grupları: kartın kendi grupları + renk ve hale (tones)
+  _nested(cfg, lang) {
+    const K = this.constructor.cardClass, N = Object.assign({}, K.nested(cfg, this._hass));
+    const tl = K.toneList(lang, cfg, this._hass) || [];
+    if (tl.length) {
+      N.tones = {};
+      tl.forEach((x) => { N.tones[x.key] = { effect: x.effect || 'auto' }; });
+    }
+    return N;
+  }
+
   _clean(cfg) {
-    const K = this.constructor.cardClass, D = K.allDefaults(), N = K.nested(cfg, this._hass);
+    const K = this.constructor.cardClass, D = K.allDefaults(), N = this._nested(cfg, pickLang(this._hass, cfg.language));
+    const same = (a, b) => JSON.stringify(a) === JSON.stringify(b);
+    const empty = (x) => x === '' || x === null || x === undefined || (Array.isArray(x) && !x.length);
+    // Varsayılanla aynı ya da boş olan alt alanları at; boş kalan grubu tamamen kaldır (iki seviyeye kadar)
+    const strip = (val, def) => {
+      const out = {};
+      Object.keys(val || {}).forEach((x) => {
+        let w = val[x];
+        const d = def ? def[x] : undefined;
+        if (w && typeof w === 'object' && !Array.isArray(w)) { w = strip(w, d && typeof d === 'object' ? d : {}); if (!Object.keys(w).length) return; }
+        else if (empty(w) || same(w, d)) return;
+        out[x] = w;
+      });
+      return out;
+    };
     Object.keys(N).forEach((k) => {
-      const v = Object.assign({}, cfg[k] || {});
-      Object.keys(N[k]).forEach((x) => { if (v[x] === N[k][x] || v[x] === '' || v[x] === null || v[x] === undefined) delete v[x]; });
+      const v = strip(cfg[k] || {}, N[k]);
       if (Object.keys(v).length) cfg[k] = v; else delete cfg[k];
     });
     Object.keys(D).forEach((k) => {
@@ -683,10 +789,25 @@ class LemurEditor extends HTMLElement {
       });
       this.appendChild(this._form);
     }
-    const N = K.nested(this._config, this._hass), data = Object.assign({}, K.allDefaults(), this._config);
-    Object.keys(N).forEach((k) => { data[k] = Object.assign({}, N[k], this._config[k] || {}); });
+    const N = this._nested(this._config, lang), data = Object.assign({}, K.allDefaults(), this._config);
+    const isObj = (x) => !!x && typeof x === 'object' && !Array.isArray(x);
+    Object.keys(N).forEach((k) => {
+      // Varsayılanların üstüne kullanıcının değerleri; durum grupları (tones) bir seviye daha birleşir
+      const cur = this._config[k] || {}, d = {};
+      Object.keys(N[k]).forEach((x) => { d[x] = isObj(N[k][x]) ? Object.assign({}, N[k][x]) : N[k][x]; });
+      Object.keys(cur).forEach((x) => { d[x] = isObj(cur[x]) && isObj(d[x]) ? Object.assign(d[x], cur[x]) : cur[x]; });
+      data[k] = d;
+    });
+    // Renk seçici ad ya da #rrggbb gösterir; YAML'da [r,g,b] ya da "r,g,b" yazılmışsa #rrggbb'ye çevir
+    const toPick = (v) => { if (v === undefined || v === null || v === '') return undefined; if (typeof v === 'string' && !/,/.test(v)) return v; const p = parseColor(v); return p ? rgbHex(p) : undefined; };
+    data.color = toPick(data.color);
+    if (data.tones) Object.keys(data.tones).forEach((x) => { const o = data.tones[x]; if (o && o.color !== undefined) o.color = toPick(o.color); });
+    let schema = K.schema(lang, this._config, this._hass);
+    const tl = K.toneList(lang, this._config, this._hass) || [];
+    const cs = SCH.colors(lang, tl), ai = schema.map((x) => x && x.name).indexOf('adv');
+    schema = ai >= 0 ? schema.slice(0, ai).concat([cs], schema.slice(ai)) : schema.concat([cs]);
     this._form.hass = this._hass;
-    this._form.schema = K.schema(lang, this._config, this._hass);
+    this._form.schema = schema;
     this._form.data = data;
   }
 }
@@ -709,6 +830,18 @@ const SCH = {
       { name: 'icon_on', selector: { icon: {} } }, { name: 'icon_off', selector: { icon: {} } }] },
     { name: 'icons', selector: { object: {} } },
     { name: 'language', selector: { select: { mode: 'dropdown', options: [{ value: 'auto', label: t(lang, 'ed_lang_auto') }, { value: 'tr', label: 'Türkçe' }, { value: 'en', label: 'English' }] } } }] }),
+  // Renkler ve hale: kartın tek rengi ve hareketi, durum başına renk ve hareket
+  colors: (lang, tones) => {
+    const eff = { select: { mode: 'dropdown', options: EFFECTS.map((x) => ({ value: x, label: t(lang, 'ef_' + x) })) } };
+    const col = { ui_color: { include_state: false, include_none: false } };
+    const sch = [{ type: 'grid', name: '', flatten: true, schema: [{ name: 'color', selector: col }, { name: 'effect', selector: eff }] }];
+    if (tones.length) {
+      sch.push({ type: 'expandable', name: 'tones', title: t(lang, 'ed_tones'), schema: tones.map((x) => ({ type: 'grid', name: x.key, schema: [
+        { name: 'color', label: x.label + ' · ' + t(lang, 'ed_tone_color'), selector: col },
+        { name: 'effect', label: x.label + ' · ' + t(lang, 'ed_tone_effect'), selector: eff }] })) });
+    }
+    return { type: 'expandable', name: 'colors_sec', flatten: true, title: t(lang, 'ed_colors'), schema: sch };
+  },
   // Gelişmiş bölümü: kartın kendi alanları + bağlantı kontrolü (her kartta)
   advanced: (lang, extra) => ({ type: 'expandable', name: 'adv', flatten: true, title: t(lang, 'ed_advanced'), schema: (extra || []).concat([
     { name: 'last_seen_sensor', selector: { entity: { domain: ['sensor'], device_class: 'timestamp' } } },
@@ -840,6 +973,16 @@ class LemurClimateCard extends LemurCard {
     return [c.entity].concat(c.entities || [], [c.temperature_sensor, c.humidity_sensor, c.outdoor_sensor]);
   }
 
+  // Renk ve hale ayarlarında gösterilen durumlar
+  static toneList(lang, cfg, hass) {
+    const st = hass && cfg.entity ? hass.states[cfg.entity] : null;
+    const kind = cfg.kind && cfg.kind !== 'auto' ? cfg.kind : ((st && st.attributes.hvac_modes || []).indexOf('cool') >= 0 ? 'ac' : 'radiator');
+    const L = (k, b, e) => ({ key: k, label: t(lang, k === 'off' ? 'st_off' : k === 'lost' ? 'st_lost' : 'tn_' + k), band: b, effect: e || 'auto' });
+    const zones = kind === 'ac' ? [L('cold', 'blue'), L('comfort', 'green'), L('warm', 'yellow'), L('hot', 'red')]
+      : [L('very_cold', 'ice'), L('cold', 'blue'), L('comfort', 'green'), L('warm', 'yellow'), L('hot', 'red'), L('heating', null)];
+    return zones.concat([L('off', null), L('lost', 'alarm', 'blink')]);
+  }
+
   _model() {
     const c = this._config, h = this._hass;
     const ents = [c.entity].concat(c.entities || []);
@@ -862,12 +1005,16 @@ class LemurClimateCard extends LemurCard {
     const m = { kind: kind, t: tmp, unit: unit, rh: rh, isOn: onList.length > 0, lost: lost, allDead: allDead, main: main, a: a, ents: ents };
     if (kind === 'ac') {
       m.band = lost ? BANDS.alarm : acBand(tc === null ? 22 : tc, rh, c.comfort);
+      const zk = BAND_TONE[acBand(tc === null ? 22 : tc, rh, c.comfort).name];
+      m.tone = lost ? ['lost'] : (m.isOn ? [zk] : ['off', zk]);
       m.icon = { mdi: lost ? 'mdi:air-conditioner' : modeIcon(main ? main.state : '') };
       m.label = lost ? 'st_lost' : (tc === null ? '' : comfortKey(tc, rh, c.comfort));
     } else {
       let st = !m.isOn ? 'st_off' : (busy ? 'st_heating' : 'st_idle');
       if (lost) st = 'st_lost'; else if (sensorLost) st = 'st_sensor';
       m.band = radiatorBand(tc === null ? 20 : tc, toC(outdoor, unit), c.radiator_bands, lost || sensorLost);
+      const zk = BAND_TONE[radiatorBand(tc === null ? 20 : tc, toC(outdoor, unit), c.radiator_bands, false).name];
+      m.tone = (lost || sensorLost) ? ['lost'] : (!m.isOn ? ['off', zk] : (busy ? ['heating', zk] : [zk]));
       const base = c.radiator_style === 'sectional' ? 'sectional' : 'panel';
       m.icon = st === 'st_heating' ? { mdi: 'mdi:fire' } : { svg: base + (st === 'st_off' ? '-off' : (st === 'st_lost' || st === 'st_sensor') ? '-lost' : '') };
       m.label = st;
@@ -897,7 +1044,7 @@ class LemurClimateCard extends LemurCard {
     }
     // Simge eşlemesi anahtarı: klimada mod (cool, heat...), petekte durum (heating, idle, off, lost, sensor)
     const state = m.kind === 'ac' ? (m.lost ? 'lost' : (main ? main.state : '')) : m.label.replace('st_', '');
-    return { name: a.friendly_name || c.entity, sec: sec, icon: m.icon, state: state, band: m.band, on: m.isOn,
+    return { name: a.friendly_name || c.entity, sec: sec, icon: m.icon, state: state, tone: m.tone, band: m.band, on: m.isOn,
       disabled: m.kind === 'ac' ? m.lost : m.allDead, boxes: boxes };
   }
 
@@ -1003,6 +1150,15 @@ function zoneOf(lang, preset, levels, v) {
   const i = zoneIndex(v, L);
   return { band: band(zoneColor(v, L, C)), zone: i, label: preset === 'custom' ? '' : t(lang, 'z_' + preset + '_' + i) };
 }
+// Renk ve hale ayarları için beş bölge (bölge adı ve varsayılan rengi)
+function zoneTones(lang, preset, levels) {
+  const out = [];
+  for (let i = 0; i < 5; i++) {
+    const lbl = preset === 'custom' ? '' : tMaybe(lang, 'z_' + preset + '_' + i);
+    out.push({ key: 'zone' + i, label: (lbl || t(lang, 'ed_c' + (i + 1))), band: levels['c' + (i + 1)] || 'grey', effect: levels['c' + (i + 1)] === 'alarm' ? 'blink' : 'auto' });
+  }
+  return out;
+}
 // Pil simgesi doluluğa göre
 function batteryIcon(v) {
   if (v === null) return 'mdi:battery-unknown';
@@ -1055,6 +1211,10 @@ class LemurSensorCard extends LemurCard {
     ];
   }
   ids() { const c = this._config; return [c.entity, c.switch_entity].concat(c.extra || []); }
+  static toneList(lang, cfg, hass) {
+    const preset = presetOf(hass, cfg.entity, cfg.preset);
+    return zoneTones(lang, preset, levelsOf(preset, cfg.levels)).concat([{ key: 'lost', label: t(lang, 'st_lost'), band: 'alarm', effect: 'blink' }]);
+  }
 
   view(lang) {
     const c = this._config, h = this._hass, st = this.st(c.entity);
@@ -1072,6 +1232,7 @@ class LemurSensorCard extends LemurCard {
       sec: lost ? [t(lang, 'st_lost')] : [c.show_zone ? z.label : '', valTxt],
       icon: { mdi: icon }, band: lost ? BANDS.alarm : z.band,
       state: lost ? 'lost' : (v === null ? 'unknown' : 'zone' + z.zone),   // simge eşlemesi: zone0..zone4, lost
+      tone: lost ? 'lost' : (v === null ? '' : 'zone' + z.zone),
       on: sw ? !isOff(sw) : true,
       powerIcon: c.switch_entity ? 'mdi:power' : null,
       boxes: (c.extra || []).slice(0, 3).map((id) => ({ type: 'info', icon: entityIcon(h, id), text: fmtState(h, id, null, lang), entity: id, title: friendly(h, id) }))
@@ -1119,17 +1280,22 @@ class LemurAirCard extends LemurCard {
     ];
   }
   ids() { const c = this._config; return [c.entity, c.sensor].concat(c.extra || []); }
+  static toneList(lang, cfg, hass) {
+    const zones = cfg.sensor ? zoneTones(lang, presetOf(hass, cfg.sensor, cfg.preset), levelsOf(presetOf(hass, cfg.sensor, cfg.preset), cfg.levels)) : [];
+    return zones.concat([{ key: 'on', label: t(lang, 'st_on'), band: 'green' }, { key: 'off', label: t(lang, 'st_off'), band: null },
+      { key: 'lost', label: t(lang, 'st_lost'), band: 'alarm', effect: 'blink' }]);
+  }
 
   view(lang) {
     const c = this._config, h = this._hass, st = this.st(c.entity), a = st ? st.attributes : {};
     const on = !isOff(st), lost = this.isLost(c.entity);
     const sec = [];
-    let bnd = on ? BANDS.green : BANDS.grey;
+    let bnd = on ? BANDS.green : BANDS.grey, zk = '';
     if (c.sensor) {
       const preset = presetOf(h, c.sensor, c.preset), v = stateNum(h, c.sensor);
       if (v !== null) {
         const z = zoneOf(lang, preset, levelsOf(preset, c.levels), v);
-        bnd = z.band;
+        bnd = z.band; zk = 'zone' + z.zone;
         if (c.show_zone) sec.push(z.label);
       }
       sec.push(fmtState(h, c.sensor, null, lang));
@@ -1148,7 +1314,8 @@ class LemurAirCard extends LemurCard {
         options: a.preset_modes.map((x) => ({ value: x, label: fanLabel(lang, x), icon: fanIcon(x) })) });
     }
     (c.extra || []).forEach((id) => { if (boxes.length < 3) boxes.push({ type: 'info', icon: entityIcon(h, id), text: fmtState(h, id, null, lang), entity: id, title: friendly(h, id) }); });
-    return { name: a.friendly_name || c.entity, sec: sec, icon: { mdi: on ? 'mdi:air-purifier' : 'mdi:air-purifier-off' }, state: lost ? 'lost' : (on ? 'on' : 'off'), band: bnd, on: on, disabled: lost, boxes: boxes };
+    const tone = lost ? ['lost'] : (zk ? (on ? [zk] : ['off', zk]) : [on ? 'on' : 'off']);
+    return { name: a.friendly_name || c.entity, sec: sec, icon: { mdi: on ? 'mdi:air-purifier' : 'mdi:air-purifier-off' }, state: lost ? 'lost' : (on ? 'on' : 'off'), tone: tone, band: bnd, on: on, disabled: lost, boxes: boxes };
   }
 
   power() { this.call('fan', isOff(this.st(this._config.entity)) ? 'turn_on' : 'turn_off', { entity_id: this._config.entity }); }
@@ -1197,6 +1364,11 @@ class LemurVacuumCard extends LemurCard {
   static get TYPE() { return 'lemur-vacuum-card'; }
   static get DOMAINS() { return ['vacuum']; }
   static get DEFAULTS() { return { battery_sensor: '', show_stop: true, show_return: true, show_fan_speed: true, show_locate: true }; }
+  static toneList(lang) {
+    const L = (k, b, e) => ({ key: k, label: k === 'lost' ? t(lang, 'st_lost') : t(lang, 'v_' + k), band: b, effect: e || 'auto' });
+    return [L('cleaning', 'green'), L('returning', 'blue'), L('charging', 'ice'), L('docked', 'grey'), L('paused', 'yellow'), L('idle', 'yellow'),
+      L('error', 'alarm', 'blink'), L('lost', 'alarm', 'blink')];
+  }
   static schema(lang) {
     return [
       Object.assign(SCH.entity('entity', ['vacuum']), { required: true }),
@@ -1240,7 +1412,7 @@ class LemurVacuumCard extends LemurCard {
     } else if (c.show_locate && (f & VF.LOCATE)) {
       boxes.push({ type: 'button', id: 'locate', icon: 'mdi:map-marker-radius', label: t(lang, 'v_locate') });
     }
-    return { name: a.friendly_name || c.entity, sec: sec, icon: { mdi: s === 'error' ? 'mdi:robot-vacuum-alert' : 'mdi:robot-vacuum' }, state: lost ? 'lost' : s,
+    return { name: a.friendly_name || c.entity, sec: sec, icon: { mdi: s === 'error' ? 'mdi:robot-vacuum-alert' : 'mdi:robot-vacuum' }, state: lost ? 'lost' : s, tone: lost ? 'lost' : s,
       band: bnd, on: cleaning, disabled: lost, powerIcon: pw ? VAC_PWR[pw][0] : null, powerTitle: pw ? t(lang, VAC_PWR[pw][1]) : '', boxes: boxes };
   }
 
@@ -1267,6 +1439,7 @@ registerCard(LemurVacuumCard, {
 // Hale: şebekeye veriyor ya da kendine yetiyor yeşil; az çekiş sarı; orta turuncu; çok çekiş kırmızı.
 
 addText({
+  tn_import_low: 'Az çekiyor', tn_import_mid: 'Orta çekiyor', tn_import_high: 'Çok çekiyor',
   e_name: 'Enerji', e_pick: 'Ayarlardan sensör seç', e_producing: 'Üretiyor', e_export: 'Şebekeye veriyor', e_self: 'Kendine yetiyor', e_import: 'Şebekeden çekiyor', e_nodata: 'Veri yok',
   e_solar: 'Güneş', e_home: 'Ev', e_grid: 'Şebeke', e_battery: 'Batarya',
   ed_solar_power: 'Güneş üretimi (W/kW)', ed_home_power: 'Ev tüketimi (W/kW)', ed_grid_power: 'Şebeke gücü (W/kW; + çekiş, − veriş)',
@@ -1275,6 +1448,7 @@ addText({
   ed_import_mid: 'Turuncu başlangıcı', ed_import_high: 'Kırmızı başlangıcı',
   ed_show_solar: 'Güneş kutusu', ed_show_home: 'Ev kutusu', ed_show_grid: 'Şebeke kutusu', ed_show_battery: 'Batarya kutusu'
 }, {
+  tn_import_low: 'Importing a little', tn_import_mid: 'Importing more', tn_import_high: 'Importing a lot',
   e_name: 'Energy', e_pick: 'Pick sensors in the settings', e_producing: 'Producing', e_export: 'Exporting', e_self: 'Self-sufficient', e_import: 'Importing', e_nodata: 'No data',
   e_solar: 'Solar', e_home: 'Home', e_grid: 'Grid', e_battery: 'Battery',
   ed_solar_power: 'Solar production (W/kW)', ed_home_power: 'Home consumption (W/kW)', ed_grid_power: 'Grid power (W/kW; + import, − export)',
@@ -1294,6 +1468,11 @@ class LemurEnergyCard extends LemurCard {
       show_solar: true, show_home: true, show_grid: true, show_battery: true, show_power: false };
   }
   static nested() { return { limits: ENERGY_LIMITS }; }
+  static toneList(lang) {
+    const L = (k, lb, b, e) => ({ key: k, label: t(lang, lb), band: b, effect: e || 'auto' });
+    return [L('export', 'e_export', 'green'), L('self', 'e_self', 'green'), L('import_low', 'tn_import_low', 'yellow'), L('import_mid', 'tn_import_mid', 'orange'),
+      L('import_high', 'tn_import_high', 'red'), L('producing', 'e_producing', 'green'), L('nodata', 'e_nodata', 'grey'), L('lost', 'st_lost', 'alarm', 'blink')];
+  }
   static stub(hass) {
     const p = (re) => firstEntity(hass, ['sensor'], (s) => s.attributes.device_class === 'power' && re.test(s.entity_id));
     const any = firstEntity(hass, ['sensor'], (s) => s.attributes.device_class === 'power');
@@ -1356,6 +1535,7 @@ class LemurEnergyCard extends LemurCard {
       sec: lost ? [t(lang, 'st_lost')] : [t(lang, key), amount !== null ? fmtPower(amount) : ''],
       icon: { mdi: f.solar !== null && f.solar > 20 ? 'mdi:solar-power-variant' : 'mdi:home-lightning-bolt-outline' },
       state: lost ? 'lost' : key.replace('e_', ''),   // simge eşlemesi: export, self, import, nodata, lost
+      tone: lost ? 'lost' : (key === 'e_import' ? (f.grid >= L.import_high ? 'import_high' : f.grid >= L.import_mid ? 'import_mid' : 'import_low') : key.replace('e_', '')),
       band: lost ? BANDS.alarm : bnd, on: true, powerIcon: null, moreInfo: main, boxes: boxes
     };
   }
@@ -1374,6 +1554,9 @@ registerCard(LemurEnergyCard, {
 // Kilidi açmak ve alarmı kapatmak iki dokunuş ister ("Emin misin?").
 
 addText({
+  tn_clear: 'Hepsi kapalı / sorun yok', tn_open: 'Açık bir şey var', tn_motion: 'Hareket', tn_danger: 'Tehlike (su, duman, gaz)',
+  tn_disarmed: 'Kurulu değil', tn_armed: 'Kurulu', tn_arming: 'Kuruluyor / bekliyor', tn_triggered: 'Çalıyor',
+  tn_locked: 'Kilitli', tn_unlocked: 'Kilit açık', tn_moving: 'Kilitleniyor / açılıyor', tn_jammed: 'Sıkıştı',
   s_group: 'Güvenlik', s_all_closed: 'Hepsi kapalı', s_no_motion: 'Hareket yok', s_all_clear: 'Sorun yok', s_open: 'açık', s_motion: 'Hareket', s_alert: 'Uyarı',
   s_disarmed: 'Kapalı', s_armed_home: 'Evde kurulu', s_armed_away: 'Dışarıda kurulu', s_armed_night: 'Gece kurulu',
   s_armed_vacation: 'Tatil modunda', s_armed_custom_bypass: 'Özel kurulu', s_arming: 'Kuruluyor', s_disarming: 'Kapanıyor',
@@ -1383,6 +1566,9 @@ addText({
   l_opening: 'Kapı açılıyor', l_lock: 'Kilitle', l_unlock: 'Kilidi aç', l_open_door: 'Kapıyı aç',
   ed_show_list: 'Altta cihazları tek tek göster'
 }, {
+  tn_clear: 'All closed / all clear', tn_open: 'Something open', tn_motion: 'Motion', tn_danger: 'Danger (water, smoke, gas)',
+  tn_disarmed: 'Disarmed', tn_armed: 'Armed', tn_arming: 'Arming / pending', tn_triggered: 'Triggered',
+  tn_locked: 'Locked', tn_unlocked: 'Unlocked', tn_moving: 'Locking / unlocking', tn_jammed: 'Jammed',
   s_group: 'Security', s_all_closed: 'All closed', s_no_motion: 'No motion', s_all_clear: 'All clear', s_open: 'open', s_motion: 'Motion', s_alert: 'Alert',
   s_disarmed: 'Disarmed', s_armed_home: 'Armed home', s_armed_away: 'Armed away', s_armed_night: 'Armed night',
   s_armed_vacation: 'Vacation', s_armed_custom_bypass: 'Armed custom', s_arming: 'Arming', s_disarming: 'Disarming',
@@ -1417,6 +1603,14 @@ class LemurSecurityCard extends LemurCard {
   static get TYPE() { return 'lemur-security-card'; }
   static get DOMAINS() { return ['binary_sensor', 'alarm_control_panel', 'lock']; }
   static get DEFAULTS() { return { entities: [], show_list: true, show_power: false }; }
+  static toneList(lang, cfg) {
+    const dom = String(cfg.entity || '').split('.')[0];
+    const L = (k, b, e) => ({ key: k, label: k === 'lost' ? t(lang, 'st_lost') : t(lang, 'tn_' + k), band: b, effect: e || 'auto' });
+    const list = dom === 'alarm_control_panel' ? [L('disarmed', 'green'), L('armed', 'blue'), L('arming', 'yellow'), L('triggered', 'alarm', 'blink')]
+      : dom === 'lock' ? [L('locked', 'green'), L('unlocked', 'yellow'), L('moving', 'blue'), L('jammed', 'alarm', 'blink')]
+      : [L('clear', 'green'), L('open', 'yellow'), L('motion', 'blue'), L('danger', 'alarm', 'blink')];
+    return list.concat([L('lost', 'alarm', 'blink')]);
+  }
   static stub(hass) { return { entity: firstEntity(hass, ['alarm_control_panel', 'lock']) || firstEntity(hass, ['binary_sensor'], (s) => !!BS_ICONS[s.attributes.device_class]) || 'binary_sensor.example' }; }
   static schema(lang) {
     return [
@@ -1454,7 +1648,7 @@ class LemurSecurityCard extends LemurCard {
     // Altta: önce açık / algılayanlar, en çok 3
     const order = onIds.concat(ids.filter((id) => onIds.indexOf(id) < 0));
     const boxes = c.show_list && ids.length > 1 ? order.slice(0, 3).map((id) => ({ type: 'info', icon: bsIcon(this.st(id)), text: short(id), entity: id, title: friendly(h, id) })) : [];
-    return { name: ids.length > 1 ? t(lang, 's_group') : friendly(h, c.entity), sec: sec, icon: { mdi: icon }, state: state, band: bnd, on: onIds.length > 0, powerIcon: null, boxes: boxes };
+    return { name: ids.length > 1 ? t(lang, 's_group') : friendly(h, c.entity), sec: sec, icon: { mdi: icon }, state: state, tone: state, band: bnd, on: onIds.length > 0, powerIcon: null, boxes: boxes };
   }
 
   _alarm(lang) {
@@ -1472,7 +1666,8 @@ class LemurSecurityCard extends LemurCard {
     if (!codeDisarm) boxes.push({ type: 'button', id: 'disarm', icon: 'mdi:shield-off-outline', label: t(lang, 's_disarm'), active: s === 'disarmed', confirm: true, showLabel: true });
     if (codeArm || codeDisarm) boxes.push({ type: 'info', icon: 'mdi:dialpad', text: t(lang, 's_code'), entity: c.entity });
     return { name: a.friendly_name || c.entity, sec: [lost ? t(lang, 'st_lost') : (tMaybe(lang, 's_' + s) || prettify(s))],
-      icon: { mdi: ALARM_ICONS[s] || 'mdi:shield-outline' }, state: lost ? 'lost' : s, band: bnd, on: s.indexOf('armed') === 0, powerIcon: null, disabled: lost, boxes: boxes };
+      icon: { mdi: ALARM_ICONS[s] || 'mdi:shield-outline' }, state: lost ? 'lost' : s,
+      tone: lost ? 'lost' : (s === 'disarmed' ? 'disarmed' : s === 'triggered' ? 'triggered' : s.indexOf('armed') === 0 ? 'armed' : 'arming'), band: bnd, on: s.indexOf('armed') === 0, powerIcon: null, disabled: lost, boxes: boxes };
   }
 
   _lock(lang) {
@@ -1487,7 +1682,8 @@ class LemurSecurityCard extends LemurCard {
     ];
     if ((num(a.supported_features) || 0) & 1) boxes.push({ type: 'button', id: 'open', icon: 'mdi:door-open', label: t(lang, 'l_open_door'), confirm: true, showLabel: true });
     return { name: a.friendly_name || c.entity, sec: [lost ? t(lang, 'st_lost') : (tMaybe(lang, 'l_' + s) || prettify(s))],
-      icon: { mdi: LOCK_ICONS[s] || 'mdi:lock-question' }, state: lost ? 'lost' : s, band: bnd, on: s === 'locked', powerIcon: null, disabled: lost, boxes: boxes };
+      icon: { mdi: LOCK_ICONS[s] || 'mdi:lock-question' }, state: lost ? 'lost' : s,
+      tone: lost ? 'lost' : (s === 'jammed' ? 'jammed' : (s === 'locking' || s === 'unlocking') ? 'moving' : (s === 'locked' && !anyOpen) ? 'locked' : 'unlocked'), band: bnd, on: s === 'locked', powerIcon: null, disabled: lost, boxes: boxes };
   }
 
   onButton(id) {
@@ -1507,11 +1703,11 @@ registerCard(LemurSecurityCard, {
 // Altta: ışıklar (açık / toplam, dokununca hepsini aç-kapat), iklim cihazı (mod simgesi + hedef), ek cihaz.
 
 addText({
-  r_name: 'Oda', r_pick: 'Ayarlardan cihaz seç', r_lights: 'Işıklar', r_lights_off: 'Işıklar kapalı', r_lights_n: 'ışık açık', r_all_off: 'Hepsini kapat', r_lights_on: 'Işıkları aç',
+  r_name: 'Oda', r_pick: 'Ayarlardan cihaz seç', r_lights: 'Işıklar', r_lights_off: 'Işıklar kapalı', r_lights_n: 'ışık açık', r_all_off: 'Hepsini kapat', r_lights_on: 'Işıkları aç', tn_lights_on: 'Işıklar açık (sıcaklık yoksa)',
   ed_climate: 'Klima / petek (isteğe bağlı)', ed_lights: 'Işıklar', ed_extra_entity: 'Ek cihaz (TV, fan, priz...)',
   ed_show_lights: 'Işık kutusu', ed_show_climate: 'İklim kutusu', ed_show_extra: 'Ek cihaz kutusu'
 }, {
-  r_name: 'Room', r_pick: 'Pick devices in the settings', r_lights: 'Lights', r_lights_off: 'Lights off', r_lights_n: 'lights on', r_all_off: 'Turn everything off', r_lights_on: 'Turn lights on',
+  r_name: 'Room', r_pick: 'Pick devices in the settings', r_lights: 'Lights', r_lights_off: 'Lights off', r_lights_n: 'lights on', r_all_off: 'Turn everything off', r_lights_on: 'Turn lights on', tn_lights_on: 'Lights on (no temperature)',
   ed_climate: 'Air conditioner / radiator (optional)', ed_lights: 'Lights', ed_extra_entity: 'Extra device (TV, fan, plug...)',
   ed_show_lights: 'Lights box', ed_show_climate: 'Climate box', ed_show_extra: 'Extra device box'
 });
@@ -1526,6 +1722,11 @@ class LemurRoomCard extends LemurCard {
   static get DEFAULTS() {
     return { icon: '', temperature_sensor: '', humidity_sensor: '', climate: '', lights: [], extra_entity: '',
       show_lights: true, show_climate: true, show_extra: true };
+  }
+  static toneList(lang, cfg) {
+    const L = (k, b, e, lb) => ({ key: k, label: t(lang, lb || ('tn_' + k)), band: b, effect: e || 'auto' });
+    const z = cfg.temperature_sensor || cfg.climate ? [L('cold', 'blue'), L('comfort', 'green'), L('warm', 'yellow'), L('hot', 'red')] : [];
+    return z.concat([L('on', 'yellow', '', 'tn_lights_on'), L('off', null, '', 'st_off'), L('lost', 'alarm', 'blink', 'st_sensor')]);
   }
   static nested() { return { comfort: COMFORT_DEFAULTS }; }
   static stub(hass) {
@@ -1597,7 +1798,9 @@ class LemurRoomCard extends LemurCard {
       const d = DOMAIN_ICONS[c.extra_entity.split('.')[0]] || ['mdi:toggle-switch-off-outline', 'mdi:toggle-switch'];
       boxes.push({ type: 'button', id: 'extra', icon: ex.attributes.icon || d[exOn ? 1 : 0], label: exOn ? t(lang, 'st_on') : t(lang, 'st_off'), active: exOn, showLabel: true });
     }
-    return { name: t(lang, 'r_name'), sec: sec, icon: { mdi: 'mdi:sofa-outline' }, state: anyOn ? 'on' : 'off', band: bnd, on: anyOn,
+    const zk = tc !== null ? BAND_TONE[acBand(tc, rh, c.comfort).name] : '';
+    const tone = sensorLost ? ['lost'] : (zk ? (anyOn ? [zk] : ['off', zk]) : [lightsOn.length ? 'on' : 'off']);
+    return { name: t(lang, 'r_name'), sec: sec, icon: { mdi: 'mdi:sofa-outline' }, state: anyOn ? 'on' : 'off', tone: tone, band: bnd, on: anyOn,
       powerIcon: lights.length || cl || ex ? undefined : null,
       powerTitle: t(lang, anyOn ? 'r_all_off' : 'r_lights_on'), moreInfo: c.temperature_sensor || c.climate || lights[0] || c.extra_entity, boxes: boxes };
   }
@@ -1656,6 +1859,11 @@ class LemurLightCard extends LemurCard {
   static get TYPE() { return 'lemur-light-card'; }
   static get DOMAINS() { return ['light']; }
   static get DEFAULTS() { return { entities: [], show_brightness: true, show_color_temp: true, show_effect: true, brightness_step: 10, kelvin_step: 250 }; }
+  // Açıkken hale lambanın kendi rengindedir; buradan sabit bir renk seçilirse o kullanılır
+  static toneList(lang) {
+    return [{ key: 'on', label: t(lang, 'li_on'), band: null, effect: 'auto' }, { key: 'off', label: t(lang, 'st_off'), band: 'grey', effect: 'auto' },
+      { key: 'lost', label: t(lang, 'st_lost'), band: 'alarm', effect: 'blink' }];
+  }
   static schema(lang) {
     return [
       Object.assign(SCH.entity('entity', ['light']), { required: true }),
@@ -1701,7 +1909,7 @@ class LemurLightCard extends LemurCard {
       boxes.push({ type: 'select', id: 'fx', title: t(lang, 'li_effect'), icon: 'mdi:creation', label: a.effect || t(lang, 'li_effect'), value: a.effect,
         options: a.effect_list.map((x) => ({ value: x, label: String(x) })) });
     }
-    return { name: a.friendly_name || c.entity, sec: sec, icon: { mdi: on ? 'mdi:lightbulb' : 'mdi:lightbulb-outline' }, state: lost ? 'lost' : (on ? 'on' : 'off'), band: bnd, on: on,
+    return { name: a.friendly_name || c.entity, sec: sec, icon: { mdi: on ? 'mdi:lightbulb' : 'mdi:lightbulb-outline' }, state: lost ? 'lost' : (on ? 'on' : 'off'), tone: lost ? 'lost' : (on ? 'on' : 'off'), band: bnd, on: on,
       haloK: on ? 0.35 + 0.65 * bri / 100 : 0.3, disabled: lost && !on, boxes: boxes };
   }
 

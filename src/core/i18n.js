@@ -15,7 +15,12 @@ const TXT = {
     ed_appearance: 'Görünüm', ed_advanced: 'Gelişmiş', ed_show_power: 'Sağ üstteki düğme', ed_show_halo: 'Hale (parıltı)',
     ed_show_labels: 'Kutularda adları da yaz', ed_language: 'Dil', ed_stale_after: 'Bu kadar saniye haber gelmezse "Bağlantı yok" (0: kapalı; son görülme sensörüyle varsayılan 7200)',
     ed_last_seen_sensor: 'Son görülme sensörü (isteğe bağlı; ör. Zigbee2MQTT last_seen)',
-    ed_lang_auto: 'Otomatik', ed_reset: 'Varsayılana dön'
+    ed_lang_auto: 'Otomatik', ed_reset: 'Varsayılana dön',
+    // renk ve hale ayarları
+    ed_colors: 'Renkler ve hale', ed_color: 'Kartın rengi (boşsa duruma göre)', ed_effect: 'Hale hareketi',
+    ed_tones: 'Durumlara göre renk ve hale', ed_tone_color: 'renk', ed_tone_effect: 'hale',
+    ef_auto: 'Varsayılan', ef_breathe: 'Yavaş nefes', ef_pulse: 'Hızlı nabız', ef_blink: 'Yanıp söner', ef_still: 'Sabit', ef_none: 'Hale yok',
+    tn_very_cold: 'Çok soğuk', tn_cold: 'Serin', tn_comfort: 'Konforlu', tn_warm: 'Sıcak', tn_hot: 'Çok sıcak', tn_heating: 'Isıtırken'
   },
   en: {
     st_off: 'Off', st_on: 'On', st_lost: 'No connection', st_sensor: 'No sensor', st_unknown: 'Unknown',
@@ -28,6 +33,10 @@ const TXT = {
     ed_appearance: 'Appearance', ed_advanced: 'Advanced', ed_show_power: 'Top-right button', ed_show_halo: 'Halo (glow)',
     ed_show_labels: 'Show names in the boxes', ed_language: 'Language', ed_stale_after: 'Show "No connection" after this many seconds without news (0: off; 7200 by default with a last seen sensor)',
     ed_last_seen_sensor: 'Last seen sensor (optional; e.g. Zigbee2MQTT last_seen)',
+    ed_colors: 'Colours and halo', ed_color: 'Card colour (by state if empty)', ed_effect: 'Halo motion',
+    ed_tones: 'Colour and halo by state', ed_tone_color: 'colour', ed_tone_effect: 'halo',
+    ef_auto: 'Default', ef_breathe: 'Slow breath', ef_pulse: 'Fast pulse', ef_blink: 'Blinking', ef_still: 'Still', ef_none: 'No halo',
+    tn_very_cold: 'Very cold', tn_cold: 'Cool', tn_comfort: 'Comfortable', tn_warm: 'Warm', tn_hot: 'Hot', tn_heating: 'Heating',
     ed_lang_auto: 'Automatic', ed_reset: 'Reset to defaults'
   }
 };

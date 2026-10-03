@@ -47,6 +47,9 @@ ha-card { position: relative; padding: 0; overflow: hidden; isolation: isolate;
 /* Bağlantı / sensör yok: tüm hale hızlıca yanıp söner */
 .alarm .halo { animation: lc-alarm var(--halo-dur, 1.2s) ease-in-out infinite; }
 @keyframes lc-alarm { 0%, 100% { opacity: 0.3; } 50% { opacity: 1; } }
+/* Sabit hale: hareket yok, nefesin en dolu anında durur */
+.still .halo::before { animation: none; transform: scale(1); opacity: 0.95; }
+.still .halo::after { animation: none; transform: translateY(12px) scale(1); opacity: 0.9; }
 .light .halo { mix-blend-mode: normal; }
 @media (prefers-reduced-motion: reduce) {
   .halo::before, .halo::after, .alarm .halo { animation: none; }

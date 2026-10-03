@@ -77,6 +77,15 @@ function zoneOf(lang, preset, levels, v) {
   const i = zoneIndex(v, L);
   return { band: band(zoneColor(v, L, C)), zone: i, label: preset === 'custom' ? '' : t(lang, 'z_' + preset + '_' + i) };
 }
+// Renk ve hale ayarları için beş bölge (bölge adı ve varsayılan rengi)
+function zoneTones(lang, preset, levels) {
+  const out = [];
+  for (let i = 0; i < 5; i++) {
+    const lbl = preset === 'custom' ? '' : tMaybe(lang, 'z_' + preset + '_' + i);
+    out.push({ key: 'zone' + i, label: (lbl || t(lang, 'ed_c' + (i + 1))), band: levels['c' + (i + 1)] || 'grey', effect: levels['c' + (i + 1)] === 'alarm' ? 'blink' : 'auto' });
+  }
+  return out;
+}
 // Pil simgesi doluluğa göre
 function batteryIcon(v) {
   if (v === null) return 'mdi:battery-unknown';
@@ -129,6 +138,10 @@ class LemurSensorCard extends LemurCard {
     ];
   }
   ids() { const c = this._config; return [c.entity, c.switch_entity].concat(c.extra || []); }
+  static toneList(lang, cfg, hass) {
+    const preset = presetOf(hass, cfg.entity, cfg.preset);
+    return zoneTones(lang, preset, levelsOf(preset, cfg.levels)).concat([{ key: 'lost', label: t(lang, 'st_lost'), band: 'alarm', effect: 'blink' }]);
+  }
 
   view(lang) {
     const c = this._config, h = this._hass, st = this.st(c.entity);
@@ -146,6 +159,7 @@ class LemurSensorCard extends LemurCard {
       sec: lost ? [t(lang, 'st_lost')] : [c.show_zone ? z.label : '', valTxt],
       icon: { mdi: icon }, band: lost ? BANDS.alarm : z.band,
       state: lost ? 'lost' : (v === null ? 'unknown' : 'zone' + z.zone),   // simge eşlemesi: zone0..zone4, lost
+      tone: lost ? 'lost' : (v === null ? '' : 'zone' + z.zone),
       on: sw ? !isOff(sw) : true,
       powerIcon: c.switch_entity ? 'mdi:power' : null,
       boxes: (c.extra || []).slice(0, 3).map((id) => ({ type: 'info', icon: entityIcon(h, id), text: fmtState(h, id, null, lang), entity: id, title: friendly(h, id) }))

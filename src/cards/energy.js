@@ -4,6 +4,7 @@
 // Hale: şebekeye veriyor ya da kendine yetiyor yeşil; az çekiş sarı; orta turuncu; çok çekiş kırmızı.
 
 addText({
+  tn_import_low: 'Az çekiyor', tn_import_mid: 'Orta çekiyor', tn_import_high: 'Çok çekiyor',
   e_name: 'Enerji', e_pick: 'Ayarlardan sensör seç', e_producing: 'Üretiyor', e_export: 'Şebekeye veriyor', e_self: 'Kendine yetiyor', e_import: 'Şebekeden çekiyor', e_nodata: 'Veri yok',
   e_solar: 'Güneş', e_home: 'Ev', e_grid: 'Şebeke', e_battery: 'Batarya',
   ed_solar_power: 'Güneş üretimi (W/kW)', ed_home_power: 'Ev tüketimi (W/kW)', ed_grid_power: 'Şebeke gücü (W/kW; + çekiş, − veriş)',
@@ -12,6 +13,7 @@ addText({
   ed_import_mid: 'Turuncu başlangıcı', ed_import_high: 'Kırmızı başlangıcı',
   ed_show_solar: 'Güneş kutusu', ed_show_home: 'Ev kutusu', ed_show_grid: 'Şebeke kutusu', ed_show_battery: 'Batarya kutusu'
 }, {
+  tn_import_low: 'Importing a little', tn_import_mid: 'Importing more', tn_import_high: 'Importing a lot',
   e_name: 'Energy', e_pick: 'Pick sensors in the settings', e_producing: 'Producing', e_export: 'Exporting', e_self: 'Self-sufficient', e_import: 'Importing', e_nodata: 'No data',
   e_solar: 'Solar', e_home: 'Home', e_grid: 'Grid', e_battery: 'Battery',
   ed_solar_power: 'Solar production (W/kW)', ed_home_power: 'Home consumption (W/kW)', ed_grid_power: 'Grid power (W/kW; + import, − export)',
@@ -31,6 +33,11 @@ class LemurEnergyCard extends LemurCard {
       show_solar: true, show_home: true, show_grid: true, show_battery: true, show_power: false };
   }
   static nested() { return { limits: ENERGY_LIMITS }; }
+  static toneList(lang) {
+    const L = (k, lb, b, e) => ({ key: k, label: t(lang, lb), band: b, effect: e || 'auto' });
+    return [L('export', 'e_export', 'green'), L('self', 'e_self', 'green'), L('import_low', 'tn_import_low', 'yellow'), L('import_mid', 'tn_import_mid', 'orange'),
+      L('import_high', 'tn_import_high', 'red'), L('producing', 'e_producing', 'green'), L('nodata', 'e_nodata', 'grey'), L('lost', 'st_lost', 'alarm', 'blink')];
+  }
   static stub(hass) {
     const p = (re) => firstEntity(hass, ['sensor'], (s) => s.attributes.device_class === 'power' && re.test(s.entity_id));
     const any = firstEntity(hass, ['sensor'], (s) => s.attributes.device_class === 'power');
@@ -93,6 +100,7 @@ class LemurEnergyCard extends LemurCard {
       sec: lost ? [t(lang, 'st_lost')] : [t(lang, key), amount !== null ? fmtPower(amount) : ''],
       icon: { mdi: f.solar !== null && f.solar > 20 ? 'mdi:solar-power-variant' : 'mdi:home-lightning-bolt-outline' },
       state: lost ? 'lost' : key.replace('e_', ''),   // simge eşlemesi: export, self, import, nodata, lost
+      tone: lost ? 'lost' : (key === 'e_import' ? (f.grid >= L.import_high ? 'import_high' : f.grid >= L.import_mid ? 'import_mid' : 'import_low') : key.replace('e_', '')),
       band: lost ? BANDS.alarm : bnd, on: true, powerIcon: null, moreInfo: main, boxes: boxes
     };
   }

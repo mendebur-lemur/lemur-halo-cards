@@ -3,11 +3,11 @@
 // Altta: ışıklar (açık / toplam, dokununca hepsini aç-kapat), iklim cihazı (mod simgesi + hedef), ek cihaz.
 
 addText({
-  r_name: 'Oda', r_pick: 'Ayarlardan cihaz seç', r_lights: 'Işıklar', r_lights_off: 'Işıklar kapalı', r_lights_n: 'ışık açık', r_all_off: 'Hepsini kapat', r_lights_on: 'Işıkları aç',
+  r_name: 'Oda', r_pick: 'Ayarlardan cihaz seç', r_lights: 'Işıklar', r_lights_off: 'Işıklar kapalı', r_lights_n: 'ışık açık', r_all_off: 'Hepsini kapat', r_lights_on: 'Işıkları aç', tn_lights_on: 'Işıklar açık (sıcaklık yoksa)',
   ed_climate: 'Klima / petek (isteğe bağlı)', ed_lights: 'Işıklar', ed_extra_entity: 'Ek cihaz (TV, fan, priz...)',
   ed_show_lights: 'Işık kutusu', ed_show_climate: 'İklim kutusu', ed_show_extra: 'Ek cihaz kutusu'
 }, {
-  r_name: 'Room', r_pick: 'Pick devices in the settings', r_lights: 'Lights', r_lights_off: 'Lights off', r_lights_n: 'lights on', r_all_off: 'Turn everything off', r_lights_on: 'Turn lights on',
+  r_name: 'Room', r_pick: 'Pick devices in the settings', r_lights: 'Lights', r_lights_off: 'Lights off', r_lights_n: 'lights on', r_all_off: 'Turn everything off', r_lights_on: 'Turn lights on', tn_lights_on: 'Lights on (no temperature)',
   ed_climate: 'Air conditioner / radiator (optional)', ed_lights: 'Lights', ed_extra_entity: 'Extra device (TV, fan, plug...)',
   ed_show_lights: 'Lights box', ed_show_climate: 'Climate box', ed_show_extra: 'Extra device box'
 });
@@ -22,6 +22,11 @@ class LemurRoomCard extends LemurCard {
   static get DEFAULTS() {
     return { icon: '', temperature_sensor: '', humidity_sensor: '', climate: '', lights: [], extra_entity: '',
       show_lights: true, show_climate: true, show_extra: true };
+  }
+  static toneList(lang, cfg) {
+    const L = (k, b, e, lb) => ({ key: k, label: t(lang, lb || ('tn_' + k)), band: b, effect: e || 'auto' });
+    const z = cfg.temperature_sensor || cfg.climate ? [L('cold', 'blue'), L('comfort', 'green'), L('warm', 'yellow'), L('hot', 'red')] : [];
+    return z.concat([L('on', 'yellow', '', 'tn_lights_on'), L('off', null, '', 'st_off'), L('lost', 'alarm', 'blink', 'st_sensor')]);
   }
   static nested() { return { comfort: COMFORT_DEFAULTS }; }
   static stub(hass) {
@@ -93,7 +98,9 @@ class LemurRoomCard extends LemurCard {
       const d = DOMAIN_ICONS[c.extra_entity.split('.')[0]] || ['mdi:toggle-switch-off-outline', 'mdi:toggle-switch'];
       boxes.push({ type: 'button', id: 'extra', icon: ex.attributes.icon || d[exOn ? 1 : 0], label: exOn ? t(lang, 'st_on') : t(lang, 'st_off'), active: exOn, showLabel: true });
     }
-    return { name: t(lang, 'r_name'), sec: sec, icon: { mdi: 'mdi:sofa-outline' }, state: anyOn ? 'on' : 'off', band: bnd, on: anyOn,
+    const zk = tc !== null ? BAND_TONE[acBand(tc, rh, c.comfort).name] : '';
+    const tone = sensorLost ? ['lost'] : (zk ? (anyOn ? [zk] : ['off', zk]) : [lightsOn.length ? 'on' : 'off']);
+    return { name: t(lang, 'r_name'), sec: sec, icon: { mdi: 'mdi:sofa-outline' }, state: anyOn ? 'on' : 'off', tone: tone, band: bnd, on: anyOn,
       powerIcon: lights.length || cl || ex ? undefined : null,
       powerTitle: t(lang, anyOn ? 'r_all_off' : 'r_lights_on'), moreInfo: c.temperature_sensor || c.climate || lights[0] || c.extra_entity, boxes: boxes };
   }

@@ -11,7 +11,7 @@ A family of eight Home Assistant cards, each with an animated, coloured halo. Th
 - **Colour says it all.** Feels-like temperature on the AC, air quality on a sensor, how much you pull from the grid, an open door or a water leak. Green means fine, yellow means look, red means trouble.
 - **No other add-ons needed.** One install from HACS; no mushroom, card-mod or other cards. All eight cards come in one file.
 - **Everything from the card editor.** Pick devices and sensors in the visual editor, no YAML needed. Thresholds and colours come ready.
-- **Your icons.** The big icon, the top-right button and the icons in the boxes below can all be changed, per state if you like.
+- **Your colours and icons.** Pick the colour of every state and how the halo moves (slow breath, fast pulse, blinking, still), or fix the card to one colour. Icons can be changed per state too.
 - **Turkish and English.** The card follows Home Assistant's language.
 - **Smooth on old tablets.** The animation is light and runs on old iPads (iOS 12) too. With reduced motion turned on, the halo stays still.
 - **Tells you when a device drops off.** When a device is unavailable the card says "No connection" and the halo blinks red.
@@ -29,6 +29,7 @@ A family of eight Home Assistant cards, each with an animated, coloured halo. Th
   - [Vacuum and room](#vacuum-and-room)
   - [Energy and security](#energy-and-security)
   - [Light and lock](#light-and-lock)
+- [Colours and halo](#colours-and-halo)
 - [Common to all cards](#common-to-all-cards)
 - [Icons](#icons)
 - [Updating](#updating)
@@ -219,6 +220,51 @@ type: custom:lemur-security-card
 entity: lock.front_door
 ```
 
+## Colours and halo
+
+Every card's colour and halo motion can be changed. In the card editor, under **Colours and halo**:
+
+- **Card colour:** fixes the card to one colour (if empty, the colour follows the state).
+- **Halo motion:** *Slow breath* (default), *Fast pulse*, *Blinking*, *Still* or *No halo*.
+- **Colour and halo by state:** a colour and motion for each of the card's states. For example, purple and fast when the AC room is comfortable, blinking pink when it's hot.
+
+The colour picker offers Home Assistant's colours; type a colour such as `#ff8800` into its search and that works too. Anything you leave empty keeps the card's own choice.
+
+![Custom colours](https://raw.githubusercontent.com/mendebur-lemur/lemur-halo-cards/main/docs/images/en/custom.webp)
+
+Setting it up takes a minute:
+
+![Setting colours](https://raw.githubusercontent.com/mendebur-lemur/lemur-halo-cards/main/docs/images/en/step-colors.webp)
+
+In YAML:
+
+```yaml
+type: custom:lemur-climate-card
+entity: climate.living_room_ac
+color: teal                  # optional: one colour for the whole card
+effect: still                # optional: auto, breathe, pulse, blink, still, none
+tones:
+  comfort: { color: deep-purple, effect: pulse }
+  hot: { color: '#ff3b6b', effect: blink }
+  off: { color: grey }
+```
+
+Priority: the state's own setting → the card colour / motion → the card's default. The "No connection" warning ignores the card colour (so it stays visible); change it with `tones.lost` if you like.
+
+Colours can be Home Assistant colour names (`red`, `pink`, `purple`, `deep-purple`, `indigo`, `blue`, `light-blue`, `cyan`, `teal`, `green`, `light-green`, `lime`, `yellow`, `amber`, `orange`, `deep-orange`, `brown`, `grey`, `blue-grey`, `black`, `white`, `primary`, `accent`), `#rrggbb` or `[r, g, b]`.
+
+| Card | `tones` keys |
+|---|---|
+| Climate (AC) | `cold`, `comfort`, `warm`, `hot`, `off`, `lost` |
+| Climate (radiator) | `very_cold`, `cold`, `comfort`, `warm`, `hot`, `heating`, `off`, `lost` |
+| Sensor | `zone0` … `zone4` (the sensor's zones), `lost` |
+| Air | `zone0` … `zone4` (with a sensor), `on`, `off`, `lost` |
+| Vacuum | `cleaning`, `returning`, `charging`, `docked`, `paused`, `idle`, `error`, `lost` |
+| Energy | `export`, `self`, `import_low`, `import_mid`, `import_high`, `producing`, `nodata`, `lost` |
+| Security | sensors: `clear`, `open`, `motion`, `danger`; alarm: `disarmed`, `armed`, `arming`, `triggered`; lock: `locked`, `unlocked`, `moving`, `jammed`; all: `lost` |
+| Room | `cold`, `comfort`, `warm`, `hot` (with a temperature), `on`, `off`, `lost` |
+| Light | `on` (the lamp's own colour if empty), `off`, `lost` |
+
 ## Common to all cards
 
 Tapping the icon or the name opens Home Assistant's more-info dialog. Temperatures follow Home Assistant's unit (°C / °F).
@@ -230,6 +276,9 @@ Tapping the icon or the name opens Home Assistant's more-info dialog. Temperatur
 | `show_power` | `true` | Top-right button |
 | `show_halo` | `true` | Halo (glow) |
 | `show_labels` | `false` | Show names next to the icons in the boxes below |
+| `color` | — | One colour for the whole card ([Colours and halo](#colours-and-halo)) |
+| `effect` | `auto` | Halo motion: `auto`, `breathe`, `pulse`, `blink`, `still`, `none` |
+| `tones` | — | Colour and motion per state |
 | `last_seen_sensor` | — | Sensor holding the last-seen time (e.g. Zigbee2MQTT's `sensor.xxx_last_seen`); older than 2 hours shows "No connection" |
 | `stale_after` | `0` | Last-seen limit (seconds). Without a last-seen sensor: "No connection" when the device's state hasn't changed for this long (only for devices that change often) |
 | `language` | `auto` | `auto`, `tr`, `en` |

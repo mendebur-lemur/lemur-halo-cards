@@ -10,8 +10,11 @@
 //   static schema(lang, cfg, hass)  editör şeması (ha-form)
 //   static stub(hass)      kart ilk eklendiğinde örnek ayar
 //   ids()                  yeniden çizimi tetikleyen varlıklar
-//   view(lang)             { name, sec:[...], icon:{mdi|svg}, state, band, on, powerIcon, disabled, boxes:[...], haloK, moreInfo }
+//   view(lang)             { name, sec:[...], icon:{mdi|svg}, state, tone, band, on, powerIcon, disabled, boxes:[...], haloK, moreInfo }
 //                          state: simge eşlemesinde (icons) kullanılan durum anahtarı (ör. 'cool', 'cleaning', 'zone2')
+//                          tone:  renk ve hale ayarlarında (tones) kullanılan durum anahtarı ya da öncelik sırasıyla anahtar listesi
+//                                 (ör. ['off', 'comfort']: kullanıcı "kapalı" için renk seçtiyse o, yoksa "konforlu")
+//   static toneList(lang, cfg, hass)  editörde gösterilecek durumlar: [{ key, label, band (renk adı ya da null), effect }]
 //   power()                sağ üst düğmeye basılınca
 //   onStep(id, dir) / onSelect(id, value) / onButton(id)   alt satır kutuları
 //
@@ -40,7 +43,10 @@ const BASE_DEFAULTS = {
   show_labels: false,
   last_seen_sensor: '',
   stale_after: 0,
-  language: 'auto'
+  language: 'auto',
+  color: '',           // kartın tek rengi (boşsa duruma göre); [r,g,b], #rrggbb ya da renk adı
+  effect: 'auto',      // hale hareketi: auto, breathe, pulse, blink, still, none
+  tones: {}            // durum → { color, effect } (ör. hot: { color: '#ff0000', effect: blink })
 };
 
 class LemurCard extends HTMLElement {
@@ -51,6 +57,7 @@ class LemurCard extends HTMLElement {
   static allDefaults() { return Object.assign({}, BASE_DEFAULTS, this.DEFAULTS); }
   static nested() { return {}; }
   static schema() { return []; }
+  static toneList() { return []; }
   static stub(hass) {
     const d = this.DOMAINS;
     return d ? { entity: firstEntity(hass, d) || (d[0] + '.example') } : {};
@@ -76,6 +83,7 @@ class LemurCard extends HTMLElement {
       else if (!Array.isArray(c[k])) c[k] = [];
     });
     if (!c.icons || typeof c.icons !== 'object') c.icons = {};
+    if (!c.tones || typeof c.tones !== 'object' || Array.isArray(c.tones)) c.tones = {};
     this._config = c;
     this._sig = '';
     this._timer();
@@ -198,6 +206,40 @@ class LemurCard extends HTMLElement {
     return o;
   }
 
+  // Hale rengi ve hareketi. Öncelik: durumun kendi ayarı (tones) > kartın tek rengi / hareketi > kartın kendi seçimi.
+  // "Bağlantı yok" durumunda kartın tek rengi uygulanmaz (uyarı görünür kalsın), ama tones.lost ile değiştirilebilir.
+  _haloStyle(v, bnd) {
+    const c = this._config, keys = Array.isArray(v.tone) ? v.tone : (v.tone ? [v.tone] : []);
+    const isAlarm = bnd === BANDS.alarm;
+    let rgb = bnd.rgb, eff = isAlarm ? 'blink' : 'breathe';
+    if (keys[0] !== 'lost') {
+      const fc = this._color(c.color); if (fc) rgb = fc;
+      if (c.effect && c.effect !== 'auto' && EFFECTS.indexOf(c.effect) >= 0) eff = c.effect;
+    }
+    const T = c.tones || {};
+    for (let i = 0; i < keys.length; i++) {
+      const o = T[keys[i]];
+      if (!o || typeof o !== 'object') continue;
+      const oc = this._color(o.color), oe = o.effect && o.effect !== 'auto' && EFFECTS.indexOf(o.effect) >= 0 ? o.effect : null;
+      if (!oc && !oe) continue;
+      if (oc) rgb = oc;
+      if (oe) eff = oe;
+      break;
+    }
+    const dur = eff === 'blink' ? (isAlarm ? bnd.duration : 1.2) : eff === 'pulse' ? 1.6 : (isAlarm ? 4.4 : bnd.duration);
+    return { rgb: rgb, eff: eff, dur: dur };
+  }
+
+  // Renk adı temada tanımlıysa (--rgb-red-color gibi) temanın rengi, değilse parseColor
+  _color(v) {
+    if (typeof v === 'string' && /^[a-z-]+$/.test(v.trim()) && window.getComputedStyle) {
+      const css = window.getComputedStyle(this).getPropertyValue('--rgb-' + v.trim() + '-color').trim();
+      const p = css && parseColor(css.replace(/\s+/g, ''));
+      if (p) return p;
+    }
+    return parseColor(v);
+  }
+
   _boxHtml(b, showLabels) {
     const id = esc(b.id || '');
     const lbl = (txt, force) => (txt && (showLabels || force)) ? '<span class="lbl" id="' + id + '-lbl">' + esc(txt) + '</span>' : '';
@@ -247,7 +289,8 @@ class LemurCard extends HTMLElement {
     let v;
     try { v = this.view(lang); } catch (e) { v = { name: c.name || this.constructor.TYPE, sec: [String(e && e.message || e)], icon: { mdi: 'mdi:alert' }, band: BANDS.alarm, boxes: [] }; }
     const bnd = v.band || BANDS.green;
-    const alarm = bnd === BANDS.alarm;
+    const hs = this._haloStyle(v, bnd);
+    const alarm = hs.eff === 'blink';
     const light = this._hass.themes && this._hass.themes.darkMode === false;
     const icon = this._icon(v);
     const iconHtml = icon.svg ? svgIcon(icon.svg) : '<ha-icon icon="' + esc(icon.mdi) + '"></ha-icon>';
@@ -258,9 +301,9 @@ class LemurCard extends HTMLElement {
     const haloK = v.haloK !== undefined ? v.haloK : 1;
     const hasPwr = c.show_power && v.powerIcon !== null;
     this._compact = !boxes.length;
-    this._card.className = (v.on ? 'on' : 'off') + (alarm ? ' alarm' : '') + (light ? ' light' : '') + (hasPwr ? '' : ' nopwr') + (boxes.length ? '' : ' compact');
-    this._card.setAttribute('style', '--temp-rgb:' + bnd.rgb + ';--tint-rgb:' + tint(bnd.rgb) + ';--halo-dur:' + bnd.duration + 's;--halo-k:' + haloK);
-    this._halo.style.display = c.show_halo ? '' : 'none';
+    this._card.className = (v.on ? 'on' : 'off') + (alarm ? ' alarm' : '') + (hs.eff === 'still' ? ' still' : '') + (light ? ' light' : '') + (hasPwr ? '' : ' nopwr') + (boxes.length ? '' : ' compact');
+    this._card.setAttribute('style', '--temp-rgb:' + hs.rgb + ';--tint-rgb:' + tint(hs.rgb) + ';--halo-dur:' + hs.dur + 's;--halo-k:' + haloK);
+    this._halo.style.display = c.show_halo && hs.eff !== 'none' ? '' : 'none';
     this._content.innerHTML =
       '<div class="top"><div class="ic" data-more="1">' + iconHtml + '</div>' +
       '<div class="txt" data-more="1"><div class="name">' + esc(c.name || v.name || '') + '</div><div class="sec">' + esc(sec) + '</div></div>' +
@@ -316,11 +359,35 @@ class LemurEditor extends HTMLElement {
   setConfig(config) { this._config = Object.assign({}, config); this._render(); }
   set hass(h) { this._hass = h; if (this._form) this._form.hass = h; else this._render(); }
 
+  // İç içe ayar grupları: kartın kendi grupları + renk ve hale (tones)
+  _nested(cfg, lang) {
+    const K = this.constructor.cardClass, N = Object.assign({}, K.nested(cfg, this._hass));
+    const tl = K.toneList(lang, cfg, this._hass) || [];
+    if (tl.length) {
+      N.tones = {};
+      tl.forEach((x) => { N.tones[x.key] = { effect: x.effect || 'auto' }; });
+    }
+    return N;
+  }
+
   _clean(cfg) {
-    const K = this.constructor.cardClass, D = K.allDefaults(), N = K.nested(cfg, this._hass);
+    const K = this.constructor.cardClass, D = K.allDefaults(), N = this._nested(cfg, pickLang(this._hass, cfg.language));
+    const same = (a, b) => JSON.stringify(a) === JSON.stringify(b);
+    const empty = (x) => x === '' || x === null || x === undefined || (Array.isArray(x) && !x.length);
+    // Varsayılanla aynı ya da boş olan alt alanları at; boş kalan grubu tamamen kaldır (iki seviyeye kadar)
+    const strip = (val, def) => {
+      const out = {};
+      Object.keys(val || {}).forEach((x) => {
+        let w = val[x];
+        const d = def ? def[x] : undefined;
+        if (w && typeof w === 'object' && !Array.isArray(w)) { w = strip(w, d && typeof d === 'object' ? d : {}); if (!Object.keys(w).length) return; }
+        else if (empty(w) || same(w, d)) return;
+        out[x] = w;
+      });
+      return out;
+    };
     Object.keys(N).forEach((k) => {
-      const v = Object.assign({}, cfg[k] || {});
-      Object.keys(N[k]).forEach((x) => { if (v[x] === N[k][x] || v[x] === '' || v[x] === null || v[x] === undefined) delete v[x]; });
+      const v = strip(cfg[k] || {}, N[k]);
       if (Object.keys(v).length) cfg[k] = v; else delete cfg[k];
     });
     Object.keys(D).forEach((k) => {
@@ -352,10 +419,25 @@ class LemurEditor extends HTMLElement {
       });
       this.appendChild(this._form);
     }
-    const N = K.nested(this._config, this._hass), data = Object.assign({}, K.allDefaults(), this._config);
-    Object.keys(N).forEach((k) => { data[k] = Object.assign({}, N[k], this._config[k] || {}); });
+    const N = this._nested(this._config, lang), data = Object.assign({}, K.allDefaults(), this._config);
+    const isObj = (x) => !!x && typeof x === 'object' && !Array.isArray(x);
+    Object.keys(N).forEach((k) => {
+      // Varsayılanların üstüne kullanıcının değerleri; durum grupları (tones) bir seviye daha birleşir
+      const cur = this._config[k] || {}, d = {};
+      Object.keys(N[k]).forEach((x) => { d[x] = isObj(N[k][x]) ? Object.assign({}, N[k][x]) : N[k][x]; });
+      Object.keys(cur).forEach((x) => { d[x] = isObj(cur[x]) && isObj(d[x]) ? Object.assign(d[x], cur[x]) : cur[x]; });
+      data[k] = d;
+    });
+    // Renk seçici ad ya da #rrggbb gösterir; YAML'da [r,g,b] ya da "r,g,b" yazılmışsa #rrggbb'ye çevir
+    const toPick = (v) => { if (v === undefined || v === null || v === '') return undefined; if (typeof v === 'string' && !/,/.test(v)) return v; const p = parseColor(v); return p ? rgbHex(p) : undefined; };
+    data.color = toPick(data.color);
+    if (data.tones) Object.keys(data.tones).forEach((x) => { const o = data.tones[x]; if (o && o.color !== undefined) o.color = toPick(o.color); });
+    let schema = K.schema(lang, this._config, this._hass);
+    const tl = K.toneList(lang, this._config, this._hass) || [];
+    const cs = SCH.colors(lang, tl), ai = schema.map((x) => x && x.name).indexOf('adv');
+    schema = ai >= 0 ? schema.slice(0, ai).concat([cs], schema.slice(ai)) : schema.concat([cs]);
     this._form.hass = this._hass;
-    this._form.schema = K.schema(lang, this._config, this._hass);
+    this._form.schema = schema;
     this._form.data = data;
   }
 }
@@ -378,6 +460,18 @@ const SCH = {
       { name: 'icon_on', selector: { icon: {} } }, { name: 'icon_off', selector: { icon: {} } }] },
     { name: 'icons', selector: { object: {} } },
     { name: 'language', selector: { select: { mode: 'dropdown', options: [{ value: 'auto', label: t(lang, 'ed_lang_auto') }, { value: 'tr', label: 'Türkçe' }, { value: 'en', label: 'English' }] } } }] }),
+  // Renkler ve hale: kartın tek rengi ve hareketi, durum başına renk ve hareket
+  colors: (lang, tones) => {
+    const eff = { select: { mode: 'dropdown', options: EFFECTS.map((x) => ({ value: x, label: t(lang, 'ef_' + x) })) } };
+    const col = { ui_color: { include_state: false, include_none: false } };
+    const sch = [{ type: 'grid', name: '', flatten: true, schema: [{ name: 'color', selector: col }, { name: 'effect', selector: eff }] }];
+    if (tones.length) {
+      sch.push({ type: 'expandable', name: 'tones', title: t(lang, 'ed_tones'), schema: tones.map((x) => ({ type: 'grid', name: x.key, schema: [
+        { name: 'color', label: x.label + ' · ' + t(lang, 'ed_tone_color'), selector: col },
+        { name: 'effect', label: x.label + ' · ' + t(lang, 'ed_tone_effect'), selector: eff }] })) });
+    }
+    return { type: 'expandable', name: 'colors_sec', flatten: true, title: t(lang, 'ed_colors'), schema: sch };
+  },
   // Gelişmiş bölümü: kartın kendi alanları + bağlantı kontrolü (her kartta)
   advanced: (lang, extra) => ({ type: 'expandable', name: 'adv', flatten: true, title: t(lang, 'ed_advanced'), schema: (extra || []).concat([
     { name: 'last_seen_sensor', selector: { entity: { domain: ['sensor'], device_class: 'timestamp' } } },

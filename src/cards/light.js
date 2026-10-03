@@ -26,6 +26,11 @@ class LemurLightCard extends LemurCard {
   static get TYPE() { return 'lemur-light-card'; }
   static get DOMAINS() { return ['light']; }
   static get DEFAULTS() { return { entities: [], show_brightness: true, show_color_temp: true, show_effect: true, brightness_step: 10, kelvin_step: 250 }; }
+  // Açıkken hale lambanın kendi rengindedir; buradan sabit bir renk seçilirse o kullanılır
+  static toneList(lang) {
+    return [{ key: 'on', label: t(lang, 'li_on'), band: null, effect: 'auto' }, { key: 'off', label: t(lang, 'st_off'), band: 'grey', effect: 'auto' },
+      { key: 'lost', label: t(lang, 'st_lost'), band: 'alarm', effect: 'blink' }];
+  }
   static schema(lang) {
     return [
       Object.assign(SCH.entity('entity', ['light']), { required: true }),
@@ -71,7 +76,7 @@ class LemurLightCard extends LemurCard {
       boxes.push({ type: 'select', id: 'fx', title: t(lang, 'li_effect'), icon: 'mdi:creation', label: a.effect || t(lang, 'li_effect'), value: a.effect,
         options: a.effect_list.map((x) => ({ value: x, label: String(x) })) });
     }
-    return { name: a.friendly_name || c.entity, sec: sec, icon: { mdi: on ? 'mdi:lightbulb' : 'mdi:lightbulb-outline' }, state: lost ? 'lost' : (on ? 'on' : 'off'), band: bnd, on: on,
+    return { name: a.friendly_name || c.entity, sec: sec, icon: { mdi: on ? 'mdi:lightbulb' : 'mdi:lightbulb-outline' }, state: lost ? 'lost' : (on ? 'on' : 'off'), tone: lost ? 'lost' : (on ? 'on' : 'off'), band: bnd, on: on,
       haloK: on ? 0.35 + 0.65 * bri / 100 : 0.3, disabled: lost && !on, boxes: boxes };
   }
 
