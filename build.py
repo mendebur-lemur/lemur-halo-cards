@@ -1,32 +1,39 @@
 #!/usr/bin/env python3
-"""src/ klasörünü HACS'ın indireceği tek dosyada birleştirir: dist/lemur-climate-card.js"""
+"""src/ klasörünü HACS'ın indireceği tek dosyada birleştirir: dist/<PAKET>.js
+
+Sıra önemli: önce çekirdek (core/), sonra kartlar (cards/). Kartların sırası "Kart ekle" listesindeki sıradır.
+Paket adı değişirse sadece PACKAGE ve REPO satırlarını değiştir (hacs.json'daki filename da aynı olmalı).
+"""
 import json, pathlib, re
+
+PACKAGE = "lemur-halo-cards"                         # dist dosyasının adı (HACS bunu indirir)
+REPO = "https://github.com/mendebur-lemur/lemur-halo-cards"
+
+CORE = ["i18n.js", "bands.js", "util.js", "comfort.js", "icons.js", "base.js"]
+CARDS = ["climate.js", "sensor.js", "air.js", "vacuum.js", "energy.js", "security.js", "room.js", "light.js"]
+
 root = pathlib.Path(__file__).parent
 src = root / "src"
 version = (root / "VERSION").read_text().strip()
-css = re.sub(r"/\*.*?\*/", "", (src / "card.css").read_text(encoding="utf-8"), flags=re.S)
+
+css = re.sub(r"/\*.*?\*/", "", (src / "core" / "card.css").read_text(encoding="utf-8"), flags=re.S)
 css = "\n".join(l.strip() for l in css.splitlines() if l.strip())
-parts = [(src / f).read_text(encoding="utf-8") for f in ("i18n.js", "comfort.js", "icons.js", "card.js", "editor.js")]
+
+parts = [(src / "core" / f).read_text(encoding="utf-8") for f in CORE]
+parts += [(src / "cards" / f).read_text(encoding="utf-8") for f in CARDS if (src / "cards" / f).exists()]
 body = "\n".join(parts).replace("const CARD_VERSION = '0.0.0';", f"const CARD_VERSION = '{version}';")
-out = f"""/*! Lemur Climate Card v{version} | MIT */
+
+out = f"""/*! Lemur Halo Cards v{version} | MIT | {REPO} */
 (() => {{
-if (customElements.get('lemur-climate-card')) return;
-const module = undefined;
+if (window.__lemurCardsLoaded) return;
+window.__lemurCardsLoaded = true;
 const CSS = {json.dumps(css, ensure_ascii=False)};
+const DOCS_URL = {json.dumps(REPO)};
 {body}
-customElements.define('lemur-climate-card', LemurClimateCard);
-customElements.define('lemur-climate-card-editor', LemurClimateCardEditor);
-window.customCards = window.customCards || [];
-if (!window.customCards.some(c => c.type === 'lemur-climate-card')) {{
-  window.customCards.push({{ type: 'lemur-climate-card', preview: true,
-    documentationURL: 'https://github.com/mendebur-lemur/lemur-climate-card',
-    get name() {{ return pickLang(document.querySelector('home-assistant') && document.querySelector('home-assistant').hass) === 'tr' ? 'Lemur İklim Kartı' : 'Lemur Climate Card'; }},
-    get description() {{ return pickLang(document.querySelector('home-assistant') && document.querySelector('home-assistant').hass) === 'tr' ? 'Klima ve petek için konfor göstergeli kart' : 'Air conditioner and radiator card with comfort display'; }} }});
-}}
-console.info('%c LEMUR CLIMATE CARD %c v' + CARD_VERSION + ' ', 'background:#F0A93B;color:#1A1105;font-weight:700', 'background:#1E2024;color:#ECEDEF');
+console.info('%c LEMUR HALO CARDS %c v' + CARD_VERSION + ' ', 'background:#F0A93B;color:#1A1105;font-weight:700', 'background:#1E2024;color:#ECEDEF');
 }})();
 """
-dst = root / "dist" / "lemur-climate-card.js"
+dst = root / "dist" / f"{PACKAGE}.js"
 dst.parent.mkdir(exist_ok=True)
 dst.write_text(out, encoding="utf-8")
 print(dst, len(out.encode()))

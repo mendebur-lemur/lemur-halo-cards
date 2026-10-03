@@ -1,0 +1,1738 @@
+/*! Lemur Halo Cards v0.1.0 | MIT | https://github.com/mendebur-lemur/lemur-halo-cards */
+(() => {
+if (window.__lemurCardsLoaded) return;
+window.__lemurCardsLoaded = true;
+const CSS = ":host { display: block; }\nha-card { position: relative; padding: 0; overflow: hidden; isolation: isolate;\nborder-radius: var(--ha-card-border-radius, 12px);\nbackground: var(--ha-card-background, var(--card-background-color)); }\n.halo { position: absolute; left: 14px; top: 14px; width: 460px; height: 460px; margin: -230px 0 0 -230px;\npointer-events: none; z-index: 0; mix-blend-mode: screen; opacity: var(--halo-k, 1);\n-webkit-mask-image: radial-gradient(circle closest-side, transparent 52px, #000 53px);\nmask-image: radial-gradient(circle closest-side, transparent 52px, #000 53px); }\n.halo::before, .halo::after { content: ''; position: absolute; left: 0; top: 0; width: 100%; height: 100%; border-radius: 50%;\nwill-change: transform, opacity; }\n.halo::before { background: radial-gradient(circle closest-side,\nrgba(var(--temp-rgb), 0.416) 52px,\nrgba(var(--temp-rgb), 0.399) 70px,\nrgba(var(--temp-rgb), 0.353) 88px,\nrgba(var(--temp-rgb), 0.288) 105px,\nrgba(var(--temp-rgb), 0.216) 123px,\nrgba(var(--temp-rgb), 0.150) 141px,\nrgba(var(--temp-rgb), 0.095) 159px,\nrgba(var(--temp-rgb), 0.056) 177px,\nrgba(var(--temp-rgb), 0.030) 194px,\nrgba(var(--temp-rgb), 0.015) 212px,\nrgba(var(--temp-rgb), 0.000) 230px);\nanimation: lc-glow var(--halo-dur, 4.4s) cubic-bezier(0.45, 0, 0.55, 1) infinite; }\n.halo::after { background: radial-gradient(circle closest-side,\nrgba(var(--tint-rgb), 0.272) 52px,\nrgba(var(--tint-rgb), 0.250) 70px,\nrgba(var(--tint-rgb), 0.196) 88px,\nrgba(var(--tint-rgb), 0.130) 105px,\nrgba(var(--tint-rgb), 0.073) 123px,\nrgba(var(--tint-rgb), 0.034) 141px,\nrgba(var(--tint-rgb), 0.014) 159px,\nrgba(var(--tint-rgb), 0.005) 177px,\nrgba(var(--tint-rgb), 0.002) 194px,\nrgba(var(--tint-rgb), 0.000) 212px,\nrgba(var(--tint-rgb), 0.000) 230px);\nanimation: lc-sheen var(--halo-dur, 4.4s) cubic-bezier(0.45, 0, 0.55, 1) infinite;\nanimation-delay: calc(var(--halo-dur, 4.4s) * -0.12); }\n@keyframes lc-glow { 0%, 100% { transform: scale(0.84); opacity: 0.72; } 50% { transform: scale(1.06); opacity: 1; } }\n@keyframes lc-sheen { 0%, 100% { transform: translateY(8px) scale(0.86); opacity: 0.55; } 50% { transform: translateY(16px) scale(1.04); opacity: 1; } }\n.alarm .halo { animation: lc-alarm var(--halo-dur, 1.2s) ease-in-out infinite; }\n@keyframes lc-alarm { 0%, 100% { opacity: 0.3; } 50% { opacity: 1; } }\n.light .halo { mix-blend-mode: normal; }\n@media (prefers-reduced-motion: reduce) {\n.halo::before, .halo::after, .alarm .halo { animation: none; }\n}\n.top { position: relative; z-index: 1; height: 70px; }\n.ic { position: absolute; left: -18px; top: -18px; box-sizing: border-box; width: 64px; height: 64px; border-radius: 50%;\ndisplay: flex; align-items: center; justify-content: center;\nbackground: rgba(127, 127, 127, 0.08); border: 1px solid rgba(255, 255, 255, 0.07);\ncolor: rgb(var(--temp-rgb, 140,140,140)); --mdc-icon-size: 38px; }\n.ic svg { width: 38px; height: 38px; }\n.txt { position: absolute; left: 76px; top: 12px; right: 90px; min-width: 0; }\n.name { font-size: 14px; line-height: 21px; font-weight: 500; color: var(--primary-text-color);\nwhite-space: nowrap; overflow: hidden; text-overflow: ellipsis; }\n.sec { font-size: 12px; line-height: 16px; color: var(--secondary-text-color); overflow: hidden;\ndisplay: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; max-height: 32px; word-wrap: break-word; }\n.pwr { position: absolute; top: 12px; right: 12px; width: 56px; height: 56px; border-radius: 14px; border: none; cursor: pointer; padding: 0;\ndisplay: flex; align-items: center; justify-content: center; --mdc-icon-size: 26px;\nbackground: var(--lc-box, rgba(255, 255, 255, 0.05)); color: var(--secondary-text-color); }\n.pwr.on { background: rgba(40, 190, 100, 0.18); color: rgb(40, 190, 100); }\n.nopwr .txt { right: 14px; }\n.compact .top { height: 80px; }\n.compact .txt { top: 50%; -webkit-transform: translateY(-50%); transform: translateY(-50%); }\n.bottom { position: relative; z-index: 1; display: flex; padding: 12px 12px 14px; }\n.bottom > .box + .box { margin-left: 10px; }\n.box { box-sizing: border-box; flex: 1 1 0; min-width: 0; height: 42px; border-radius: 12px; background: var(--lc-box, rgba(255, 255, 255, 0.05));\ndisplay: flex; align-items: center; justify-content: space-between; padding: 0 4px; color: var(--primary-text-color); overflow: hidden; }\n.box button { border: none; background: transparent; color: inherit; font-size: 1.2rem; flex: 0 1 30px; min-width: 14px; height: 32px;\ncursor: pointer; border-radius: 8px; padding: 0; }\n.box .val { font-size: 14px; font-weight: 600; font-variant-numeric: tabular-nums; white-space: nowrap; }\n.box.sel { position: relative; justify-content: flex-start; }\n.box.sel .lead { flex: 0 0 auto; display: flex; margin-left: 6px; --mdc-icon-size: 20px; color: var(--primary-text-color); }\n.box.sel .lbl { flex: 0 1 auto; min-width: 0; margin-left: 5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 14px; }\n.box.sel .chev { flex: 0 1000000 20px; min-width: 0; margin-left: auto; overflow: hidden; display: flex; justify-content: flex-end;\n--mdc-icon-size: 20px; color: var(--primary-text-color); margin-right: 5px; }\n.box.sel select { position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; padding: 0; margin: 0; border: 0; cursor: pointer; font-size: 16px; }\n.box.sel:focus-within { box-shadow: inset 0 0 0 2px rgba(var(--temp-rgb, 140,140,140), 0.55); }\n.box.sel select option { color: var(--primary-text-color); background: var(--card-background-color, #1c1c1c); }\nbutton.box { border: none; font: inherit; margin: 0; cursor: pointer; -webkit-appearance: none; appearance: none; }\n.box.btn { justify-content: center; --mdc-icon-size: 20px; }\n.box.btn ha-icon, .box.info ha-icon { flex: 0 0 auto; display: flex; }\n.box.btn .lbl, .box.info .lbl { flex: 0 1 auto; min-width: 0; margin-left: 6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 13px; font-weight: 500; }\n.box.btn.active { background: rgba(var(--temp-rgb), 0.2); color: rgb(var(--temp-rgb)); }\n.box.btn.ask { background: rgba(255, 55, 55, 0.22); color: rgb(255, 95, 95); }\n.box.btn:active { -webkit-transform: scale(0.97); transform: scale(0.97); }\n.box.info { justify-content: center; --mdc-icon-size: 18px; }\n.box.info ha-icon { color: var(--secondary-text-color); }\n.box.btn.tight .lbl, .box.sel.tight .lbl { display: none; }\n.box.info.tight ha-icon { display: none; }\n.box.info.tight .lbl { margin-left: 0; }\n.bottom.dis { opacity: 0.38; pointer-events: none; }\n.pwr:disabled { opacity: 0.38; cursor: default; }\n.ic[data-more], .txt[data-more] { -webkit-tap-highlight-color: transparent; }\n.light { --lc-box: rgba(0, 0, 0, 0.05); }\n.light .ic { border-color: rgba(0, 0, 0, 0.07); }";
+const DOCS_URL = "https://github.com/mendebur-lemur/lemur-halo-cards";
+// Metinler. Her metin hem tr hem en. Arayüzde marka adı geçmez.
+// Ortak metinler burada; her kart kendi metinlerini addText() ile ekler.
+const TXT = {
+  tr: {
+    // ortak durumlar
+    st_off: 'Kapalı', st_on: 'Açık', st_lost: 'Bağlantı yok', st_sensor: 'Sensör yok', st_unknown: 'Bilinmiyor',
+    confirm: 'Emin misin?', power: 'Aç / kapat',
+    // renkler (editör)
+    c_ice: 'Buz mavisi', c_blue: 'Mavi', c_green: 'Yeşil', c_yellow: 'Sarı', c_orange: 'Turuncu', c_red: 'Kırmızı',
+    c_alarm: 'Kırmızı, yanıp söner', c_grey: 'Gri', c_purple: 'Mor',
+    // editör: ortak alanlar
+    ed_entity: 'Cihaz', ed_entities: 'Birlikte kontrol edilecek diğer cihazlar', ed_name: 'Ad', ed_icon: 'Simge (her zaman)',
+    ed_icon_on: 'Simge (açıkken)', ed_icon_off: 'Simge (kapalıyken)', ed_power_icon: 'Sağ üst düğmenin simgesi',
+    ed_icons: 'Simge eşlemesi: durum, mod, seçenek ya da düğme → simge (ör. cool: mdi:snowflake-variant)',
+    ed_appearance: 'Görünüm', ed_advanced: 'Gelişmiş', ed_show_power: 'Sağ üstteki düğme', ed_show_halo: 'Hale (parıltı)',
+    ed_show_labels: 'Kutularda adları da yaz', ed_language: 'Dil', ed_stale_after: 'Bu kadar saniye haber gelmezse "Bağlantı yok" (0: kapalı; son görülme sensörüyle varsayılan 7200)',
+    ed_last_seen_sensor: 'Son görülme sensörü (isteğe bağlı; ör. Zigbee2MQTT last_seen)',
+    ed_lang_auto: 'Otomatik', ed_reset: 'Varsayılana dön'
+  },
+  en: {
+    st_off: 'Off', st_on: 'On', st_lost: 'No connection', st_sensor: 'No sensor', st_unknown: 'Unknown',
+    confirm: 'Sure?', power: 'Turn on / off',
+    c_ice: 'Ice blue', c_blue: 'Blue', c_green: 'Green', c_yellow: 'Yellow', c_orange: 'Orange', c_red: 'Red',
+    c_alarm: 'Red, blinking', c_grey: 'Grey', c_purple: 'Purple',
+    ed_entity: 'Device', ed_entities: 'Other devices controlled together', ed_name: 'Name', ed_icon: 'Icon (always)',
+    ed_icon_on: 'Icon (when on)', ed_icon_off: 'Icon (when off)', ed_power_icon: 'Top-right button icon',
+    ed_icons: 'Icon map: state, mode, option or button → icon (e.g. cool: mdi:snowflake-variant)',
+    ed_appearance: 'Appearance', ed_advanced: 'Advanced', ed_show_power: 'Top-right button', ed_show_halo: 'Halo (glow)',
+    ed_show_labels: 'Show names in the boxes', ed_language: 'Language', ed_stale_after: 'Show "No connection" after this many seconds without news (0: off; 7200 by default with a last seen sensor)',
+    ed_last_seen_sensor: 'Last seen sensor (optional; e.g. Zigbee2MQTT last_seen)',
+    ed_lang_auto: 'Automatic', ed_reset: 'Reset to defaults'
+  }
+};
+
+function addText(tr, en) {
+  Object.assign(TXT.tr, tr);
+  Object.assign(TXT.en, en);
+}
+
+function pickLang(hass, forced) {
+  if (forced === 'tr' || forced === 'en') return forced;
+  const l = (hass && ((hass.locale && hass.locale.language) || hass.language)) || 'en';
+  return String(l).toLowerCase().indexOf('tr') === 0 ? 'tr' : 'en';
+}
+
+function t(lang, key) {
+  const d = TXT[lang] || TXT.en;
+  return d[key] !== undefined ? d[key] : (TXT.en[key] !== undefined ? TXT.en[key] : key);
+}
+
+// Anahtar yoksa null döner (bilinmeyen cihaz değerleri için)
+function tMaybe(lang, key) {
+  const d = TXT[lang] || TXT.en;
+  if (d[key] !== undefined) return d[key];
+  return TXT.en[key] !== undefined ? TXT.en[key] : null;
+}
+
+// Bilinmeyen bir cihaz değerini okunur yaz: "medium_high" → "Medium high"
+function prettify(x) {
+  const r = String(x).replace(/_/g, ' ');
+  return r.charAt(0).toUpperCase() + r.slice(1);
+}
+
+// Hale renkleri ve bir nefesin süresi (sn). Serin renkler yavaş, sıcak renkler hızlı nefes alır; alarm hızlı yanıp söner.
+// Saf veri ve hesap, DOM yok (node testleri de bunu kullanır).
+const BANDS = {
+  ice:    { name: 'ice',    rgb: '120,215,255', duration: 5.2 },
+  blue:   { name: 'blue',   rgb: '0,140,255',   duration: 5.0 },
+  green:  { name: 'green',  rgb: '40,190,100',  duration: 4.4 },
+  yellow: { name: 'yellow', rgb: '255,205,40',  duration: 4.0 },
+  orange: { name: 'orange', rgb: '255,140,30',  duration: 3.8 },
+  red:    { name: 'red',    rgb: '255,55,55',   duration: 3.6 },
+  purple: { name: 'purple', rgb: '160,100,255', duration: 4.6 },
+  grey:   { name: 'grey',   rgb: '150,150,150', duration: 6.0 },
+  alarm:  { name: 'alarm',  rgb: '255,55,55',   duration: 1.2 }
+};
+const BAND_NAMES = ['ice', 'blue', 'green', 'yellow', 'orange', 'red', 'alarm', 'purple', 'grey'];
+
+function band(name) { return BANDS[name] || BANDS.green; }
+
+// Değeri dört sınırla beş bölgeye ayırır: < s1 → r1, < s2 → r2, < s3 → r3, < s4 → r4, üstü → r5.
+// Boş (null) sınır atlanır, o bölge bir sonrakiyle birleşir. Dönen değer renk adıdır.
+function zoneColor(value, limits, colors) {
+  for (let i = 0; i < 4; i++) {
+    const l = limits[i];
+    if (l !== null && l !== undefined && l !== '' && isFinite(l) && value < Number(l)) return colors[i];
+  }
+  return colors[4];
+}
+
+// Aynı bölgelemeyle sıra numarası (0-4): etiket seçmek için
+function zoneIndex(value, limits) {
+  for (let i = 0; i < 4; i++) {
+    const l = limits[i];
+    if (l !== null && l !== undefined && l !== '' && isFinite(l) && value < Number(l)) return i;
+  }
+  return 4;
+}
+
+// Küçük yardımcılar. Eski Safari (iOS 12) için ?. ve ?? kullanılmıyor.
+const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]);
+// Katı sayı çevirme: "2026-10-04T06:00" ya da "12abc" sayı sayılmaz (parseFloat bunları 2026 / 12 yapardı)
+const num = (v) => {
+  if (typeof v === 'number') return isFinite(v) ? v : null;
+  if (typeof v !== 'string') return null;
+  const s = v.trim(); if (!s) return null;
+  const n = Number(s); return isFinite(n) ? n : null;
+};
+const round = (v, d) => { const k = Math.pow(10, d || 0); return Math.round(v * k) / k; };
+
+// Halenin ikinci parıltısı için ana rengin açık tonu (beyaza %55 yaklaştırılmış)
+const tint = (rgb) => rgb.split(',').map((v) => Math.round(+v + (255 - v) * 0.55)).join(',');
+
+const isOff = (st) => !st || st.state === 'off' || st.state === 'unavailable' || st.state === 'unknown';
+const isDead = (st) => !st || st.state === 'unavailable' || st.state === 'unknown';
+
+// Cihazdan uzun süredir haber yoksa ya da unavailable/unknown ise true
+function stale(st, limit) {
+  if (isDead(st)) return true;
+  const ts = Date.parse(st.last_reported || st.last_updated);
+  return isFinite(ts) && limit > 0 && (Date.now() - ts) / 1000 > limit;
+}
+
+// Varlığın sayısal değeri (yoksa null)
+function stateNum(hass, id) {
+  if (!id || !hass.states[id]) return null;
+  return num(hass.states[id].state);
+}
+
+// Güç sensörünü watt'a çevirir. Birim büyük/küçük harfe duyarlı: mW (miliwatt) ile MW (megawatt) farklı.
+const POWER_UNITS = { W: 1, kW: 1000, MW: 1e6, GW: 1e9, mW: 0.001 };
+function watts(hass, id) {
+  if (!id || !hass.states[id]) return null;
+  const st = hass.states[id], v = num(st.state);
+  if (v === null) return null;
+  const k = POWER_UNITS[String(st.attributes.unit_of_measurement || 'W').trim()];
+  return v * (k || 1);
+}
+
+// Yüzde: Türkçede %48, İngilizcede 48%
+function pct(v, lang) { return lang === 'tr' ? '%' + v : v + '%'; }
+
+// Sıcaklık birimi: HA'nın birim sistemi (°C / °F). Konfor hesapları °C ile yapılır.
+function tempUnit(hass) { return (hass && hass.config && hass.config.unit_system && hass.config.unit_system.temperature) || '°C'; }
+function toC(v, unit) { return v === null || v === undefined ? v : (String(unit).indexOf('F') >= 0 ? (v - 32) * 5 / 9 : v); }
+function fmtPower(w) {
+  const a = Math.abs(w);
+  return a >= 1000 ? round(w / 1000, a >= 10000 ? 0 : 1) + ' kW' : Math.round(w) + ' W';
+}
+
+// Sensör değeri + birimi: "24.5 °C", "%48" (en: "48%"), "812 ppm"
+function fmtState(hass, id, decimals, lang) {
+  const st = hass.states[id];
+  if (!st) return '';
+  const v = num(st.state);
+  if (v === null) return st.state;
+  const u = st.attributes.unit_of_measurement || '';
+  const d = decimals !== undefined && decimals !== null && decimals !== '' ? Number(decimals) : (Math.abs(v) < 100 && v % 1 ? 1 : 0);
+  const s = String(round(v, d));
+  if (u === '%') return pct(s, lang || 'tr');
+  return u ? s + ' ' + u : s;
+}
+
+function friendly(hass, id) {
+  const st = hass.states[id];
+  return (st && st.attributes.friendly_name) || id;
+}
+
+// HA'nın ayrıntı penceresini açar
+function moreInfo(el, entityId) {
+  el.dispatchEvent(new CustomEvent('hass-more-info', { detail: { entityId: entityId }, bubbles: true, composed: true }));
+}
+
+// Fan hızı simgeleri (klima ve hava temizleyici). Listede olmayan değer mdi:fan alır.
+const FAN_ICONS = { auto: 'mdi:fan-auto', off: 'mdi:fan-off', on: 'mdi:fan',
+  low: 'mdi:fan-speed-1', quiet: 'mdi:fan-speed-1', silent: 'mdi:fan-speed-1', sleep: 'mdi:fan-speed-1', medium_low: 'mdi:fan-speed-1',
+  medium: 'mdi:fan-speed-2', middle: 'mdi:fan-speed-2', mid: 'mdi:fan-speed-2', medium_high: 'mdi:fan-speed-2', normal: 'mdi:fan-speed-2',
+  high: 'mdi:fan-speed-3', strong: 'mdi:fan-speed-3', turbo: 'mdi:fan-speed-3', powerful: 'mdi:fan-speed-3', boost: 'mdi:fan-speed-3', max: 'mdi:fan-speed-3' };
+const fanIcon = (x) => FAN_ICONS[String(x).toLowerCase()] || 'mdi:fan';
+// Fan adı: bilinen değerler çevrilir, bilinmeyen değer okunur hâle getirilir
+const fanLabel = (lang, x) => { const v = tMaybe(lang, 'f_' + String(x).toLowerCase()); return v !== null ? v : prettify(x); };
+
+// İlk uygun varlık (editör ilk açıldığında örnek ayar için)
+function firstEntity(hass, domains, filter) {
+  if (!hass) return '';
+  const ids = Object.keys(hass.states).filter((id) => domains.indexOf(id.split('.')[0]) >= 0 && (!filter || filter(hass.states[id])));
+  return ids[0] || '';
+}
+
+addText({
+  f_auto: 'Otomatik', f_low: 'Düşük', f_medium_low: 'Orta-düşük', f_medium: 'Orta', f_middle: 'Orta', f_mid: 'Orta', f_normal: 'Normal',
+  f_medium_high: 'Orta-yüksek', f_high: 'Yüksek', f_quiet: 'Sessiz', f_silent: 'Sessiz', f_sleep: 'Uyku', f_strong: 'Güçlü',
+  f_powerful: 'Güçlü', f_turbo: 'Turbo', f_boost: 'Turbo', f_max: 'En yüksek', f_on: 'Açık', f_off: 'Kapalı', f_focus: 'Odaklı', f_diffuse: 'Yayılı'
+}, {
+  f_auto: 'Auto', f_low: 'Low', f_medium_low: 'Medium-low', f_medium: 'Medium', f_middle: 'Medium', f_mid: 'Medium', f_normal: 'Normal',
+  f_medium_high: 'Medium-high', f_high: 'High', f_quiet: 'Quiet', f_silent: 'Silent', f_sleep: 'Sleep', f_strong: 'Strong',
+  f_powerful: 'Powerful', f_turbo: 'Turbo', f_boost: 'Boost', f_max: 'Max', f_on: 'On', f_off: 'Off', f_focus: 'Focus', f_diffuse: 'Diffuse'
+});
+
+// Saf hesaplar (DOM yok). Bugünkü Jinja şablonlarının birebir JS karşılığı.
+// Kaynak: dev/eski-kartlar/klima-karti.md ve petek-karti.md
+
+const COMFORT_DEFAULTS = { cold: 16, cool: 19, warm: 29, hot: 31.5, humid_dewpoint: 18, dry_humidity: 28 };
+const RADIATOR_DEFAULTS = { very_cold: 15, cold: 18, comfort: 24, warm: 26, outdoor_base: 10, outdoor_factor: 0.33, outdoor_max_shift: 3 };
+
+// Renkler core/bands.js içinde (BANDS).
+
+// Çiy noktası (Magnus formülü). Nem yoksa null.
+function dewPoint(t, rh) {
+  if (!(rh > 0) || !isFinite(t)) return null;
+  const g = Math.log(rh / 100) + (17.62 * t) / (243.12 + t);
+  return (243.12 * g) / (17.62 - g);
+}
+
+// Hissedilen sıcaklık: 13.5 °C üstü çiy noktası sıcağı artırır, 12 °C altı kuru hava serinletir;
+// etki 21 °C altında devreye girmez, 24 °C'de tam etkili olur.
+function feelsLike(t, rh) {
+  const td = dewPoint(t, rh);
+  if (td === null) return { his: t, td: null };
+  const nemli = Math.max(0, td - 13.5);
+  const kuru = Math.max(0, 12 - td);
+  const k = Math.min(1, Math.max(0, (t - 21) / 3));
+  return { his: t + k * (0.55 * nemli - 0.3 * kuru), td: td };
+}
+
+// Konfor etiketi anahtarı (i18n.js'deki anahtarlar)
+function comfortKey(t, rh, c) {
+  c = Object.assign({}, COMFORT_DEFAULTS, c || {});
+  const r = feelsLike(t, rh);
+  const his = r.his, td = r.td;
+  if (his < c.cold) return 'very_cold';
+  if (his < c.cool) return 'cool';
+  if (his < c.warm) {
+    if (td !== null && td >= c.humid_dewpoint) return 'humid';
+    if (rh > 0 && rh < c.dry_humidity) return 'dry';
+    return 'comfortable';
+  }
+  if (his < c.hot) return 'warm';
+  return 'hot';
+}
+
+// Klima hale bandı: hissedilen sıcaklığa göre
+function acBand(t, rh, c) {
+  c = Object.assign({}, COMFORT_DEFAULTS, c || {});
+  const his = feelsLike(t, rh).his;
+  if (his < c.cool) return BANDS.blue;
+  if (his < c.warm) return BANDS.green;
+  if (his < c.hot) return BANDS.yellow;
+  return BANDS.red;
+}
+
+// Petek hale bandı: gerçek sıcaklığa göre, dış sıcaklıkla kayan eşikler
+function radiatorBand(t, outdoor, b, lost) {
+  if (lost) return BANDS.alarm;
+  b = Object.assign({}, RADIATOR_DEFAULTS, b || {});
+  let kay = 0;
+  if (outdoor !== null && outdoor !== undefined && isFinite(outdoor)) {
+    kay = Math.max(0, Math.min(b.outdoor_max_shift, (outdoor - b.outdoor_base) * b.outdoor_factor));
+  }
+  if (t < b.very_cold + kay) return BANDS.ice;
+  if (t < b.cold + kay) return BANDS.blue;
+  if (t < b.comfort + kay) return BANDS.green;
+  if (t < b.warm + kay) return BANDS.yellow;
+  return BANDS.red;
+}
+
+
+// Kendi simgelerimiz. Petek simgeleri bu projenin kendi çizimi.
+// MDI simgeleri için HA'nın ha-icon bileşeni kullanılır (ek bağımlılık değil).
+const ICONS = (() => {
+  const f = (n) => Math.round(n * 100) / 100;
+  const rr = (x, y, w, h, r) => {
+    r = Math.min(r, w / 2, h / 2);
+    return 'M' + f(x + r) + ' ' + f(y) + 'H' + f(x + w - r) + 'A' + f(r) + ' ' + f(r) + ' 0 0 1 ' + f(x + w) + ' ' + f(y + r) +
+      'V' + f(y + h - r) + 'A' + f(r) + ' ' + f(r) + ' 0 0 1 ' + f(x + w - r) + ' ' + f(y + h) +
+      'H' + f(x + r) + 'A' + f(r) + ' ' + f(r) + ' 0 0 1 ' + f(x) + ' ' + f(y + h - r) +
+      'V' + f(y + r) + 'A' + f(r) + ' ' + f(r) + ' 0 0 1 ' + f(x + r) + ' ' + f(y) + 'Z';
+  };
+  const rrHole = (x, y, w, h, r) => {
+    r = Math.min(r, w / 2, h / 2);
+    return 'M' + f(x + r) + ' ' + f(y) + 'A' + f(r) + ' ' + f(r) + ' 0 0 0 ' + f(x) + ' ' + f(y + r) +
+      'V' + f(y + h - r) + 'A' + f(r) + ' ' + f(r) + ' 0 0 0 ' + f(x + r) + ' ' + f(y + h) +
+      'H' + f(x + w - r) + 'A' + f(r) + ' ' + f(r) + ' 0 0 0 ' + f(x + w) + ' ' + f(y + h - r) +
+      'V' + f(y + r) + 'A' + f(r) + ' ' + f(r) + ' 0 0 0 ' + f(x + w - r) + ' ' + f(y) + 'Z';
+  };
+  const circle = (cx, cy, r) =>
+    'M' + f(cx - r) + ' ' + f(cy) + 'A' + f(r) + ' ' + f(r) + ' 0 1 1 ' + f(cx + r) + ' ' + f(cy) + 'A' + f(r) + ' ' + f(r) + ' 0 1 1 ' + f(cx - r) + ' ' + f(cy) + 'Z';
+  const circleHole = (cx, cy, r) =>
+    'M' + f(cx - r) + ' ' + f(cy) + 'A' + f(r) + ' ' + f(r) + ' 0 1 0 ' + f(cx + r) + ' ' + f(cy) + 'A' + f(r) + ' ' + f(r) + ' 0 1 0 ' + f(cx - r) + ' ' + f(cy) + 'Z';
+  const sectional = (bx, by, s) => {
+    const R = (x, y, w, h, r) => rr(bx + x * s, by + y * s, w * s, h * s, r * s);
+    let p = R(0, 3, 20, 1.7, 0.85) + R(0, 11.3, 20, 1.7, 0.85);
+    for (let i = 0; i < 4; i++) p += R(1.4 + i * 4.55, 0.5, 3.3, 14.5, 1.65);
+    return p + R(2.05, 15, 2, 2, 0.6) + R(15.95, 15, 2, 2, 0.6);
+  };
+  const panel = (bx, by, s) => {
+    const R = (x, y, w, h, r) => rr(bx + x * s, by + y * s, w * s, h * s, r * s);
+    const H = (x, y, w, h, r) => rrHole(bx + x * s, by + y * s, w * s, h * s, r * s);
+    let p = R(1, 0.5, 18, 14, 1.8);
+    for (let i = 0; i < 6; i++) p += H(3.3 + i * 2.55, 2.6, 0.95, 9.8, 0.47);
+    return p + R(0, 1.6, 1.4, 1.6, 0.4) + R(18.6, 11.8, 1.4, 1.6, 0.4) + R(3, 14.5, 1.8, 2.5, 0.5) + R(15.2, 14.5, 1.8, 2.5, 0.5);
+  };
+  const slash = (x1, y1, x2, y2, w) => {
+    const dx = x2 - x1, dy = y2 - y1, L = Math.hypot(dx, dy);
+    const nx = (-dy / L) * w / 2, ny = (dx / L) * w / 2;
+    return 'M' + f(x1 - nx) + ' ' + f(y1 - ny) + 'L' + f(x2 - nx) + ' ' + f(y2 - ny) + 'L' + f(x2 + nx) + ' ' + f(y2 + ny) + 'L' + f(x1 + nx) + ' ' + f(y1 + ny) + 'Z';
+  };
+  const badge = (cx, cy, r) => circle(cx, cy, r) + rrHole(cx - r * 0.17, cy - r * 0.62, r * 0.34, r * 0.72, r * 0.17) + circleHole(cx, cy + r * 0.5, r * 0.19);
+  const full = { bx: 2, by: 3.5, s: 1 };
+  const small = { bx: 1.5, by: 8.6, s: 0.72 };
+  return {
+    'sectional': sectional(full.bx, full.by, full.s),
+    'sectional-off': sectional(full.bx, full.by, full.s) + slash(3, 2.5, 21, 21.5, 2.2),
+    'sectional-lost': sectional(small.bx, small.by, small.s) + badge(18.6, 5.6, 4.6),
+    'panel': panel(full.bx, full.by, full.s),
+    'panel-off': panel(full.bx, full.by, full.s) + slash(3, 2.5, 21, 21.5, 2.2),
+    'panel-lost': panel(small.bx, small.by, small.s) + badge(18.6, 5.6, 4.6)
+  };
+})();
+
+function svgIcon(name) {
+  const p = ICONS[name] || ICONS.panel;
+  return '<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" fill-rule="nonzero" d="' + p + '"/></svg>';
+}
+
+// Bütün Lemur kartlarının ortak tabanı. HTMLElement + shadow DOM, Lit yok, başka eklenti yok.
+// Eski Safari (iOS 12) için ?. ve ?? kullanılmıyor, sınıf alanı (class field) yok.
+//
+// Bir kart şunları tanımlar:
+//   static get TYPE()      'lemur-xxx-card'
+//   static get DOMAINS()   ana varlığın alanları (['climate']); ana varlığı olmayan kart için null
+//   static get DEFAULTS()  kartın varsayılan ayarları (BASE_DEFAULTS ile birleşir)
+//   static nested(cfg, hass)   editörde iç içe ayar grupları ve varsayılanları: { comfort: {...} }
+//   static get RESETS()    editörde bir alan değişince sıfırlanacak iç içe gruplar: { levels: ['entity', 'preset'] }
+//   static schema(lang, cfg, hass)  editör şeması (ha-form)
+//   static stub(hass)      kart ilk eklendiğinde örnek ayar
+//   ids()                  yeniden çizimi tetikleyen varlıklar
+//   view(lang)             { name, sec:[...], icon:{mdi|svg}, state, band, on, powerIcon, disabled, boxes:[...], haloK, moreInfo }
+//                          state: simge eşlemesinde (icons) kullanılan durum anahtarı (ör. 'cool', 'cleaning', 'zone2')
+//   power()                sağ üst düğmeye basılınca
+//   onStep(id, dir) / onSelect(id, value) / onButton(id)   alt satır kutuları
+//
+// Kutular (alt satır, eşit genişlik):
+//   { type: 'step', id, value }                         − değer +
+//   { type: 'select', id, icon, label, value, options: [{ value, label, icon }] }
+//   { type: 'button', id, icon, label, active, confirm, showLabel }
+//   { type: 'info', icon, text, entity }                sadece gösterir; dokununca ayrıntı penceresi
+//
+// "Bağlantı yok": cihaz unavailable / unknown ise. İsteğe bağlı olarak:
+//   last_seen_sensor  son görülme zamanını tutan sensör (ör. Zigbee2MQTT'nin sensor.xxx_last_seen); stale_after (varsayılan 7200 sn) geçerse
+//   stale_after       > 0 ise cihazın durumu bu kadar saniye hiç değişmezse. Dikkat: HA, değer aynı kaldıkça zamanı güncellemez;
+//                     sadece sürekli değişen cihazlarda kullan.
+
+const CARD_VERSION = '0.1.0';
+
+const BASE_DEFAULTS = {
+  name: '',
+  icon: '',            // her zaman bu simge
+  icon_on: '',         // açıkken
+  icon_off: '',        // kapalıyken
+  power_icon: '',      // sağ üst düğme
+  icons: {},           // eşleme: durum / mod / seçenek / düğme / varlık → simge (ör. cool: mdi:snowflake-variant)
+  show_power: true,
+  show_halo: true,
+  show_labels: false,
+  last_seen_sensor: '',
+  stale_after: 0,
+  language: 'auto'
+};
+
+class LemurCard extends HTMLElement {
+  static get TYPE() { return 'lemur-card'; }
+  static get DOMAINS() { return null; }
+  static get DEFAULTS() { return {}; }
+  static get RESETS() { return {}; }
+  static allDefaults() { return Object.assign({}, BASE_DEFAULTS, this.DEFAULTS); }
+  static nested() { return {}; }
+  static schema() { return []; }
+  static stub(hass) {
+    const d = this.DOMAINS;
+    return d ? { entity: firstEntity(hass, d) || (d[0] + '.example') } : {};
+  }
+  static getConfigElement() { return document.createElement(this.TYPE + '-editor'); }
+  static getStubConfig(hass) { return this.stub(hass); }
+
+  validate(config) {
+    const d = this.constructor.DOMAINS;
+    if (!d) return;
+    const dom = String(config.entity || '').split('.')[0];
+    if (!config.entity || d.indexOf(dom) < 0) throw new Error('entity: ' + d.join(' / ') + '.xxx');
+  }
+
+  setConfig(config) {
+    if (!config) throw new Error('config');
+    this.validate(config);
+    const D = this.constructor.allDefaults(), c = Object.assign({}, D, config);
+    // YAML'da liste yerine tek değer yazılmışsa listeye çevir (lights: light.salon → [light.salon])
+    Object.keys(D).forEach((k) => {
+      if (!Array.isArray(D[k])) return;
+      if (typeof c[k] === 'string') c[k] = c[k] ? [c[k]] : [];
+      else if (!Array.isArray(c[k])) c[k] = [];
+    });
+    if (!c.icons || typeof c.icons !== 'object') c.icons = {};
+    this._config = c;
+    this._sig = '';
+    this._timer();
+    if (this._hass) this._render();
+  }
+
+  // Alt satırı olmayan kart kısadır (yalnız üst satır)
+  getCardSize() { return this._compact ? 2 : 3; }
+  getGridOptions() { return { columns: 12, rows: 'auto', min_columns: 6 }; }
+
+  connectedCallback() {
+    this._timer();
+    // Kart genişliği değişince (tablet döndü, pano yeniden dizildi) kutulara sığma kontrolü
+    if (!this._ro && !this._onRs) {
+      if (window.ResizeObserver) { this._ro = new ResizeObserver(() => this._fit()); this._ro.observe(this); }
+      else { this._onRs = () => this._fit(); window.addEventListener('resize', this._onRs); }
+    }
+    this._fit();
+  }
+  disconnectedCallback() {
+    if (this._tick) { clearInterval(this._tick); this._tick = null; }
+    if (this._ro) { this._ro.disconnect(); this._ro = null; }
+    if (this._onRs) { window.removeEventListener('resize', this._onRs); this._onRs = null; }
+  }
+  // Süreye bağlı "Bağlantı yok" kontrolü açıksa dakikada bir yeniden bak (durum değişmese de)
+  _timer() {
+    const c = this._config, need = c && (c.stale_after > 0 || c.last_seen_sensor) && this.isConnected;
+    if (need && !this._tick) this._tick = setInterval(() => { this._sig = ''; if (this._hass) this.hass = this._hass; }, 60000);
+    if (!need && this._tick) { clearInterval(this._tick); this._tick = null; }
+  }
+
+  // Sığma kontrolü: kutudaki ad tam sığmıyorsa .tight (CSS: düğme/seçimde ad gizlenir, bilgi kutusunda simge gizlenir).
+  // Yarım kalmış "Kap…" gibi yazılar yerine ya tamamı ya hiç.
+  _fit() {
+    const root = this.shadowRoot;
+    if (!root || !this.offsetWidth) return;
+    const boxes = root.querySelectorAll('.box.btn, .box.sel, .box.info');
+    for (let i = 0; i < boxes.length; i++) boxes[i].classList.remove('tight');
+    for (let i = 0; i < boxes.length; i++) {
+      const l = boxes[i].querySelector('.lbl');
+      if (l && l.scrollWidth > l.clientWidth + 1) boxes[i].classList.add('tight');
+    }
+  }
+
+  set hass(h) {
+    this._hass = h;
+    if (!this._config) return;
+    const dark = !(h.themes && h.themes.darkMode === false);
+    const sig = pickLang(h, this._config.language) + (dark ? 'D' : 'L') + '|' +
+      this.ids().concat([this._config.last_seen_sensor]).filter(Boolean)
+        .map((id) => { const s = h.states[id]; return s ? id + s.last_updated + s.state : id; }).join('|');
+    if (sig === this._sig) return;
+    this._sig = sig;
+    this._render();
+  }
+  get hass() { return this._hass; }
+
+  ids() { return [this._config.entity].concat(this._config.entities || []); }
+  st(id) { return id && this._hass ? this._hass.states[id] : undefined; }
+  power() {}
+  onStep() {}
+  onSelect() {}
+  onButton() {}
+
+  // Bağlantı yok mu: cihaz unavailable/unknown, ya da (açıksa) süre aşıldı, ya da son görülme sensörü eski
+  isLost(id) {
+    const c = this._config;
+    if (stale(this.st(id), c.stale_after)) return true;
+    if (c.last_seen_sensor) {
+      const s = this.st(c.last_seen_sensor), ts = s ? Date.parse(s.state) : NaN;
+      const limit = c.stale_after > 0 ? c.stale_after : 7200;
+      if (isFinite(ts) && (Date.now() - ts) / 1000 > limit) return true;
+    }
+    return false;
+  }
+
+  call(domain, service, data) {
+    return this._hass.callService(domain, service, data || {});
+  }
+
+  // Art arda basışları toplar, 800 ms sonra tek komut gönderir. Değer kutusu hemen güncellenir,
+  // arada kart yeniden çizilse de bekleyen değer gösterilmeye devam eder.
+  stepValue(key, cur, delta, lo, hi, fmt, commit) {
+    this._pend = this._pend || {};
+    this._pendFmt = this._pendFmt || {};
+    const base = this._pend[key] !== undefined ? this._pend[key] : cur;
+    if (base === null || base === undefined) return;
+    let v = Math.round((base + delta) * 100) / 100;
+    if (lo !== null && lo !== undefined) v = Math.max(lo, v);
+    if (hi !== null && hi !== undefined) v = Math.min(hi, v);
+    this._pend[key] = v;
+    this._pendFmt[key] = fmt;
+    const el = this.shadowRoot && this.shadowRoot.getElementById(key + '-val');
+    if (el) el.textContent = fmt(v);
+    this._tmrs = this._tmrs || {};
+    clearTimeout(this._tmrs[key]);
+    this._tmrs[key] = setTimeout(() => { const val = this._pend[key]; delete this._pend[key]; commit(val); }, 800);
+  }
+
+  // Büyük ikon. Öncelik: icon > icon_on / icon_off > icons[durum] > kartın kendi seçimi
+  _icon(v) {
+    const c = this._config, map = c.icons || {};
+    if (c.icon) return { mdi: c.icon };
+    if (v.on && c.icon_on) return { mdi: c.icon_on };
+    if (!v.on && c.icon_off) return { mdi: c.icon_off };
+    if (v.state !== undefined && map[v.state]) return { mdi: map[v.state] };
+    return v.icon || { mdi: 'mdi:help-circle' };
+  }
+
+  // Kutulara simge eşlemesi: seçenek değeri, düğme kimliği ya da varlık kimliği
+  _mapBox(b) {
+    const map = this._config.icons || {};
+    if (!Object.keys(map).length) return b;
+    const o = Object.assign({}, b);
+    if (o.type === 'select') {
+      o.options = (o.options || []).map((x) => map[x.value] ? Object.assign({}, x, { icon: map[x.value] }) : x);
+      if (map[o.value]) o.icon = map[o.value];
+    } else if (o.type === 'button' && map[o.id]) o.icon = map[o.id];
+    else if (o.type === 'info' && o.entity && map[o.entity]) o.icon = map[o.entity];
+    return o;
+  }
+
+  _boxHtml(b, showLabels) {
+    const id = esc(b.id || '');
+    const lbl = (txt, force) => (txt && (showLabels || force)) ? '<span class="lbl" id="' + id + '-lbl">' + esc(txt) + '</span>' : '';
+    if (b.type === 'step') {
+      const pv = this._pend && this._pend[b.id], f = this._pendFmt && this._pendFmt[b.id];
+      const value = pv !== undefined && f ? f(pv) : b.value;
+      return '<div class="box tgt"><button data-step="' + id + '" data-dir="-1" aria-label="−">−</button>' +
+        '<span class="val" id="' + id + '-val">' + esc(value) + '</span>' +
+        '<button data-step="' + id + '" data-dir="1" aria-label="+">+</button></div>';
+    }
+    if (b.type === 'select') {
+      const opts = b.options || [];
+      const has = opts.some((o) => o.value === b.value);
+      return '<div class="box sel" title="' + esc(b.title || '') + '"><ha-icon class="lead" id="' + id + '-ic" icon="' + esc(b.icon || 'mdi:menu') + '"></ha-icon>' +
+        lbl(b.label) + '<span class="chev"><ha-icon icon="mdi:menu-down"></ha-icon></span>' +
+        '<select data-sel="' + id + '" aria-label="' + esc(b.title || '') + '">' +
+        (has ? '' : '<option value="" selected disabled hidden>' + esc(b.label || '') + '</option>') +
+        opts.map((o) => '<option value="' + esc(o.value) + '"' + (o.value === b.value ? ' selected' : '') + '>' + esc(o.label) + '</option>').join('') +
+        '</select></div>';
+    }
+    if (b.type === 'button') {
+      return '<button class="box btn' + (b.active ? ' active' : '') + '" data-btn="' + id + '"' + (b.confirm ? ' data-confirm="1"' : '') +
+        ' title="' + esc(b.label || '') + '" aria-label="' + esc(b.label || '') + '">' +
+        '<ha-icon icon="' + esc(b.icon || 'mdi:gesture-tap') + '"></ha-icon>' + lbl(b.label, b.showLabel) + '</button>';
+    }
+    // info
+    return '<div class="box info"' + (b.entity ? ' data-info="' + esc(b.entity) + '"' : '') + ' title="' + esc(b.title || '') + '">' +
+      (b.icon ? '<ha-icon icon="' + esc(b.icon) + '"></ha-icon>' : '') + '<span class="lbl">' + esc(b.text) + '</span></div>';
+  }
+
+  _render() {
+    if (!this._hass || !this._config) return;
+    if (!this.shadowRoot) this.attachShadow({ mode: 'open' });
+    const root = this.shadowRoot;
+    // Açık bir seçim listesi varken yeniden çizme (iPad'de liste kapanır); seçim bitince çizilir
+    const ae = root.activeElement;
+    if (ae && ae.tagName === 'SELECT') { this._dirty = true; return; }
+    this._dirty = false;
+    // İskelet bir kez kurulur: hale öğesi hep aynı kalır, animasyonu durum değişince baştan başlamaz
+    if (!this._card) {
+      root.innerHTML = '<style>' + CSS + '</style><ha-card><div class="halo"></div><div class="content"></div></ha-card>';
+      this._card = root.querySelector('ha-card');
+      this._halo = root.querySelector('.halo');
+      this._content = root.querySelector('.content');
+    }
+    const c = this._config, lang = pickLang(this._hass, c.language);
+    let v;
+    try { v = this.view(lang); } catch (e) { v = { name: c.name || this.constructor.TYPE, sec: [String(e && e.message || e)], icon: { mdi: 'mdi:alert' }, band: BANDS.alarm, boxes: [] }; }
+    const bnd = v.band || BANDS.green;
+    const alarm = bnd === BANDS.alarm;
+    const light = this._hass.themes && this._hass.themes.darkMode === false;
+    const icon = this._icon(v);
+    const iconHtml = icon.svg ? svgIcon(icon.svg) : '<ha-icon icon="' + esc(icon.mdi) + '"></ha-icon>';
+    // Alt yazı parçaları kendi içinde bölünmesin diye boşluklar bölünmez boşluk olur; satır yalnız " · " aralarında kırılır
+    const sec = (v.sec || []).filter((x) => x !== '' && x !== null && x !== undefined).map((x) => String(x).replace(/ /g, ' ')).join(' · ');
+    const boxes = (v.boxes || []).filter(Boolean).map((b) => this._mapBox(b));
+    v.boxes = boxes;
+    const haloK = v.haloK !== undefined ? v.haloK : 1;
+    const hasPwr = c.show_power && v.powerIcon !== null;
+    this._compact = !boxes.length;
+    this._card.className = (v.on ? 'on' : 'off') + (alarm ? ' alarm' : '') + (light ? ' light' : '') + (hasPwr ? '' : ' nopwr') + (boxes.length ? '' : ' compact');
+    this._card.setAttribute('style', '--temp-rgb:' + bnd.rgb + ';--tint-rgb:' + tint(bnd.rgb) + ';--halo-dur:' + bnd.duration + 's;--halo-k:' + haloK);
+    this._halo.style.display = c.show_halo ? '' : 'none';
+    this._content.innerHTML =
+      '<div class="top"><div class="ic" data-more="1">' + iconHtml + '</div>' +
+      '<div class="txt" data-more="1"><div class="name">' + esc(c.name || v.name || '') + '</div><div class="sec">' + esc(sec) + '</div></div>' +
+      (hasPwr ? '<button class="pwr' + (v.on ? ' on' : '') + '" id="pwr" aria-label="' + esc(v.powerTitle || t(lang, 'power')) + '"' +
+        (v.disabled ? ' disabled' : '') + '><ha-icon icon="' + esc(c.power_icon || v.powerIcon || 'mdi:power') + '"></ha-icon></button>' : '') +
+      '</div>' + (boxes.length ? '<div class="bottom' + (v.disabled ? ' dis' : '') + '">' + boxes.map((b) => this._boxHtml(b, c.show_labels)).join('') + '</div>' : '');
+    this._bind(v, lang);
+    this._fit();
+    if (window.requestAnimationFrame) requestAnimationFrame(() => this._fit());
+  }
+
+  _bind(v, lang) {
+    const root = this.shadowRoot;
+    const each = (sel, fn) => { const l = root.querySelectorAll(sel); for (let i = 0; i < l.length; i++) fn(l[i]); };
+    const pwr = root.getElementById('pwr');
+    if (pwr) pwr.addEventListener('click', (e) => { e.stopPropagation(); this.power(); });
+    const mi = v.moreInfo !== undefined ? v.moreInfo : this._config.entity;
+    if (mi) each('[data-more]', (el) => { el.style.cursor = 'pointer'; el.addEventListener('click', () => moreInfo(this, mi)); });
+    each('[data-step]', (el) => el.addEventListener('click', () => this.onStep(el.getAttribute('data-step'), Number(el.getAttribute('data-dir')))));
+    each('[data-sel]', (el) => {
+      el.addEventListener('change', () => {
+        const id = el.getAttribute('data-sel'), box = (v.boxes || []).filter((b) => b && b.id === id)[0];
+        const opt = box && box.options.filter((o) => o.value === el.value)[0];
+        if (opt && opt.icon) { const ic = root.getElementById(id + '-ic'); if (ic) ic.setAttribute('icon', opt.icon); }
+        const lb = root.getElementById(id + '-lbl'); if (lb && opt) lb.textContent = opt.label;
+        this.onSelect(id, el.value);
+        el.blur();
+      });
+      // Liste açıkken gelen güncellemeler beklemişse şimdi çiz
+      el.addEventListener('blur', () => { if (this._dirty) setTimeout(() => this._render(), 0); });
+    });
+    each('[data-btn]', (el) => el.addEventListener('click', () => {
+      const id = el.getAttribute('data-btn');
+      if (el.getAttribute('data-confirm') && !el.classList.contains('ask')) {
+        // Riskli işlem: ilk dokunuşta "Emin misin?", 3 sn içinde ikinci dokunuş onaylar
+        el.classList.add('ask');
+        el.classList.remove('tight');
+        const lb = el.querySelector('.lbl'); const old = lb ? lb.textContent : null;
+        if (lb) lb.textContent = t(lang, 'confirm'); else el.insertAdjacentHTML('beforeend', '<span class="lbl">' + esc(t(lang, 'confirm')) + '</span>');
+        setTimeout(() => { el.classList.remove('ask'); const l2 = el.querySelector('.lbl'); if (l2) { if (old === null) l2.parentNode.removeChild(l2); else l2.textContent = old; } this._fit(); }, 3000);
+        return;
+      }
+      el.classList.remove('ask');
+      this.onButton(id);
+    }));
+    each('[data-info]', (el) => { el.style.cursor = 'pointer'; el.addEventListener('click', () => moreInfo(this, el.getAttribute('data-info'))); });
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Ortak editör: kartın schema() ve varsayılanlarıyla çalışır. HA'nın kendi ha-form bileşeni (ek bağımlılık değil).
+class LemurEditor extends HTMLElement {
+  setConfig(config) { this._config = Object.assign({}, config); this._render(); }
+  set hass(h) { this._hass = h; if (this._form) this._form.hass = h; else this._render(); }
+
+  _clean(cfg) {
+    const K = this.constructor.cardClass, D = K.allDefaults(), N = K.nested(cfg, this._hass);
+    Object.keys(N).forEach((k) => {
+      const v = Object.assign({}, cfg[k] || {});
+      Object.keys(N[k]).forEach((x) => { if (v[x] === N[k][x] || v[x] === '' || v[x] === null || v[x] === undefined) delete v[x]; });
+      if (Object.keys(v).length) cfg[k] = v; else delete cfg[k];
+    });
+    Object.keys(D).forEach((k) => {
+      if (Array.isArray(D[k]) && Array.isArray(cfg[k]) && cfg[k].join() === D[k].join()) delete cfg[k];
+      else if (cfg[k] === D[k]) delete cfg[k];
+    });
+    Object.keys(cfg).forEach((k) => {
+      const x = cfg[k];
+      if (x === '' || x === undefined || x === null || (Array.isArray(x) && !x.length) || (typeof x === 'object' && !Array.isArray(x) && !Object.keys(x).length)) delete cfg[k];
+    });
+    return cfg;
+  }
+
+  _render() {
+    if (!this._hass || !this._config) return;
+    const K = this.constructor.cardClass;
+    const lang = pickLang(this._hass, this._config.language);
+    if (!this._form) {
+      this._form = document.createElement('ha-form');
+      this._form.computeLabel = (s) => { if (s.label) return s.label; const v = tMaybe(lang, 'ed_' + s.name); return v !== null ? v : (s.title || s.name); };
+      this._form.addEventListener('value-changed', (ev) => {
+        const prev = this._config, next = Object.assign({}, prev, ev.detail.value), R = K.RESETS;
+        // Cihaz ya da hazır ayar değişince ona bağlı iç içe grup (ör. sensör bölgeleri) eskisinden kalmasın
+        Object.keys(R).forEach((k) => { if (R[k].some((f) => String(prev[f] || '') !== String(next[f] || ''))) delete next[k]; });
+        const cfg = this._clean(next);
+        this._config = cfg;
+        this.dispatchEvent(new CustomEvent('config-changed', { detail: { config: cfg }, bubbles: true, composed: true }));
+        this._render();
+      });
+      this.appendChild(this._form);
+    }
+    const N = K.nested(this._config, this._hass), data = Object.assign({}, K.allDefaults(), this._config);
+    Object.keys(N).forEach((k) => { data[k] = Object.assign({}, N[k], this._config[k] || {}); });
+    this._form.hass = this._hass;
+    this._form.schema = K.schema(lang, this._config, this._hass);
+    this._form.data = data;
+  }
+}
+
+// Editör şemasında sık kullanılan parçalar
+const SCH = {
+  entity: (name, domains, extra) => ({ name: name, selector: { entity: Object.assign({ domain: domains }, extra || {}) } }),
+  entities: (name, domains) => ({ name: name, selector: { entity: { domain: domains, multiple: true } } }),
+  text: (name) => ({ name: name, selector: { text: {} } }),
+  icon: () => ({ name: 'icon', selector: { icon: {} } }),
+  bool: (name) => ({ name: name, selector: { boolean: {} } }),
+  num: (name, min, max, step, unit) => ({ name: name, selector: { number: { min: min, max: max, step: step || 1, mode: 'box', unit_of_measurement: unit || '' } } }),
+  select: (name, lang, values, prefix) => ({ name: name, selector: { select: { mode: 'dropdown',
+    options: values.map((x) => ({ value: x, label: t(lang, (prefix || '') + x) })) } } }),
+  color: (name, lang) => ({ name: name, selector: { select: { mode: 'dropdown', options: BAND_NAMES.map((x) => ({ value: x, label: t(lang, 'c_' + x) })) } } }),
+  // Görünüm bölümü: her kartın ortak anahtarları + kartın kendi anahtarları
+  appearance: (lang, extra) => ({ type: 'expandable', name: 'appearance', flatten: true, title: t(lang, 'ed_appearance'), schema: [
+    { type: 'grid', name: '', flatten: true, schema: ['show_power', 'show_halo', 'show_labels'].concat(extra || []).map((k) => ({ name: k, selector: { boolean: {} } })) },
+    { type: 'grid', name: '', flatten: true, schema: [{ name: 'icon', selector: { icon: {} } }, { name: 'power_icon', selector: { icon: {} } },
+      { name: 'icon_on', selector: { icon: {} } }, { name: 'icon_off', selector: { icon: {} } }] },
+    { name: 'icons', selector: { object: {} } },
+    { name: 'language', selector: { select: { mode: 'dropdown', options: [{ value: 'auto', label: t(lang, 'ed_lang_auto') }, { value: 'tr', label: 'Türkçe' }, { value: 'en', label: 'English' }] } } }] }),
+  // Gelişmiş bölümü: kartın kendi alanları + bağlantı kontrolü (her kartta)
+  advanced: (lang, extra) => ({ type: 'expandable', name: 'adv', flatten: true, title: t(lang, 'ed_advanced'), schema: (extra || []).concat([
+    { name: 'last_seen_sensor', selector: { entity: { domain: ['sensor'], device_class: 'timestamp' } } },
+    { name: 'stale_after', selector: { number: { min: 0, max: 86400, step: 60, mode: 'box', unit_of_measurement: 's' } } }]) })
+};
+
+// Kartı ve editörünü kaydeder, HA'nın "Kart ekle" listesine ekler
+function registerCard(cls, info) {
+  const type = cls.TYPE;
+  if (!customElements.get(type)) customElements.define(type, cls);
+  if (!customElements.get(type + '-editor')) {
+    const Ed = class extends LemurEditor {};
+    Ed.cardClass = cls;
+    customElements.define(type + '-editor', Ed);
+  }
+  window.customCards = window.customCards || [];
+  if (window.customCards.some((x) => x.type === type)) return;
+  const L = () => { const ha = document.querySelector('home-assistant'); return pickLang(ha && ha.hass); };
+  window.customCards.push({ type: type, preview: true, documentationURL: DOCS_URL,
+    get name() { return info[L()].name; }, get description() { return info[L()].desc; } });
+}
+
+// İklim kartı: klima ve petek (radyatör vanası / termostat).
+// Konfor hesabı core/comfort.js'te (projenin kendi formülü).
+
+addText({
+  very_cold: 'Çok soğuk', cool: 'Serin', comfortable: 'Konforlu', humid: 'Nemli', dry: 'Kuru', warm: 'Biraz sıcak', hot: 'Sıcak',
+  st_heating: 'Isıtıyor', st_cooling: 'Soğutuyor', st_idle: 'Bekliyor',
+  mode: 'Mod', fan: 'Fan', target: 'Hedef',
+  m_off: 'Kapalı', m_heat: 'Isıtma', m_cool: 'Soğutma', m_heat_cool: 'Otomatik', m_auto: 'Otomatik',
+  m_dry: 'Nem alma', m_fan_only: 'Fan', m_unavailable: 'Bağlantı yok', m_unknown: 'Bilinmiyor',
+  k_auto: 'Otomatik', k_ac: 'Klima', k_radiator: 'Petek', rs_panel: 'Panel', rs_sectional: 'Dilimli',
+  ed_kind: 'Kart tipi', ed_radiator_style: 'Petek simgesi',
+  ed_temperature_sensor: 'Sıcaklık sensörü (boşsa cihazdan)', ed_humidity_sensor: 'Nem sensörü (boşsa cihazdan)',
+  ed_outdoor_sensor: 'Dış sıcaklık sensörü (petek eşiklerini kaydırır)',
+  ed_show_target: 'Hedef sıcaklık', ed_show_hvac_modes: 'Mod seçici', ed_show_fan_modes: 'Fan hızı seçici',
+  ed_hvac_modes: 'Mod listesinde gösterilecek modlar', ed_sensor_stale_after: 'Sensörden bu kadar saniye haber gelmezse "Sensör yok"',
+  ed_comfort: 'Konfor eşikleri (hissedilen, °C)', ed_radiator_bands: 'Petek renk eşikleri (°C)',
+  ed_cold: 'Çok soğuk sınırı', ed_cool: 'Serin sınırı', ed_warm: 'Biraz sıcak başlangıcı', ed_hot: 'Sıcak başlangıcı',
+  ed_humid_dewpoint: 'Nemli: çiy noktası en az', ed_dry_humidity: 'Kuru: nem en çok', ed_very_cold: 'Çok soğuk sınırı',
+  rb_very_cold: 'Buz mavisi: bunun altı', rb_cold: 'Mavi: bunun altı', rb_comfort: 'Yeşil: bunun altı', rb_warm: 'Sarı: bunun altı (üstü kırmızı)'
+}, {
+  very_cold: 'Very cold', cool: 'Cool', comfortable: 'Comfortable', humid: 'Humid', dry: 'Dry', warm: 'A bit warm', hot: 'Hot',
+  st_heating: 'Heating', st_cooling: 'Cooling', st_idle: 'Idle',
+  mode: 'Mode', fan: 'Fan', target: 'Target',
+  m_off: 'Off', m_heat: 'Heat', m_cool: 'Cool', m_heat_cool: 'Auto', m_auto: 'Auto',
+  m_dry: 'Dry', m_fan_only: 'Fan', m_unavailable: 'No connection', m_unknown: 'Unknown',
+  k_auto: 'Automatic', k_ac: 'Air conditioner', k_radiator: 'Radiator', rs_panel: 'Panel', rs_sectional: 'Sectional',
+  ed_kind: 'Card type', ed_radiator_style: 'Radiator icon',
+  ed_temperature_sensor: 'Temperature sensor (device if empty)', ed_humidity_sensor: 'Humidity sensor (device if empty)',
+  ed_outdoor_sensor: 'Outdoor temperature sensor (shifts radiator thresholds)',
+  ed_show_target: 'Target temperature', ed_show_hvac_modes: 'Mode selector', ed_show_fan_modes: 'Fan speed selector',
+  ed_hvac_modes: 'Modes shown in the mode list', ed_sensor_stale_after: 'Show "No sensor" after this many seconds without news',
+  ed_comfort: 'Comfort thresholds (feels-like, °C)', ed_radiator_bands: 'Radiator colour thresholds (°C)',
+  ed_cold: 'Very cold below', ed_cool: 'Cool below', ed_warm: 'A bit warm from', ed_hot: 'Hot from',
+  ed_humid_dewpoint: 'Humid: dew point at least', ed_dry_humidity: 'Dry: humidity at most', ed_very_cold: 'Very cold below',
+  rb_very_cold: 'Ice blue below', rb_cold: 'Blue below', rb_comfort: 'Green below', rb_warm: 'Yellow below (red above)'
+});
+
+const MODE_ICONS = { cool: 'mdi:snowflake', heat: 'mdi:fire', dry: 'mdi:water-percent', fan_only: 'mdi:fan',
+  heat_cool: 'mdi:sun-snowflake-variant', auto: 'mdi:autorenew', off: 'mdi:power-standby' };
+const modeIcon = (x) => MODE_ICONS[x] || 'mdi:air-conditioner';
+
+// Aç / kapat: cihaz destekliyorsa climate.turn_on/turn_off, desteklemiyorsa set_hvac_mode
+// (TURN_OFF = 128, TURN_ON = 256; bazı termostat vanaları bunları desteklemez)
+function climateOff(card, ids) {
+  ids.forEach((id) => {
+    const st = card.st(id); if (!st) return;
+    const f = num(st.attributes.supported_features) || 0;
+    if (f & 128) card.call('climate', 'turn_off', { entity_id: id });
+    else card.call('climate', 'set_hvac_mode', { entity_id: id, hvac_mode: 'off' });
+  });
+}
+function climateOn(card, ids, mode) {
+  ids.forEach((id) => {
+    const st = card.st(id); if (!st) return;
+    const f = num(st.attributes.supported_features) || 0, modes = (st.attributes.hvac_modes || []).filter((x) => x !== 'off');
+    if (mode && modes.indexOf(mode) >= 0) card.call('climate', 'set_hvac_mode', { entity_id: id, hvac_mode: mode });
+    else if (f & 256) card.call('climate', 'turn_on', { entity_id: id });
+    // Klimada soğutma, petekte (tek mod) ısıtma; yoksa ilk mod
+    else if (modes.length) card.call('climate', 'set_hvac_mode', { entity_id: id, hvac_mode: modes.indexOf('cool') >= 0 ? 'cool' : modes[0] });
+  });
+}
+
+class LemurClimateCard extends LemurCard {
+  static get TYPE() { return 'lemur-climate-card'; }
+  static get DOMAINS() { return ['climate']; }
+  static get DEFAULTS() {
+    return {
+      kind: 'auto',               // auto | ac | radiator (auto: hvac_modes içinde cool varsa klima)
+      radiator_style: 'panel',    // panel | sectional
+      entities: [],
+      temperature_sensor: '',
+      humidity_sensor: '',
+      outdoor_sensor: '',
+      hvac_modes: ['heat', 'cool', 'dry', 'fan_only'],
+      show_target: true,
+      show_hvac_modes: true,
+      show_fan_modes: true,
+      sensor_stale_after: 0
+    };
+  }
+  static nested() { return { comfort: COMFORT_DEFAULTS, radiator_bands: { very_cold: 15, cold: 18, comfort: 24, warm: 26 } }; }
+  static schema(lang) {
+    const n = (name, min, max) => SCH.num(name, min, max, 0.5, '°C');
+    return [
+      Object.assign(SCH.entity('entity', ['climate']), { required: true }),
+      SCH.entities('entities', ['climate']),
+      SCH.text('name'),
+      { type: 'grid', name: '', flatten: true, schema: [SCH.select('kind', lang, ['auto', 'ac', 'radiator'], 'k_'), SCH.select('radiator_style', lang, ['panel', 'sectional'], 'rs_')] },
+      SCH.entity('temperature_sensor', ['sensor'], { device_class: 'temperature' }),
+      SCH.entity('humidity_sensor', ['sensor'], { device_class: 'humidity' }),
+      SCH.entity('outdoor_sensor', ['sensor'], { device_class: 'temperature' }),
+      SCH.appearance(lang, ['show_target', 'show_hvac_modes', 'show_fan_modes']),
+      { name: 'hvac_modes', selector: { select: { multiple: true, mode: 'list',
+        options: ['heat', 'cool', 'dry', 'fan_only', 'heat_cool', 'auto', 'off'].map((x) => ({ value: x, label: t(lang, 'm_' + x) })) } } },
+      { type: 'expandable', name: 'comfort', title: t(lang, 'ed_comfort'), schema: [
+        n('cold', 0, 40), n('cool', 0, 40), n('warm', 0, 45), n('hot', 0, 45), n('humid_dewpoint', 0, 30), SCH.num('dry_humidity', 0, 100, 1, '%')] },
+      // Petek alanları konfor alanlarıyla aynı adı taşıdığı için etiketleri ayrı verilir
+      { type: 'expandable', name: 'radiator_bands', title: t(lang, 'ed_radiator_bands'), schema: [
+        Object.assign(n('very_cold', 0, 40), { label: t(lang, 'rb_very_cold') }), Object.assign(n('cold', 0, 40), { label: t(lang, 'rb_cold') }),
+        Object.assign(n('comfort', 0, 40), { label: t(lang, 'rb_comfort') }), Object.assign(n('warm', 0, 40), { label: t(lang, 'rb_warm') })] },
+      SCH.advanced(lang, [SCH.num('sensor_stale_after', 0, 86400, 60, 's')])
+    ];
+  }
+
+  ids() {
+    const c = this._config;
+    return [c.entity].concat(c.entities || [], [c.temperature_sensor, c.humidity_sensor, c.outdoor_sensor]);
+  }
+
+  _model() {
+    const c = this._config, h = this._hass;
+    const ents = [c.entity].concat(c.entities || []);
+    const main = this.st(c.entity), a = main ? main.attributes : {};
+    const kind = c.kind !== 'auto' ? c.kind : ((a.hvac_modes || []).indexOf('cool') >= 0 ? 'ac' : 'radiator');
+    // Sıcaklık HA'nın biriminde okunur (°C ya da °F); konfor ve renk hesabı için °C'ye çevrilir
+    let tmp = stateNum(h, c.temperature_sensor); if (tmp === null) tmp = num(a.current_temperature);
+    const unit = tempUnit(h), tc = toC(tmp, unit);
+    let rh = stateNum(h, c.humidity_sensor); if (rh === null) rh = num(a.current_humidity);
+    const outdoor = stateNum(h, c.outdoor_sensor);
+    const lost = ents.some((id) => this.isLost(id));
+    const allDead = ents.every((id) => isDead(this.st(id)));
+    const sensorLost = !!c.temperature_sensor && stale(this.st(c.temperature_sensor), c.sensor_stale_after);
+    const onList = ents.filter((id) => !isOff(this.st(id)));
+    const busy = onList.some((id) => {
+      const x = this.st(id).attributes, act = x.hvac_action;
+      if (act === 'heating' || act === 'cooling') return true;
+      return !act && num(x.current_temperature) !== null && num(x.temperature) !== null && num(x.current_temperature) < num(x.temperature);
+    });
+    const m = { kind: kind, t: tmp, unit: unit, rh: rh, isOn: onList.length > 0, lost: lost, allDead: allDead, main: main, a: a, ents: ents };
+    if (kind === 'ac') {
+      m.band = lost ? BANDS.alarm : acBand(tc === null ? 22 : tc, rh, c.comfort);
+      m.icon = { mdi: lost ? 'mdi:air-conditioner' : modeIcon(main ? main.state : '') };
+      m.label = lost ? 'st_lost' : (tc === null ? '' : comfortKey(tc, rh, c.comfort));
+    } else {
+      let st = !m.isOn ? 'st_off' : (busy ? 'st_heating' : 'st_idle');
+      if (lost) st = 'st_lost'; else if (sensorLost) st = 'st_sensor';
+      m.band = radiatorBand(tc === null ? 20 : tc, toC(outdoor, unit), c.radiator_bands, lost || sensorLost);
+      const base = c.radiator_style === 'sectional' ? 'sectional' : 'panel';
+      m.icon = st === 'st_heating' ? { mdi: 'mdi:fire' } : { svg: base + (st === 'st_off' ? '-off' : (st === 'st_lost' || st === 'st_sensor') ? '-lost' : '') };
+      m.label = st;
+    }
+    return m;
+  }
+
+  view(lang) {
+    const c = this._config, m = this._model(), a = m.a, main = m.main;
+    this._m = m;
+    const sec = [m.label ? t(lang, m.label) : ''];
+    if (m.t !== null) sec.push(round(m.t, 1) + ' ' + m.unit);
+    if (m.rh !== null && m.rh > 0) sec.push(pct(Math.round(m.rh), lang));
+    const boxes = [];
+    const target = num(a.temperature);
+    if (c.show_target && target !== null) boxes.push({ type: 'step', id: 'tgt', value: target + '°' });
+    if (m.kind === 'ac' && c.show_hvac_modes) {
+      const modes = (a.hvac_modes || []).filter((x) => c.hvac_modes.indexOf(x) >= 0);
+      const cur = main ? main.state : '';
+      if (modes.length) boxes.push({ type: 'select', id: 'mode', title: t(lang, 'mode'), icon: modeIcon(cur), label: t(lang, 'm_' + cur), value: cur,
+        options: modes.map((x) => ({ value: x, label: t(lang, 'm_' + x), icon: modeIcon(x) })) });
+    }
+    if (m.kind === 'ac' && c.show_fan_modes && (a.fan_modes || []).length) {
+      boxes.push({ type: 'select', id: 'fan', title: t(lang, 'fan'), icon: fanIcon(a.fan_mode || ''),
+        label: a.fan_mode ? fanLabel(lang, a.fan_mode) : t(lang, 'fan'), value: a.fan_mode,
+        options: a.fan_modes.map((x) => ({ value: x, label: fanLabel(lang, x), icon: fanIcon(x) })) });
+    }
+    // Simge eşlemesi anahtarı: klimada mod (cool, heat...), petekte durum (heating, idle, off, lost, sensor)
+    const state = m.kind === 'ac' ? (m.lost ? 'lost' : (main ? main.state : '')) : m.label.replace('st_', '');
+    return { name: a.friendly_name || c.entity, sec: sec, icon: m.icon, state: state, band: m.band, on: m.isOn,
+      disabled: m.kind === 'ac' ? m.lost : m.allDead, boxes: boxes };
+  }
+
+  power() {
+    const m = this._m;
+    if (m.isOn) return climateOff(this, m.ents);
+    return climateOn(this, m.ents, m.kind === 'radiator' ? 'heat' : null);
+  }
+
+  onStep(id, dir) {
+    const a = this._m.a, step = num(a.target_temp_step) || 0.5;
+    this.stepValue('tgt', num(a.temperature), dir * step, num(a.min_temp) !== null ? num(a.min_temp) : 5, num(a.max_temp) !== null ? num(a.max_temp) : 35,
+      (v) => v + '°', (v) => this.call('climate', 'set_temperature', { entity_id: this._m.ents, temperature: v }));
+  }
+
+  onSelect(id, value) {
+    if (id === 'mode') this.call('climate', 'set_hvac_mode', { entity_id: this._config.entity, hvac_mode: value });
+    if (id === 'fan') this.call('climate', 'set_fan_mode', { entity_id: this._config.entity, fan_mode: value });
+  }
+}
+
+registerCard(LemurClimateCard, {
+  tr: { name: 'Lemur İklim Kartı', desc: 'Klima ve petek için konfor göstergeli kart' },
+  en: { name: 'Lemur Climate Card', desc: 'Air conditioner and radiator card with comfort display' }
+});
+
+// Sensör kartı: herhangi bir sayısal sensör. Değer dört sınırla beş bölgeye ayrılır, her bölgenin rengi ve adı var.
+// Hazır ayarlar (preset) sensörün türüne (device_class) göre otomatik seçilir; hepsi editörden değiştirilebilir.
+// Hava temizleyici kartı da bu hazır ayarları kullanır.
+
+addText({
+  // bölge adları
+  z_temperature_0: 'Çok soğuk', z_temperature_1: 'Serin', z_temperature_2: 'Konforlu', z_temperature_3: 'Sıcak', z_temperature_4: 'Çok sıcak',
+  z_humidity_0: 'Çok kuru', z_humidity_1: 'Kuru', z_humidity_2: 'İdeal', z_humidity_3: 'Nemli', z_humidity_4: 'Çok nemli',
+  z_co2_0: 'Temiz', z_co2_1: 'İyi', z_co2_2: 'Havalandır', z_co2_3: 'Kötü', z_co2_4: 'Çok kötü',
+  z_pm25_0: 'İyi', z_pm25_1: 'Orta', z_pm25_2: 'Hassas', z_pm25_3: 'Kötü', z_pm25_4: 'Çok kötü',
+  z_pm10_0: 'İyi', z_pm10_1: 'Orta', z_pm10_2: 'Hassas', z_pm10_3: 'Kötü', z_pm10_4: 'Çok kötü',
+  z_voc_0: 'İyi', z_voc_1: 'Orta', z_voc_2: 'Hassas', z_voc_3: 'Kötü', z_voc_4: 'Çok kötü',
+  z_aqi_0: 'İyi', z_aqi_1: 'Orta', z_aqi_2: 'Hassas', z_aqi_3: 'Kötü', z_aqi_4: 'Çok kötü',
+  z_battery_0: 'Kritik', z_battery_1: 'Zayıf', z_battery_2: 'Orta', z_battery_3: 'İyi', z_battery_4: 'Dolu',
+  z_power_0: 'Boşta', z_power_1: 'Düşük', z_power_2: 'Orta', z_power_3: 'Yüksek', z_power_4: 'Çok yüksek',
+  z_illuminance_0: 'Karanlık', z_illuminance_1: 'Loş', z_illuminance_2: 'Normal', z_illuminance_3: 'Aydınlık', z_illuminance_4: 'Güneşli',
+  p_auto: 'Otomatik (sensör türüne göre)', p_temperature: 'Sıcaklık', p_humidity: 'Nem', p_co2: 'CO₂', p_pm25: 'PM2.5', p_pm10: 'PM10',
+  p_voc: 'VOC (indeks)', p_aqi: 'Hava kalitesi indeksi', p_battery: 'Pil', p_power: 'Güç (W)', p_illuminance: 'Işık (lx)', p_custom: 'Özel (renk sabit)',
+  ed_preset: 'Hazır ayar', ed_levels: 'Bölgeler: sınırlar ve renkler', ed_switch_entity: 'Sağ üstteki düğme bunu açıp kapatsın (isteğe bağlı)',
+  ed_show_zone: 'Bölge adını yaz', ed_decimals: 'Ondalık basamak', ed_extra: 'Altta gösterilecek diğer değerler (en çok 3)',
+  ed_t1: '1. sınır', ed_t2: '2. sınır', ed_t3: '3. sınır', ed_t4: '4. sınır',
+  ed_c1: '1. sınırın altı', ed_c2: '1-2 arası', ed_c3: '2-3 arası', ed_c4: '3-4 arası', ed_c5: '4. sınırın üstü'
+}, {
+  z_temperature_0: 'Very cold', z_temperature_1: 'Cool', z_temperature_2: 'Comfortable', z_temperature_3: 'Warm', z_temperature_4: 'Hot',
+  z_humidity_0: 'Very dry', z_humidity_1: 'Dry', z_humidity_2: 'Ideal', z_humidity_3: 'Humid', z_humidity_4: 'Very humid',
+  z_co2_0: 'Fresh', z_co2_1: 'Good', z_co2_2: 'Ventilate', z_co2_3: 'Poor', z_co2_4: 'Very poor',
+  z_pm25_0: 'Good', z_pm25_1: 'Moderate', z_pm25_2: 'Sensitive', z_pm25_3: 'Unhealthy', z_pm25_4: 'Very unhealthy',
+  z_pm10_0: 'Good', z_pm10_1: 'Moderate', z_pm10_2: 'Sensitive', z_pm10_3: 'Unhealthy', z_pm10_4: 'Very unhealthy',
+  z_voc_0: 'Good', z_voc_1: 'Moderate', z_voc_2: 'Sensitive', z_voc_3: 'Unhealthy', z_voc_4: 'Very unhealthy',
+  z_aqi_0: 'Good', z_aqi_1: 'Moderate', z_aqi_2: 'Sensitive', z_aqi_3: 'Unhealthy', z_aqi_4: 'Very unhealthy',
+  z_battery_0: 'Critical', z_battery_1: 'Low', z_battery_2: 'Medium', z_battery_3: 'Good', z_battery_4: 'Full',
+  z_power_0: 'Idle', z_power_1: 'Low', z_power_2: 'Medium', z_power_3: 'High', z_power_4: 'Very high',
+  z_illuminance_0: 'Dark', z_illuminance_1: 'Dim', z_illuminance_2: 'Normal', z_illuminance_3: 'Bright', z_illuminance_4: 'Sunny',
+  p_auto: 'Automatic (by sensor type)', p_temperature: 'Temperature', p_humidity: 'Humidity', p_co2: 'CO₂', p_pm25: 'PM2.5', p_pm10: 'PM10',
+  p_voc: 'VOC (index)', p_aqi: 'Air quality index', p_battery: 'Battery', p_power: 'Power (W)', p_illuminance: 'Light (lx)', p_custom: 'Custom (fixed colour)',
+  ed_preset: 'Preset', ed_levels: 'Zones: limits and colours', ed_switch_entity: 'Top-right button switches this (optional)',
+  ed_show_zone: 'Show zone name', ed_decimals: 'Decimal places', ed_extra: 'Other values shown below (up to 3)',
+  ed_t1: 'Limit 1', ed_t2: 'Limit 2', ed_t3: 'Limit 3', ed_t4: 'Limit 4',
+  ed_c1: 'Below limit 1', ed_c2: 'Between 1 and 2', ed_c3: 'Between 2 and 3', ed_c4: 'Between 3 and 4', ed_c5: 'Above limit 4'
+});
+
+// Hazır ayarlar: 4 sınır, 5 renk, simge
+const PRESETS = {
+  temperature: { t: [16, 19, 26, 30], c: ['ice', 'blue', 'green', 'yellow', 'red'], icon: 'mdi:thermometer' },
+  humidity:    { t: [25, 35, 60, 70], c: ['orange', 'yellow', 'green', 'blue', 'purple'], icon: 'mdi:water-percent' },
+  co2:         { t: [600, 1000, 1500, 2000], c: ['green', 'green', 'yellow', 'orange', 'red'], icon: 'mdi:molecule-co2' },
+  pm25:        { t: [9, 35, 55, 125], c: ['green', 'yellow', 'orange', 'red', 'purple'], icon: 'mdi:blur' },
+  pm10:        { t: [54, 154, 254, 354], c: ['green', 'yellow', 'orange', 'red', 'purple'], icon: 'mdi:blur-linear' },
+  voc:         { t: [150, 250, 350, 450], c: ['green', 'yellow', 'orange', 'red', 'purple'], icon: 'mdi:air-filter' },
+  aqi:         { t: [51, 101, 151, 201], c: ['green', 'yellow', 'orange', 'red', 'purple'], icon: 'mdi:air-filter' },
+  battery:     { t: [10, 25, 50, 80], c: ['alarm', 'red', 'yellow', 'green', 'green'], icon: 'mdi:battery' },
+  power:       { t: [5, 300, 1500, 3000], c: ['grey', 'green', 'yellow', 'orange', 'red'], icon: 'mdi:flash' },
+  illuminance: { t: [10, 100, 1000, 10000], c: ['blue', 'ice', 'green', 'yellow', 'orange'], icon: 'mdi:brightness-5' },
+  custom:      { t: [null, null, null, null], c: ['green', 'green', 'green', 'green', 'green'], icon: 'mdi:gauge' }
+};
+const PRESET_NAMES = ['auto', 'temperature', 'humidity', 'co2', 'pm25', 'pm10', 'voc', 'aqi', 'battery', 'power', 'illuminance', 'custom'];
+// VOC device_class'ları µg/m³ ya da ppm/ppb ölçer; VOC hazır ayarı ise indeks (1-500) içindir, bu yüzden otomatik seçilmez (elle seçilebilir)
+const DC_PRESET = { temperature: 'temperature', humidity: 'humidity', carbon_dioxide: 'co2', pm25: 'pm25', pm10: 'pm10',
+  aqi: 'aqi', battery: 'battery', power: 'power', illuminance: 'illuminance' };
+
+function presetOf(hass, id, chosen) {
+  if (chosen && chosen !== 'auto' && PRESETS[chosen]) return chosen;
+  const st = hass && id ? hass.states[id] : null;
+  const dc = st ? st.attributes.device_class : '';
+  return DC_PRESET[dc] || 'custom';
+}
+// Bölge ayarları: hazır ayar + kullanıcının değiştirdikleri
+function levelsOf(preset, user) {
+  const p = PRESETS[preset], u = user || {}, d = {};
+  for (let i = 0; i < 4; i++) d['t' + (i + 1)] = p.t[i];
+  for (let i = 0; i < 5; i++) d['c' + (i + 1)] = p.c[i];
+  return Object.assign(d, u);
+}
+// Değeri bölgeye yerleştir: { band, zone (0-4), label }
+function zoneOf(lang, preset, levels, v) {
+  const L = [levels.t1, levels.t2, levels.t3, levels.t4], C = [levels.c1, levels.c2, levels.c3, levels.c4, levels.c5];
+  const i = zoneIndex(v, L);
+  return { band: band(zoneColor(v, L, C)), zone: i, label: preset === 'custom' ? '' : t(lang, 'z_' + preset + '_' + i) };
+}
+// Pil simgesi doluluğa göre
+function batteryIcon(v) {
+  if (v === null) return 'mdi:battery-unknown';
+  const s = Math.round(v / 10) * 10;
+  return s >= 100 ? 'mdi:battery' : s <= 0 ? 'mdi:battery-outline' : 'mdi:battery-' + s;
+}
+const DC_ICONS = { temperature: 'mdi:thermometer', humidity: 'mdi:water-percent', carbon_dioxide: 'mdi:molecule-co2', pm25: 'mdi:blur',
+  pm10: 'mdi:blur-linear', power: 'mdi:flash', energy: 'mdi:lightning-bolt', illuminance: 'mdi:brightness-5', pressure: 'mdi:gauge',
+  voltage: 'mdi:sine-wave', current: 'mdi:current-ac', volatile_organic_compounds: 'mdi:air-filter', volatile_organic_compounds_parts: 'mdi:air-filter',
+  moisture: 'mdi:water', gas: 'mdi:meter-gas', water: 'mdi:water' };
+function entityIcon(hass, id) {
+  const st = hass.states[id];
+  if (!st) return 'mdi:help-circle-outline';
+  if (st.attributes.icon) return st.attributes.icon;
+  const dc = st.attributes.device_class;
+  if (dc === 'battery') return batteryIcon(num(st.state));
+  return DC_ICONS[dc] || 'mdi:eye';
+}
+function levelsSchema(lang) {
+  const row = (i) => ({ type: 'grid', name: '', flatten: true, schema: [SCH.num('t' + i, -100000, 100000, 0.1), SCH.color('c' + i, lang)] });
+  return { type: 'expandable', name: 'levels', title: t(lang, 'ed_levels'), schema: [row(1), row(2), row(3), row(4), SCH.color('c5', lang)] };
+}
+
+class LemurSensorCard extends LemurCard {
+  static get TYPE() { return 'lemur-sensor-card'; }
+  static get DOMAINS() { return ['sensor', 'number', 'input_number']; }
+  static get DEFAULTS() { return { preset: 'auto', extra: [], switch_entity: '', show_zone: true, decimals: '' }; }
+  static stub(hass) {
+    // Önce bilinen türden sayısal bir sensör (sıcaklık, nem, CO2...), yoksa herhangi bir sayısal sensör
+    const isNum = (s) => num(s.state) !== null;
+    const known = ['temperature', 'humidity', 'carbon_dioxide', 'pm25', 'battery', 'power'];
+    for (let i = 0; i < known.length; i++) {
+      const id = firstEntity(hass, ['sensor'], (s) => isNum(s) && s.attributes.device_class === known[i]);
+      if (id) return { entity: id };
+    }
+    return { entity: firstEntity(hass, ['sensor'], isNum) || 'sensor.example' };
+  }
+  static nested(cfg, hass) { return { levels: levelsOf(presetOf(hass, cfg.entity, cfg.preset)) }; }
+  static get RESETS() { return { levels: ['entity', 'preset'] }; }
+  static schema(lang) {
+    return [
+      Object.assign(SCH.entity('entity', ['sensor', 'number', 'input_number']), { required: true }),
+      SCH.text('name'),
+      SCH.select('preset', lang, PRESET_NAMES, 'p_'),
+      { name: 'extra', selector: { entity: { multiple: true } } },
+      { name: 'switch_entity', selector: { entity: { domain: ['switch', 'light', 'fan', 'input_boolean', 'humidifier', 'climate'] } } },
+      SCH.appearance(lang, ['show_zone']),
+      levelsSchema(lang),
+      SCH.advanced(lang, [SCH.num('decimals', 0, 4, 1)])
+    ];
+  }
+  ids() { const c = this._config; return [c.entity, c.switch_entity].concat(c.extra || []); }
+
+  view(lang) {
+    const c = this._config, h = this._hass, st = this.st(c.entity);
+    const preset = presetOf(h, c.entity, c.preset), lv = levelsOf(preset, c.levels);
+    const lost = this.isLost(c.entity);
+    let v = preset === 'power' ? watts(h, c.entity) : stateNum(h, c.entity);
+    // Sıcaklık hazır ayarı °C'dir; °F sensörün değeri bölgelemede °C'ye çevrilir
+    const vz = preset === 'temperature' && st ? toC(v, st.attributes.unit_of_measurement || '') : v;
+    const z = v === null ? { band: BANDS.grey, label: '' } : zoneOf(lang, preset, lv, vz);
+    const valTxt = st ? (preset === 'power' && v !== null ? fmtPower(v) : fmtState(h, c.entity, c.decimals, lang)) : '';
+    const sw = this.st(c.switch_entity);
+    const icon = st && st.attributes.icon ? st.attributes.icon : (preset === 'battery' ? batteryIcon(v) : (DC_ICONS[st && st.attributes.device_class] || PRESETS[preset].icon));
+    return {
+      name: st ? st.attributes.friendly_name : c.entity,
+      sec: lost ? [t(lang, 'st_lost')] : [c.show_zone ? z.label : '', valTxt],
+      icon: { mdi: icon }, band: lost ? BANDS.alarm : z.band,
+      state: lost ? 'lost' : (v === null ? 'unknown' : 'zone' + z.zone),   // simge eşlemesi: zone0..zone4, lost
+      on: sw ? !isOff(sw) : true,
+      powerIcon: c.switch_entity ? 'mdi:power' : null,
+      boxes: (c.extra || []).slice(0, 3).map((id) => ({ type: 'info', icon: entityIcon(h, id), text: fmtState(h, id, null, lang), entity: id, title: friendly(h, id) }))
+    };
+  }
+  power() { if (this._config.switch_entity) this.call('homeassistant', 'toggle', { entity_id: this._config.switch_entity }); }
+}
+
+registerCard(LemurSensorCard, {
+  tr: { name: 'Lemur Sensör Kartı', desc: 'Herhangi bir sensör; değere göre renk değiştiren hale' },
+  en: { name: 'Lemur Sensor Card', desc: 'Any sensor, with a halo that changes colour with the value' }
+});
+
+// Hava kartı: hava temizleyici (fan) + hava kalitesi sensörü. Hale sensörün bölgesine göre renk alır
+// (sensör kartının hazır ayarları: PM2.5, PM10, CO₂, VOC, AQI). Sensör yoksa: açık yeşil, kapalı gri.
+
+addText({
+  speed: 'Hız', preset: 'Program',
+  ed_sensor: 'Hava kalitesi sensörü (PM2.5, CO₂...)', ed_show_speed: 'Hız (− %40 +)', ed_show_presets: 'Program seçici'
+}, {
+  speed: 'Speed', preset: 'Preset',
+  ed_sensor: 'Air quality sensor (PM2.5, CO₂...)', ed_show_speed: 'Speed (− 40% +)', ed_show_presets: 'Preset selector'
+});
+
+class LemurAirCard extends LemurCard {
+  static get TYPE() { return 'lemur-air-card'; }
+  static get DOMAINS() { return ['fan']; }
+  static get DEFAULTS() { return { sensor: '', preset: 'auto', extra: [], show_speed: true, show_presets: true, show_zone: true }; }
+  static nested(cfg, hass) { return { levels: levelsOf(presetOf(hass, cfg.sensor, cfg.preset)) }; }
+  static get RESETS() { return { levels: ['sensor', 'preset'] }; }
+  static stub(hass) {
+    return { entity: firstEntity(hass, ['fan']) || 'fan.example',
+      sensor: firstEntity(hass, ['sensor'], (s) => ['pm25', 'carbon_dioxide', 'aqi'].indexOf(s.attributes.device_class) >= 0) };
+  }
+  static schema(lang) {
+    return [
+      Object.assign(SCH.entity('entity', ['fan']), { required: true }),
+      SCH.entity('sensor', ['sensor']),
+      SCH.text('name'),
+      SCH.select('preset', lang, ['auto', 'pm25', 'pm10', 'co2', 'voc', 'aqi', 'humidity', 'custom'], 'p_'),
+      { name: 'extra', selector: { entity: { multiple: true } } },
+      SCH.appearance(lang, ['show_speed', 'show_presets', 'show_zone']),
+      levelsSchema(lang),
+      SCH.advanced(lang)
+    ];
+  }
+  ids() { const c = this._config; return [c.entity, c.sensor].concat(c.extra || []); }
+
+  view(lang) {
+    const c = this._config, h = this._hass, st = this.st(c.entity), a = st ? st.attributes : {};
+    const on = !isOff(st), lost = this.isLost(c.entity);
+    const sec = [];
+    let bnd = on ? BANDS.green : BANDS.grey;
+    if (c.sensor) {
+      const preset = presetOf(h, c.sensor, c.preset), v = stateNum(h, c.sensor);
+      if (v !== null) {
+        const z = zoneOf(lang, preset, levelsOf(preset, c.levels), v);
+        bnd = z.band;
+        if (c.show_zone) sec.push(z.label);
+      }
+      sec.push(fmtState(h, c.sensor, null, lang));
+    }
+    if (lost) { bnd = BANDS.alarm; sec.unshift(t(lang, 'st_lost')); }
+    else if (!on) sec.push(t(lang, 'st_off'));
+    else if (a.preset_mode) sec.push(fanLabel(lang, a.preset_mode));
+    else if (num(a.percentage) !== null) sec.push(pct(Math.round(num(a.percentage)), lang));
+    const boxes = [];
+    if (c.show_speed && a.percentage !== undefined) {
+      boxes.push({ type: 'step', id: 'spd', value: on && num(a.percentage) !== null ? pct(Math.round(num(a.percentage)), lang) : '—' });
+    }
+    if (c.show_presets && (a.preset_modes || []).length) {
+      boxes.push({ type: 'select', id: 'pre', title: t(lang, 'preset'), icon: a.preset_mode ? fanIcon(a.preset_mode) : 'mdi:tune-variant',
+        label: a.preset_mode ? fanLabel(lang, a.preset_mode) : t(lang, 'preset'), value: a.preset_mode,
+        options: a.preset_modes.map((x) => ({ value: x, label: fanLabel(lang, x), icon: fanIcon(x) })) });
+    }
+    (c.extra || []).forEach((id) => { if (boxes.length < 3) boxes.push({ type: 'info', icon: entityIcon(h, id), text: fmtState(h, id, null, lang), entity: id, title: friendly(h, id) }); });
+    return { name: a.friendly_name || c.entity, sec: sec, icon: { mdi: on ? 'mdi:air-purifier' : 'mdi:air-purifier-off' }, state: lost ? 'lost' : (on ? 'on' : 'off'), band: bnd, on: on, disabled: lost, boxes: boxes };
+  }
+
+  power() { this.call('fan', isOff(this.st(this._config.entity)) ? 'turn_on' : 'turn_off', { entity_id: this._config.entity }); }
+  onStep(id, dir) {
+    const a = this.st(this._config.entity).attributes, step = num(a.percentage_step) || 10;
+    const cur = isOff(this.st(this._config.entity)) ? 0 : (num(a.percentage) || 0);
+    const lang = pickLang(this._hass, this._config.language);
+    this.stepValue('spd', cur, dir * step, 0, 100, (v) => pct(Math.round(v), lang),
+      (v) => this.call('fan', 'set_percentage', { entity_id: this._config.entity, percentage: Math.round(v) }));
+  }
+  onSelect(id, value) { this.call('fan', 'set_preset_mode', { entity_id: this._config.entity, preset_mode: value }); }
+}
+
+registerCard(LemurAirCard, {
+  tr: { name: 'Lemur Hava Kartı', desc: 'Hava temizleyici ve hava kalitesi; kaliteye göre renk değiştiren hale' },
+  en: { name: 'Lemur Air Card', desc: 'Air purifier and air quality, with a halo that follows the air quality' }
+});
+
+// Robot süpürge kartı. Sağ üstteki düğme başlat / duraklat; altta durdur, eve dön, emiş gücü (ya da bul).
+// Hale: temizlerken yeşil, eve dönerken mavi, şarj olurken buz mavisi, istasyonda dolu gri, beklerken sarı, hata kırmızı yanıp söner.
+
+addText({
+  v_cleaning: 'Temizliyor', v_docked: 'İstasyonda', v_charging: 'Şarj oluyor', v_returning: 'Eve dönüyor', v_paused: 'Duraklatıldı',
+  v_idle: 'Bekliyor', v_error: 'Hata', v_start: 'Başlat', v_pause: 'Duraklat', v_stop: 'Durdur', v_home: 'Eve dön', v_locate: 'Bul',
+  v_suction: 'Emiş gücü',
+  ed_battery_sensor: 'Pil sensörü (boşsa cihazdan)', ed_show_stop: 'Durdur', ed_show_return: 'Eve dön', ed_show_fan_speed: 'Emiş gücü', ed_show_locate: 'Bul'
+}, {
+  v_cleaning: 'Cleaning', v_docked: 'Docked', v_charging: 'Charging', v_returning: 'Returning', v_paused: 'Paused',
+  v_idle: 'Idle', v_error: 'Error', v_start: 'Start', v_pause: 'Pause', v_stop: 'Stop', v_home: 'Go home', v_locate: 'Locate',
+  v_suction: 'Suction',
+  ed_battery_sensor: 'Battery sensor (device if empty)', ed_show_stop: 'Stop', ed_show_return: 'Go home', ed_show_fan_speed: 'Suction power', ed_show_locate: 'Locate'
+});
+
+// VacuumEntityFeature bitleri. Öznitelik hiç yoksa (eski ya da sahte cihaz) hepsi var sayılır.
+const VF = { TURN_ON: 1, TURN_OFF: 2, PAUSE: 4, STOP: 8, RETURN: 16, FAN: 32, LOCATE: 512, START: 8192 };
+const vacFeatures = (a) => (a.supported_features === undefined || a.supported_features === null) ? 0xFFFFFF : (num(a.supported_features) || 0);
+// Sağ üst düğme: temizlerken duraklat > durdur > eve dön > kapat; değilse başlat > aç
+function vacPower(f, cleaning) {
+  if (cleaning) return f & VF.PAUSE ? 'pause' : f & VF.STOP ? 'stop' : f & VF.RETURN ? 'return_to_base' : f & VF.TURN_OFF ? 'turn_off' : null;
+  return f & VF.START ? 'start' : f & VF.TURN_ON ? 'turn_on' : null;
+}
+const VAC_PWR = { pause: ['mdi:pause', 'v_pause'], stop: ['mdi:stop', 'v_stop'], return_to_base: ['mdi:home-import-outline', 'v_home'],
+  turn_off: ['mdi:stop', 'v_stop'], start: ['mdi:play', 'v_start'], turn_on: ['mdi:play', 'v_start'] };
+
+class LemurVacuumCard extends LemurCard {
+  static get TYPE() { return 'lemur-vacuum-card'; }
+  static get DOMAINS() { return ['vacuum']; }
+  static get DEFAULTS() { return { battery_sensor: '', show_stop: true, show_return: true, show_fan_speed: true, show_locate: true }; }
+  static schema(lang) {
+    return [
+      Object.assign(SCH.entity('entity', ['vacuum']), { required: true }),
+      SCH.text('name'),
+      SCH.entity('battery_sensor', ['sensor'], { device_class: 'battery' }),
+      SCH.appearance(lang, ['show_stop', 'show_return', 'show_fan_speed', 'show_locate']),
+      SCH.advanced(lang)
+    ];
+  }
+  // Pil: önce seçilen sensör, sonra cihazın battery_level özniteliği (HA 2025.8'den beri kullanımdan kalkıyor),
+  // sonra aynı adlı pil sensörü (sensor.<süpürge>_battery)
+  _battery() {
+    const c = this._config, h = this._hass, st = this.st(c.entity), obj = c.entity.split('.')[1];
+    let v = stateNum(h, c.battery_sensor);
+    if (v === null && st) v = num(st.attributes.battery_level);
+    if (v === null) v = stateNum(h, 'sensor.' + obj + '_battery');
+    if (v === null) v = stateNum(h, 'sensor.' + obj + '_battery_level');
+    return v;
+  }
+  ids() { const obj = this._config.entity.split('.')[1]; return [this._config.entity, this._config.battery_sensor, 'sensor.' + obj + '_battery', 'sensor.' + obj + '_battery_level']; }
+
+  view(lang) {
+    const c = this._config, h = this._hass, st = this.st(c.entity), a = st ? st.attributes : {};
+    const lost = this.isLost(c.entity);
+    const bat = this._battery();
+    let s = st ? st.state : 'unavailable';
+    if (s === 'docked' && bat !== null && bat < 100) s = 'charging';
+    const BAND = { cleaning: 'green', returning: 'blue', charging: 'ice', docked: 'grey', paused: 'yellow', idle: 'yellow', error: 'alarm' };
+    const bnd = lost ? BANDS.alarm : band(BAND[s] || 'grey');
+    const cleaning = s === 'cleaning';
+    const sec = [lost ? t(lang, 'st_lost') : (tMaybe(lang, 'v_' + s) || prettify(s))];
+    if (bat !== null) sec.push(pct(Math.round(bat), lang));
+    if (s === 'error' && a.error) sec.push(String(a.error));
+    const f = vacFeatures(a), pw = vacPower(f, cleaning);
+    const boxes = [];
+    if (c.show_stop && (f & VF.STOP) && pw !== 'stop') boxes.push({ type: 'button', id: 'stop', icon: 'mdi:stop', label: t(lang, 'v_stop') });
+    if (c.show_return && (f & VF.RETURN)) boxes.push({ type: 'button', id: 'home', icon: 'mdi:home-import-outline', label: t(lang, 'v_home'), active: s === 'returning' });
+    if (c.show_fan_speed && (f & VF.FAN) && (a.fan_speed_list || []).length) {
+      boxes.push({ type: 'select', id: 'suction', title: t(lang, 'v_suction'), icon: fanIcon(a.fan_speed || ''), label: a.fan_speed ? fanLabel(lang, a.fan_speed) : t(lang, 'v_suction'),
+        value: a.fan_speed, options: a.fan_speed_list.map((x) => ({ value: x, label: fanLabel(lang, x), icon: fanIcon(x) })) });
+    } else if (c.show_locate && (f & VF.LOCATE)) {
+      boxes.push({ type: 'button', id: 'locate', icon: 'mdi:map-marker-radius', label: t(lang, 'v_locate') });
+    }
+    return { name: a.friendly_name || c.entity, sec: sec, icon: { mdi: s === 'error' ? 'mdi:robot-vacuum-alert' : 'mdi:robot-vacuum' }, state: lost ? 'lost' : s,
+      band: bnd, on: cleaning, disabled: lost, powerIcon: pw ? VAC_PWR[pw][0] : null, powerTitle: pw ? t(lang, VAC_PWR[pw][1]) : '', boxes: boxes };
+  }
+
+  power() {
+    const st = this.st(this._config.entity); if (!st) return;
+    const svc = vacPower(vacFeatures(st.attributes), st.state === 'cleaning');
+    if (svc) this.call('vacuum', svc, { entity_id: this._config.entity });
+  }
+  onButton(id) {
+    const svc = { stop: 'stop', home: 'return_to_base', locate: 'locate' }[id];
+    if (svc) this.call('vacuum', svc, { entity_id: this._config.entity });
+  }
+  onSelect(id, value) { this.call('vacuum', 'set_fan_speed', { entity_id: this._config.entity, fan_speed: value }); }
+}
+
+registerCard(LemurVacuumCard, {
+  tr: { name: 'Lemur Robot Süpürge Kartı', desc: 'Robot süpürge: durum, pil, başlat / eve dön' },
+  en: { name: 'Lemur Vacuum Card', desc: 'Robot vacuum: status, battery, start / go home' }
+});
+
+// Enerji kartı: güneş üretimi, ev tüketimi, şebeke ve batarya. Ana varlığı yok, sensörler seçilir.
+// Şebeke: pozitif = şebekeden çekiş, negatif = şebekeye veriş (ters bağlıysa grid_invert).
+// Şebeke sensörü yoksa tüketim − üretim − batarya deşarjı olarak hesaplanır.
+// Hale: şebekeye veriyor ya da kendine yetiyor yeşil; az çekiş sarı; orta turuncu; çok çekiş kırmızı.
+
+addText({
+  e_name: 'Enerji', e_pick: 'Ayarlardan sensör seç', e_producing: 'Üretiyor', e_export: 'Şebekeye veriyor', e_self: 'Kendine yetiyor', e_import: 'Şebekeden çekiyor', e_nodata: 'Veri yok',
+  e_solar: 'Güneş', e_home: 'Ev', e_grid: 'Şebeke', e_battery: 'Batarya',
+  ed_solar_power: 'Güneş üretimi (W/kW)', ed_home_power: 'Ev tüketimi (W/kW)', ed_grid_power: 'Şebeke gücü (W/kW; + çekiş, − veriş)',
+  ed_grid_invert: 'Şebeke sensörü ters (+ veriş, − çekiş)', ed_battery_soc: 'Batarya doluluğu (%)', ed_battery_power: 'Batarya gücü (W/kW; + deşarj)',
+  ed_battery_invert: 'Batarya gücü ters (+ şarj)', ed_limits: 'Renk sınırları (W)', ed_self_margin: 'Kendine yetiyor sayılan çekiş (en çok)',
+  ed_import_mid: 'Turuncu başlangıcı', ed_import_high: 'Kırmızı başlangıcı',
+  ed_show_solar: 'Güneş kutusu', ed_show_home: 'Ev kutusu', ed_show_grid: 'Şebeke kutusu', ed_show_battery: 'Batarya kutusu'
+}, {
+  e_name: 'Energy', e_pick: 'Pick sensors in the settings', e_producing: 'Producing', e_export: 'Exporting', e_self: 'Self-sufficient', e_import: 'Importing', e_nodata: 'No data',
+  e_solar: 'Solar', e_home: 'Home', e_grid: 'Grid', e_battery: 'Battery',
+  ed_solar_power: 'Solar production (W/kW)', ed_home_power: 'Home consumption (W/kW)', ed_grid_power: 'Grid power (W/kW; + import, − export)',
+  ed_grid_invert: 'Grid sensor inverted (+ export, − import)', ed_battery_soc: 'Battery charge (%)', ed_battery_power: 'Battery power (W/kW; + discharge)',
+  ed_battery_invert: 'Battery power inverted (+ charge)', ed_limits: 'Colour limits (W)', ed_self_margin: 'Import still counted as self-sufficient (max)',
+  ed_import_mid: 'Orange from', ed_import_high: 'Red from',
+  ed_show_solar: 'Solar box', ed_show_home: 'Home box', ed_show_grid: 'Grid box', ed_show_battery: 'Battery box'
+});
+
+const ENERGY_LIMITS = { self_margin: 100, import_mid: 1000, import_high: 3000 };
+
+class LemurEnergyCard extends LemurCard {
+  static get TYPE() { return 'lemur-energy-card'; }
+  static get DOMAINS() { return null; }
+  static get DEFAULTS() {
+    return { solar_power: '', home_power: '', grid_power: '', grid_invert: false, battery_soc: '', battery_power: '', battery_invert: false,
+      show_solar: true, show_home: true, show_grid: true, show_battery: true, show_power: false };
+  }
+  static nested() { return { limits: ENERGY_LIMITS }; }
+  static stub(hass) {
+    const p = (re) => firstEntity(hass, ['sensor'], (s) => s.attributes.device_class === 'power' && re.test(s.entity_id));
+    const any = firstEntity(hass, ['sensor'], (s) => s.attributes.device_class === 'power');
+    const cfg = { solar_power: p(/solar|pv|gunes/i), home_power: p(/home|house|load|ev_|tuketim/i), grid_power: p(/grid|sebeke/i) };
+    if (!cfg.solar_power && !cfg.home_power && !cfg.grid_power) cfg.home_power = any;
+    Object.keys(cfg).forEach((k) => { if (!cfg[k]) delete cfg[k]; });
+    return cfg;
+  }
+  // Sensör seçilmemişse hata yerine kartta "Ayarlardan sensör seç" yazar
+  validate() {}
+  static schema(lang) {
+    const pw = (n) => SCH.entity(n, ['sensor'], { device_class: 'power' });
+    return [
+      SCH.text('name'),
+      pw('solar_power'), pw('home_power'), pw('grid_power'), SCH.bool('grid_invert'),
+      SCH.entity('battery_soc', ['sensor'], { device_class: 'battery' }), pw('battery_power'), SCH.bool('battery_invert'),
+      SCH.appearance(lang, ['show_solar', 'show_home', 'show_grid', 'show_battery']),
+      { type: 'expandable', name: 'limits', title: t(lang, 'ed_limits'), schema: [
+        SCH.num('self_margin', 0, 100000, 10, 'W'), SCH.num('import_mid', 0, 100000, 50, 'W'), SCH.num('import_high', 0, 100000, 50, 'W')] },
+      SCH.advanced(lang)
+    ];
+  }
+  ids() { const c = this._config; return [c.solar_power, c.home_power, c.grid_power, c.battery_soc, c.battery_power]; }
+
+  _flows() {
+    const c = this._config, h = this._hass;
+    const solar = watts(h, c.solar_power), home = watts(h, c.home_power);
+    let grid = watts(h, c.grid_power); if (grid !== null && c.grid_invert) grid = -grid;
+    let batt = watts(h, c.battery_power); if (batt !== null && c.battery_invert) batt = -batt;
+    if (grid === null && home !== null) grid = home - (solar || 0) - (batt || 0);
+    return { solar: solar, home: home, grid: grid, batt: batt, soc: stateNum(h, c.battery_soc) };
+  }
+
+  view(lang) {
+    const c = this._config, f = this._flows(), L = Object.assign({}, ENERGY_LIMITS, c.limits || {});
+    const main = c.grid_power || c.solar_power || c.home_power;
+    if (!main) return { name: t(lang, 'e_name'), sec: [t(lang, 'e_pick')], icon: { mdi: 'mdi:home-lightning-bolt-outline' }, band: BANDS.grey, on: false, powerIcon: null, boxes: [] };
+    const lost = this.isLost(main);
+    let key = 'e_nodata', bnd = BANDS.grey, amount = null;
+    // Yalnız ev sensörü varsa üretim kaynağı yoktur: her şey şebekeden gelir, "kendine yetiyor" denmez
+    const homeOnly = !c.solar_power && !c.battery_power && !c.grid_power;
+    if (f.grid !== null) {
+      if (!homeOnly && f.grid < -L.self_margin) { key = 'e_export'; bnd = BANDS.green; amount = -f.grid; }
+      else if (!homeOnly && f.grid <= L.self_margin) { key = 'e_self'; bnd = BANDS.green; }
+      else { key = 'e_import'; amount = Math.max(f.grid, 0); bnd = f.grid <= L.self_margin ? BANDS.green : f.grid < L.import_mid ? BANDS.yellow : f.grid < L.import_high ? BANDS.orange : BANDS.red; }
+    } else if (f.solar !== null) {
+      // Sadece güneş sensörü var: üretimi göster
+      key = f.solar > 20 ? 'e_producing' : 'e_nodata'; amount = f.solar > 20 ? f.solar : null; bnd = f.solar > 20 ? BANDS.green : BANDS.grey;
+    }
+    const boxes = [];
+    if (c.show_solar && f.solar !== null) boxes.push({ type: 'info', icon: 'mdi:solar-power', text: fmtPower(f.solar), entity: c.solar_power, title: t(lang, 'e_solar') });
+    if (c.show_home && f.home !== null) boxes.push({ type: 'info', icon: 'mdi:home-lightning-bolt-outline', text: fmtPower(f.home), entity: c.home_power, title: t(lang, 'e_home') });
+    if (c.show_grid && f.grid !== null) boxes.push({ type: 'info', icon: f.grid < 0 ? 'mdi:transmission-tower-export' : 'mdi:transmission-tower-import',
+      text: fmtPower(Math.abs(f.grid)), entity: c.grid_power || c.home_power, title: t(lang, 'e_grid') });
+    if (c.show_battery && f.soc !== null) boxes.push({ type: 'info', icon: batteryIcon(f.soc), text: pct(Math.round(f.soc), lang), entity: c.battery_soc, title: t(lang, 'e_battery') });
+    // Dört kutu dar gelir: dördü de varsa ev kutusu çıkar (ev tüketimi alt yazıda zaten okunur)
+    if (boxes.length > 3) boxes.splice(1, 1);
+    return {
+      name: t(lang, 'e_name'),
+      sec: lost ? [t(lang, 'st_lost')] : [t(lang, key), amount !== null ? fmtPower(amount) : ''],
+      icon: { mdi: f.solar !== null && f.solar > 20 ? 'mdi:solar-power-variant' : 'mdi:home-lightning-bolt-outline' },
+      state: lost ? 'lost' : key.replace('e_', ''),   // simge eşlemesi: export, self, import, nodata, lost
+      band: lost ? BANDS.alarm : bnd, on: true, powerIcon: null, moreInfo: main, boxes: boxes
+    };
+  }
+}
+
+registerCard(LemurEnergyCard, {
+  tr: { name: 'Lemur Enerji Kartı', desc: 'Güneş, ev, şebeke ve batarya; şebekeden çekişe göre renk' },
+  en: { name: 'Lemur Energy Card', desc: 'Solar, home, grid and battery, coloured by grid import' }
+});
+
+// Güvenlik kartı: üç tür cihazla çalışır, ana cihazın türüne göre davranır.
+//  - binary_sensor (kapı, pencere, hareket, su kaçağı, duman...): bir ya da birden çok. Açık olanları sayar ve yazar.
+//    Tehlike (su, duman, gaz...) kırmızı yanıp söner; açık kapı/pencere sarı; hareket mavi; hepsi kapalı yeşil.
+//  - alarm_control_panel: evde / dışarıda kur, kapat. Kurulu mavi, kuruluyor sarı, çalıyor kırmızı yanıp söner.
+//  - lock: kilitle / aç. Kilitli yeşil, açık sarı, sıkışmış kırmızı yanıp söner.
+// Kilidi açmak ve alarmı kapatmak iki dokunuş ister ("Emin misin?").
+
+addText({
+  s_group: 'Güvenlik', s_all_closed: 'Hepsi kapalı', s_no_motion: 'Hareket yok', s_all_clear: 'Sorun yok', s_open: 'açık', s_motion: 'Hareket', s_alert: 'Uyarı',
+  s_disarmed: 'Kapalı', s_armed_home: 'Evde kurulu', s_armed_away: 'Dışarıda kurulu', s_armed_night: 'Gece kurulu',
+  s_armed_vacation: 'Tatil modunda', s_armed_custom_bypass: 'Özel kurulu', s_arming: 'Kuruluyor', s_disarming: 'Kapanıyor',
+  s_pending: 'Bekliyor', s_triggered: 'ALARM!', s_code: 'Kod gerekli',
+  s_arm_home: 'Evde', s_arm_away: 'Dışarıda', s_arm_night: 'Gece', s_disarm: 'Kapat',
+  l_locked: 'Kilitli', l_unlocked: 'Kilit açık', l_locking: 'Kilitleniyor', l_unlocking: 'Açılıyor', l_jammed: 'Sıkıştı', l_open: 'Kapı açık',
+  l_opening: 'Kapı açılıyor', l_lock: 'Kilitle', l_unlock: 'Kilidi aç', l_open_door: 'Kapıyı aç',
+  ed_show_list: 'Altta cihazları tek tek göster'
+}, {
+  s_group: 'Security', s_all_closed: 'All closed', s_no_motion: 'No motion', s_all_clear: 'All clear', s_open: 'open', s_motion: 'Motion', s_alert: 'Alert',
+  s_disarmed: 'Disarmed', s_armed_home: 'Armed home', s_armed_away: 'Armed away', s_armed_night: 'Armed night',
+  s_armed_vacation: 'Vacation', s_armed_custom_bypass: 'Armed custom', s_arming: 'Arming', s_disarming: 'Disarming',
+  s_pending: 'Pending', s_triggered: 'ALARM!', s_code: 'Code required',
+  s_arm_home: 'Home', s_arm_away: 'Away', s_arm_night: 'Night', s_disarm: 'Disarm',
+  l_locked: 'Locked', l_unlocked: 'Unlocked', l_locking: 'Locking', l_unlocking: 'Unlocking', l_jammed: 'Jammed', l_open: 'Door open',
+  l_opening: 'Opening', l_lock: 'Lock', l_unlock: 'Unlock', l_open_door: 'Open door',
+  ed_show_list: 'Show each device below'
+});
+
+const DANGER = ['moisture', 'smoke', 'gas', 'carbon_monoxide', 'safety', 'problem', 'tamper', 'heat'];
+const ACTIVITY = ['motion', 'occupancy', 'presence', 'vibration', 'sound'];
+// [kapalı/normal simge, açık/algılandı simge]
+const BS_ICONS = {
+  door: ['mdi:door-closed', 'mdi:door-open'], window: ['mdi:window-closed-variant', 'mdi:window-open-variant'],
+  garage_door: ['mdi:garage', 'mdi:garage-open'], opening: ['mdi:square-outline', 'mdi:square-rounded-badge-outline'],
+  lock: ['mdi:lock', 'mdi:lock-open-variant'], motion: ['mdi:motion-sensor-off', 'mdi:motion-sensor'],
+  occupancy: ['mdi:home-outline', 'mdi:home-account'], presence: ['mdi:home-outline', 'mdi:home-account'],
+  moisture: ['mdi:water-off', 'mdi:water-alert'], smoke: ['mdi:smoke-detector-variant', 'mdi:smoke-detector-variant-alert'],
+  gas: ['mdi:meter-gas', 'mdi:meter-gas-outline'], carbon_monoxide: ['mdi:smoke-detector', 'mdi:smoke-detector-alert'],
+  safety: ['mdi:shield-check', 'mdi:shield-alert'], problem: ['mdi:check-circle', 'mdi:alert-circle'], tamper: ['mdi:check-circle', 'mdi:alert-circle'],
+  heat: ['mdi:thermometer', 'mdi:fire-alert'], vibration: ['mdi:crop-portrait', 'mdi:vibrate'], sound: ['mdi:music-note-off', 'mdi:music-note']
+};
+const bsIcon = (st) => { const dc = st ? st.attributes.device_class : '', p = BS_ICONS[dc] || ['mdi:checkbox-blank-circle-outline', 'mdi:checkbox-marked-circle']; return p[st && st.state === 'on' ? 1 : 0]; };
+const ALARM_ICONS = { disarmed: 'mdi:shield-off-outline', armed_home: 'mdi:shield-home', armed_away: 'mdi:shield-lock', armed_night: 'mdi:shield-moon',
+  armed_vacation: 'mdi:shield-airplane', armed_custom_bypass: 'mdi:security', arming: 'mdi:shield-sync', disarming: 'mdi:shield-sync',
+  pending: 'mdi:shield-sync', triggered: 'mdi:bell-ring' };
+const LOCK_ICONS = { locked: 'mdi:lock', unlocked: 'mdi:lock-open-variant', locking: 'mdi:lock-clock', unlocking: 'mdi:lock-clock',
+  jammed: 'mdi:lock-alert', open: 'mdi:door-open', opening: 'mdi:door-open' };
+
+class LemurSecurityCard extends LemurCard {
+  static get TYPE() { return 'lemur-security-card'; }
+  static get DOMAINS() { return ['binary_sensor', 'alarm_control_panel', 'lock']; }
+  static get DEFAULTS() { return { entities: [], show_list: true, show_power: false }; }
+  static stub(hass) { return { entity: firstEntity(hass, ['alarm_control_panel', 'lock']) || firstEntity(hass, ['binary_sensor'], (s) => !!BS_ICONS[s.attributes.device_class]) || 'binary_sensor.example' }; }
+  static schema(lang) {
+    return [
+      Object.assign(SCH.entity('entity', ['binary_sensor', 'alarm_control_panel', 'lock']), { required: true }),
+      SCH.entities('entities', ['binary_sensor', 'lock']),
+      SCH.text('name'),
+      SCH.appearance(lang, ['show_list']),
+      SCH.advanced(lang)
+    ];
+  }
+
+  view(lang) {
+    const dom = this._config.entity.split('.')[0];
+    if (dom === 'alarm_control_panel') return this._alarm(lang);
+    if (dom === 'lock') return this._lock(lang);
+    return this._sensors(lang);
+  }
+
+  _sensors(lang) {
+    const c = this._config, h = this._hass, ids = [c.entity].concat(c.entities || []), sts = ids.map((id) => this.st(id));
+    const lost = ids.some((id) => this.isLost(id));
+    const onIds = ids.filter((id) => { const s = this.st(id); return s && s.state === 'on'; });
+    const dcOf = (id) => { const s = this.st(id); return s ? s.attributes.device_class : ''; };
+    const danger = onIds.filter((id) => DANGER.indexOf(dcOf(id)) >= 0);
+    const active = onIds.filter((id) => ACTIVITY.indexOf(dcOf(id)) >= 0);
+    const open = onIds.filter((id) => danger.indexOf(id) < 0 && active.indexOf(id) < 0);
+    const short = (id) => String(friendly(h, id)).replace(/\s*(sensörü|sensor|kontak|contact)\s*$/i, '');
+    let bnd = BANDS.green, sec = [], icon = bsIcon(this.st(c.entity)), state = 'clear';
+    const mainDc = dcOf(c.entity);
+    if (danger.length) { state = 'danger'; bnd = BANDS.alarm; icon = bsIcon(this.st(danger[0])); sec = [t(lang, 's_alert'), danger.map(short).join(', ')]; }
+    else if (open.length) { state = 'open'; bnd = BANDS.yellow; icon = bsIcon(this.st(open[0])); sec = [ids.length > 1 ? open.length + ' ' + t(lang, 's_open') : t(lang, 'st_on'), ids.length > 1 ? open.map(short).join(', ') : '']; }
+    else if (active.length) { state = 'motion'; bnd = BANDS.blue; icon = bsIcon(this.st(active[0])); sec = [t(lang, 's_motion'), active.map(short).join(', ')]; }
+    else sec = [t(lang, ACTIVITY.indexOf(mainDc) >= 0 ? 's_no_motion' : DANGER.indexOf(mainDc) >= 0 ? 's_all_clear' : 's_all_closed')];
+    if (lost) { state = 'lost'; bnd = BANDS.alarm; sec.unshift(t(lang, 'st_lost')); }
+    // Altta: önce açık / algılayanlar, en çok 3
+    const order = onIds.concat(ids.filter((id) => onIds.indexOf(id) < 0));
+    const boxes = c.show_list && ids.length > 1 ? order.slice(0, 3).map((id) => ({ type: 'info', icon: bsIcon(this.st(id)), text: short(id), entity: id, title: friendly(h, id) })) : [];
+    return { name: ids.length > 1 ? t(lang, 's_group') : friendly(h, c.entity), sec: sec, icon: { mdi: icon }, state: state, band: bnd, on: onIds.length > 0, powerIcon: null, boxes: boxes };
+  }
+
+  _alarm(lang) {
+    const c = this._config, st = this.st(c.entity), a = st ? st.attributes : {}, s = st ? st.state : 'unavailable';
+    const lost = this.isLost(c.entity);
+    const B = { disarmed: 'green', triggered: 'alarm', arming: 'yellow', pending: 'yellow', disarming: 'yellow' };
+    const bnd = lost ? BANDS.alarm : band(B[s] || (s.indexOf('armed') === 0 ? 'blue' : 'grey'));
+    const f = num(a.supported_features) || 0, codeArm = a.code_arm_required !== false && !!a.code_format, codeDisarm = !!a.code_format;
+    const boxes = [];
+    if (!codeArm) {
+      if (f & 1) boxes.push({ type: 'button', id: 'arm_home', icon: 'mdi:shield-home', label: t(lang, 's_arm_home'), active: s === 'armed_home', showLabel: true });
+      if (f & 2) boxes.push({ type: 'button', id: 'arm_away', icon: 'mdi:shield-lock', label: t(lang, 's_arm_away'), active: s === 'armed_away', showLabel: true });
+      if ((f & 4) && boxes.length < 2) boxes.push({ type: 'button', id: 'arm_night', icon: 'mdi:shield-moon', label: t(lang, 's_arm_night'), active: s === 'armed_night', showLabel: true });
+    }
+    if (!codeDisarm) boxes.push({ type: 'button', id: 'disarm', icon: 'mdi:shield-off-outline', label: t(lang, 's_disarm'), active: s === 'disarmed', confirm: true, showLabel: true });
+    if (codeArm || codeDisarm) boxes.push({ type: 'info', icon: 'mdi:dialpad', text: t(lang, 's_code'), entity: c.entity });
+    return { name: a.friendly_name || c.entity, sec: [lost ? t(lang, 'st_lost') : (tMaybe(lang, 's_' + s) || prettify(s))],
+      icon: { mdi: ALARM_ICONS[s] || 'mdi:shield-outline' }, state: lost ? 'lost' : s, band: bnd, on: s.indexOf('armed') === 0, powerIcon: null, disabled: lost, boxes: boxes };
+  }
+
+  _lock(lang) {
+    const c = this._config, ids = [c.entity].concat(c.entities || []), st = this.st(c.entity), a = st ? st.attributes : {}, s = st ? st.state : 'unavailable';
+    const lost = ids.some((id) => this.isLost(id));
+    const anyOpen = ids.some((id) => { const x = this.st(id); return x && (x.state === 'unlocked' || x.state === 'open'); });
+    const B = { locked: 'green', unlocked: 'yellow', open: 'yellow', opening: 'yellow', locking: 'blue', unlocking: 'blue', jammed: 'alarm' };
+    const bnd = lost ? BANDS.alarm : band(anyOpen && s === 'locked' ? 'yellow' : (B[s] || 'grey'));
+    const boxes = [
+      { type: 'button', id: 'lock', icon: 'mdi:lock', label: t(lang, 'l_lock'), active: s === 'locked', showLabel: true },
+      { type: 'button', id: 'unlock', icon: 'mdi:lock-open-variant', label: t(lang, 'l_unlock'), active: s === 'unlocked', confirm: true, showLabel: true }
+    ];
+    if ((num(a.supported_features) || 0) & 1) boxes.push({ type: 'button', id: 'open', icon: 'mdi:door-open', label: t(lang, 'l_open_door'), confirm: true, showLabel: true });
+    return { name: a.friendly_name || c.entity, sec: [lost ? t(lang, 'st_lost') : (tMaybe(lang, 'l_' + s) || prettify(s))],
+      icon: { mdi: LOCK_ICONS[s] || 'mdi:lock-question' }, state: lost ? 'lost' : s, band: bnd, on: s === 'locked', powerIcon: null, disabled: lost, boxes: boxes };
+  }
+
+  onButton(id) {
+    const c = this._config, dom = c.entity.split('.')[0];
+    if (dom === 'alarm_control_panel') this.call('alarm_control_panel', 'alarm_' + id, { entity_id: c.entity });
+    if (dom === 'lock') this.call('lock', id, { entity_id: [c.entity].concat(c.entities || []).filter((x) => x.indexOf('lock.') === 0) });
+  }
+}
+
+registerCard(LemurSecurityCard, {
+  tr: { name: 'Lemur Güvenlik Kartı', desc: 'Kapı, pencere, sızıntı ve duman sensörleri, alarm paneli ya da kilit' },
+  en: { name: 'Lemur Security Card', desc: 'Door, window, leak and smoke sensors, alarm panel or lock' }
+});
+
+// Oda kartı: bir odanın özeti. Sıcaklık ve nemden konfor (iklim kartıyla aynı hesap), ışıklar, iklim cihazı ve bir ek cihaz.
+// Sağ üstteki düğme odadaki her şeyi kapatır (bir şey açıksa) ya da ışıkları açar.
+// Altta: ışıklar (açık / toplam, dokununca hepsini aç-kapat), iklim cihazı (mod simgesi + hedef), ek cihaz.
+
+addText({
+  r_name: 'Oda', r_pick: 'Ayarlardan cihaz seç', r_lights: 'Işıklar', r_lights_off: 'Işıklar kapalı', r_lights_n: 'ışık açık', r_all_off: 'Hepsini kapat', r_lights_on: 'Işıkları aç',
+  ed_climate: 'Klima / petek (isteğe bağlı)', ed_lights: 'Işıklar', ed_extra_entity: 'Ek cihaz (TV, fan, priz...)',
+  ed_show_lights: 'Işık kutusu', ed_show_climate: 'İklim kutusu', ed_show_extra: 'Ek cihaz kutusu'
+}, {
+  r_name: 'Room', r_pick: 'Pick devices in the settings', r_lights: 'Lights', r_lights_off: 'Lights off', r_lights_n: 'lights on', r_all_off: 'Turn everything off', r_lights_on: 'Turn lights on',
+  ed_climate: 'Air conditioner / radiator (optional)', ed_lights: 'Lights', ed_extra_entity: 'Extra device (TV, fan, plug...)',
+  ed_show_lights: 'Lights box', ed_show_climate: 'Climate box', ed_show_extra: 'Extra device box'
+});
+
+const DOMAIN_ICONS = { media_player: ['mdi:television-off', 'mdi:television'], fan: ['mdi:fan-off', 'mdi:fan'], switch: ['mdi:power-plug-off-outline', 'mdi:power-plug'],
+  light: ['mdi:lightbulb-outline', 'mdi:lightbulb'], input_boolean: ['mdi:toggle-switch-off-outline', 'mdi:toggle-switch'],
+  humidifier: ['mdi:air-humidifier-off', 'mdi:air-humidifier'], cover: ['mdi:window-shutter', 'mdi:window-shutter-open'] };
+
+class LemurRoomCard extends LemurCard {
+  static get TYPE() { return 'lemur-room-card'; }
+  static get DOMAINS() { return null; }
+  static get DEFAULTS() {
+    return { icon: '', temperature_sensor: '', humidity_sensor: '', climate: '', lights: [], extra_entity: '',
+      show_lights: true, show_climate: true, show_extra: true };
+  }
+  static nested() { return { comfort: COMFORT_DEFAULTS }; }
+  static stub(hass) {
+    const tmp = firstEntity(hass, ['sensor'], (s) => s.attributes.device_class === 'temperature');
+    const light = firstEntity(hass, ['light']), cl = firstEntity(hass, ['climate']);
+    const cfg = {};   // ad boşsa kart dile göre "Oda" / "Room" yazar
+    if (tmp) cfg.temperature_sensor = tmp;
+    if (light) cfg.lights = [light];
+    if (!tmp && cl) cfg.climate = cl;
+    return cfg;
+  }
+  // Hiçbir şey seçilmemişse hata yerine kartta "Ayarlardan cihaz seç" yazar
+  validate() {}
+  static schema(lang) {
+    const n = (name, min, max) => SCH.num(name, min, max, 0.5, '°C');
+    return [
+      SCH.text('name'),
+      SCH.entity('temperature_sensor', ['sensor'], { device_class: 'temperature' }),
+      SCH.entity('humidity_sensor', ['sensor'], { device_class: 'humidity' }),
+      SCH.entity('climate', ['climate']),
+      SCH.entities('lights', ['light', 'switch']),
+      { name: 'extra_entity', selector: { entity: { domain: ['media_player', 'fan', 'switch', 'input_boolean', 'humidifier', 'light', 'cover'] } } },
+      SCH.appearance(lang, ['show_lights', 'show_climate', 'show_extra']),
+      { type: 'expandable', name: 'comfort', title: t(lang, 'ed_comfort'), schema: [
+        n('cold', 0, 40), n('cool', 0, 40), n('warm', 0, 45), n('hot', 0, 45), n('humid_dewpoint', 0, 30), SCH.num('dry_humidity', 0, 100, 1, '%')] },
+      SCH.advanced(lang)
+    ];
+  }
+  ids() { const c = this._config; return [c.temperature_sensor, c.humidity_sensor, c.climate, c.extra_entity].concat(c.lights || []); }
+
+  // Ek cihaz açık mı: görünüm ve sağ üst düğme aynı kuralı kullanır (kapalı perde, bekleyen medya "kapalı" sayılır)
+  _exOn() {
+    const ex = this.st(this._config.extra_entity);
+    return !!ex && !isOff(ex) && ['idle', 'standby', 'closed', 'paused'].indexOf(ex.state) < 0;
+  }
+  _lightsOn() { return (this._config.lights || []).filter((id) => !isOff(this.st(id))); }
+  _anyOn() { const cl = this.st(this._config.climate); return this._lightsOn().length > 0 || (!!cl && !isOff(cl)) || this._exOn(); }
+
+  view(lang) {
+    const c = this._config, h = this._hass, cl = this.st(c.climate), ca = cl ? cl.attributes : {};
+    if (!c.temperature_sensor && !c.climate && !(c.lights || []).length && !c.extra_entity) {
+      return { name: t(lang, 'r_name'), sec: [t(lang, 'r_pick')], icon: { mdi: 'mdi:sofa-outline' }, band: BANDS.grey, on: false, powerIcon: null, boxes: [] };
+    }
+    // Sıcaklık HA'nın biriminde gösterilir, konfor hesabı °C ile yapılır
+    let tmp = stateNum(h, c.temperature_sensor); if (tmp === null) tmp = num(ca.current_temperature);
+    let rh = stateNum(h, c.humidity_sensor); if (rh === null) rh = num(ca.current_humidity);
+    const unit = tempUnit(h), tc = toC(tmp, unit);
+    const lights = c.lights || [], lightsOn = this._lightsOn();
+    const ex = this.st(c.extra_entity), exOn = this._exOn();
+    const anyOn = this._anyOn();
+    const sensorLost = c.temperature_sensor ? this.isLost(c.temperature_sensor) : false;
+    let bnd = tc !== null ? acBand(tc, rh, c.comfort) : (lightsOn.length ? BANDS.yellow : BANDS.grey);
+    const sec = [];
+    if (sensorLost) { bnd = BANDS.alarm; sec.push(t(lang, 'st_sensor')); }
+    else if (tc !== null) sec.push(t(lang, comfortKey(tc, rh, c.comfort)));
+    if (tmp !== null) sec.push(round(tmp, 1) + ' ' + unit);
+    if (rh !== null && rh > 0) sec.push(pct(Math.round(rh), lang));
+    // Sıcaklık yoksa alt yazıda ışık durumu
+    if (tmp === null && lights.length) sec.push(lightsOn.length ? lightsOn.length + '/' + lights.length + ' ' + t(lang, 'r_lights_n') : t(lang, 'r_lights_off'));
+    const boxes = [];
+    if (c.show_lights && lights.length) boxes.push({ type: 'button', id: 'lights', icon: lightsOn.length ? 'mdi:lightbulb-group' : 'mdi:lightbulb-group-off-outline',
+      label: lightsOn.length + '/' + lights.length, active: lightsOn.length > 0, showLabel: true });
+    if (c.show_climate && cl) {
+      const tg = num(ca.temperature);
+      boxes.push({ type: 'button', id: 'climate', icon: isDead(cl) ? 'mdi:air-conditioner' : modeIcon(cl.state),
+        label: isOff(cl) ? t(lang, 'st_off') : (tg !== null ? tg + '°' : t(lang, 'm_' + cl.state)), active: !isOff(cl), showLabel: true });
+    }
+    if (c.show_extra && ex) {
+      const d = DOMAIN_ICONS[c.extra_entity.split('.')[0]] || ['mdi:toggle-switch-off-outline', 'mdi:toggle-switch'];
+      boxes.push({ type: 'button', id: 'extra', icon: ex.attributes.icon || d[exOn ? 1 : 0], label: exOn ? t(lang, 'st_on') : t(lang, 'st_off'), active: exOn, showLabel: true });
+    }
+    return { name: t(lang, 'r_name'), sec: sec, icon: { mdi: 'mdi:sofa-outline' }, state: anyOn ? 'on' : 'off', band: bnd, on: anyOn,
+      powerIcon: lights.length || cl || ex ? undefined : null,
+      powerTitle: t(lang, anyOn ? 'r_all_off' : 'r_lights_on'), moreInfo: c.temperature_sensor || c.climate || lights[0] || c.extra_entity, boxes: boxes };
+  }
+
+  _lights(on) {
+    const ls = this._config.lights || [];
+    if (ls.length) this.call('homeassistant', on ? 'turn_on' : 'turn_off', { entity_id: ls });
+  }
+  power() {
+    const c = this._config, cl = this.st(c.climate);
+    if (!this._anyOn()) return this._lights(true);
+    // Odadan çıkarken: her şeyi kapat
+    this._lights(false);
+    if (cl && !isOff(cl)) climateOff(this, [c.climate]);
+    if (this._exOn()) this.call('homeassistant', 'turn_off', { entity_id: c.extra_entity });
+  }
+  onButton(id) {
+    const c = this._config;
+    if (id === 'lights') this._lights(!this._lightsOn().length);
+    if (id === 'climate') { if (isOff(this.st(c.climate))) climateOn(this, [c.climate]); else climateOff(this, [c.climate]); }
+    // Ek cihaz: aç / kapat (medya oynatıcı dahil; kapalı TV'yi de açar)
+    if (id === 'extra') this.call('homeassistant', this._exOn() ? 'turn_off' : 'turn_on', { entity_id: c.extra_entity });
+  }
+}
+
+registerCard(LemurRoomCard, {
+  tr: { name: 'Lemur Oda Kartı', desc: 'Odanın konforu, ışıkları ve iklim cihazı tek kartta' },
+  en: { name: 'Lemur Room Card', desc: 'A room at a glance: comfort, lights and climate in one card' }
+});
+
+// Işık kartı: hale lambanın kendi rengini alır (renkli lamba: rengi; beyaz lamba: renk sıcaklığı), parlaklığı halenin şiddeti olur.
+// Bir ya da birden çok lamba. Altta parlaklık (− %80 +), renk sıcaklığı (− 2700K +) ve efekt seçici.
+// Efekt kartları için ayrıca Lemur Light Effect Card var; bu kart günlük kullanım içindir.
+
+addText({
+  li_on: 'Açık', li_some_on: 'açık', li_effect: 'Efekt', li_none: 'Yok',
+  ed_show_brightness: 'Parlaklık (− %80 +)', ed_show_color_temp: 'Renk sıcaklığı (− 2700K +)', ed_show_effect: 'Efekt seçici',
+  ed_brightness_step: 'Parlaklık adımı (%)', ed_kelvin_step: 'Renk sıcaklığı adımı (K)'
+}, {
+  li_on: 'On', li_some_on: 'on', li_effect: 'Effect', li_none: 'None',
+  ed_show_brightness: 'Brightness (− 80% +)', ed_show_color_temp: 'Colour temperature (− 2700K +)', ed_show_effect: 'Effect selector',
+  ed_brightness_step: 'Brightness step (%)', ed_kelvin_step: 'Colour temperature step (K)'
+});
+
+// Renk sıcaklığından (K) yaklaşık RGB
+function kelvinRgb(k) {
+  const x = Math.max(1000, Math.min(40000, k)) / 100;
+  let r, g, b;
+  if (x <= 66) { r = 255; g = 99.47 * Math.log(x) - 161.12; b = x <= 19 ? 0 : 138.52 * Math.log(x - 10) - 305.04; }
+  else { r = 329.7 * Math.pow(x - 60, -0.1332); g = 288.12 * Math.pow(x - 60, -0.0755); b = 255; }
+  const c = (v) => Math.max(0, Math.min(255, Math.round(v)));
+  return c(r) + ',' + c(g) + ',' + c(b);
+}
+
+class LemurLightCard extends LemurCard {
+  static get TYPE() { return 'lemur-light-card'; }
+  static get DOMAINS() { return ['light']; }
+  static get DEFAULTS() { return { entities: [], show_brightness: true, show_color_temp: true, show_effect: true, brightness_step: 10, kelvin_step: 250 }; }
+  static schema(lang) {
+    return [
+      Object.assign(SCH.entity('entity', ['light']), { required: true }),
+      SCH.entities('entities', ['light']),
+      SCH.text('name'),
+      SCH.appearance(lang, ['show_brightness', 'show_color_temp', 'show_effect']),
+      { type: 'expandable', name: 'adv', flatten: true, title: t(lang, 'ed_advanced'), schema: [
+        SCH.num('brightness_step', 1, 50, 1, '%'), SCH.num('kelvin_step', 50, 1000, 50, 'K')] },
+      SCH.advanced(lang)
+    ];
+  }
+
+  _ents() { return [this._config.entity].concat(this._config.entities || []); }
+
+  view(lang) {
+    const c = this._config, ents = this._ents(), st = this.st(c.entity), a = st ? st.attributes : {};
+    const onIds = ents.filter((id) => !isOff(this.st(id)));
+    const on = onIds.length > 0;
+    const lost = ents.some((id) => this.isLost(id));
+    // Renk ve parlaklık açık olan ilk lambadan
+    const lead = on ? this.st(onIds[0]).attributes : a;
+    const bri = on && num(lead.brightness) !== null ? Math.round(num(lead.brightness) / 2.55) : (on ? 100 : 0);
+    const kelvin = num(lead.color_temp_kelvin);
+    let rgb = '255,180,90';
+    if (lead.color_mode === 'color_temp' && kelvin) rgb = kelvinRgb(kelvin);
+    else if (Array.isArray(lead.rgb_color)) rgb = lead.rgb_color.join(',');
+    else if (kelvin) rgb = kelvinRgb(kelvin);
+    const bnd = lost ? BANDS.alarm : on ? { name: 'light', rgb: rgb, duration: 5.0 } : BANDS.grey;
+    const modes = a.supported_color_modes || [];
+    const dimmable = modes.some((m) => m !== 'onoff');
+    const sec = [];
+    if (lost) sec.push(t(lang, 'st_lost'));
+    else if (ents.length > 1) sec.push(onIds.length + '/' + ents.length + ' ' + t(lang, 'li_some_on'));
+    else sec.push(t(lang, on ? 'li_on' : 'st_off'));
+    if (on && dimmable) sec.push(pct(bri, lang));
+    if (on && lead.color_mode === 'color_temp' && kelvin) sec.push(Math.round(kelvin) + 'K');
+    if (on && lead.effect && lead.effect !== 'none' && lead.effect !== 'None') sec.push(String(lead.effect));
+    const boxes = [];
+    if (c.show_brightness && dimmable) boxes.push({ type: 'step', id: 'bri', value: on ? pct(bri, lang) : '—' });
+    if (c.show_color_temp && modes.indexOf('color_temp') >= 0) boxes.push({ type: 'step', id: 'ct', value: kelvin && on ? Math.round(kelvin) + 'K' : '—' });
+    if (c.show_effect && (a.effect_list || []).length) {
+      boxes.push({ type: 'select', id: 'fx', title: t(lang, 'li_effect'), icon: 'mdi:creation', label: a.effect || t(lang, 'li_effect'), value: a.effect,
+        options: a.effect_list.map((x) => ({ value: x, label: String(x) })) });
+    }
+    return { name: a.friendly_name || c.entity, sec: sec, icon: { mdi: on ? 'mdi:lightbulb' : 'mdi:lightbulb-outline' }, state: lost ? 'lost' : (on ? 'on' : 'off'), band: bnd, on: on,
+      haloK: on ? 0.35 + 0.65 * bri / 100 : 0.3, disabled: lost && !on, boxes: boxes };
+  }
+
+  power() {
+    const ents = this._ents(), on = ents.some((id) => !isOff(this.st(id)));
+    this.call('light', on ? 'turn_off' : 'turn_on', { entity_id: ents });
+  }
+  // Adım düğmeleri, ekranda gösterilen lambadan (açık olan ilk lamba) başlar; komut gruptaki bütün lambalara gider
+  onStep(id, dir) {
+    const c = this._config, ents = this._ents(), lang = pickLang(this._hass, c.language);
+    const onIds = ents.filter((x) => !isOff(this.st(x))), st = this.st(onIds.length ? onIds[0] : c.entity);
+    if (!st) return;
+    const a = st.attributes, on = onIds.length > 0;
+    if (id === 'bri') {
+      const cur = on && num(a.brightness) !== null ? Math.round(num(a.brightness) / 2.55) : 0;
+      this.stepValue('bri', cur, dir * Number(c.brightness_step), dir > 0 ? 1 : 0, 100, (v) => pct(Math.round(v), lang),
+        (v) => v <= 0 ? this.call('light', 'turn_off', { entity_id: ents }) : this.call('light', 'turn_on', { entity_id: ents, brightness_pct: Math.round(v) }));
+    }
+    if (id === 'ct') {
+      const lo = num(a.min_color_temp_kelvin) || 2000, hi = num(a.max_color_temp_kelvin) || 6500;
+      const cur = num(a.color_temp_kelvin) || Math.round((lo + hi) / 2);
+      this.stepValue('ct', cur, dir * Number(c.kelvin_step), lo, hi, (v) => Math.round(v) + 'K',
+        (v) => this.call('light', 'turn_on', { entity_id: ents, color_temp_kelvin: Math.round(v) }));
+    }
+  }
+  onSelect(id, value) { this.call('light', 'turn_on', { entity_id: this._ents(), effect: value }); }
+}
+
+registerCard(LemurLightCard, {
+  tr: { name: 'Lemur Işık Kartı', desc: 'Hale lambanın rengini ve parlaklığını alır; parlaklık ve renk sıcaklığı ayarı' },
+  en: { name: 'Lemur Light Card', desc: 'The halo takes the lamp\'s colour and brightness; brightness and colour temperature control' }
+});
+
+console.info('%c LEMUR HALO CARDS %c v' + CARD_VERSION + ' ', 'background:#F0A93B;color:#1A1105;font-weight:700', 'background:#1E2024;color:#ECEDEF');
+})();

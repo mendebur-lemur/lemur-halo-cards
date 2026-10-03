@@ -1,4 +1,4 @@
-// Kendi simgelerimiz. Petek simgeleri Hakan'ın petek-ikonlari.js çiziminden (dev/eski-kartlar/).
+// Kendi simgelerimiz. Petek simgeleri bu projenin kendi çizimi.
 // MDI simgeleri için HA'nın ha-icon bileşeni kullanılır (ek bağımlılık değil).
 const ICONS = (() => {
   const f = (n) => Math.round(n * 100) / 100;

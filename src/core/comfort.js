@@ -4,15 +4,7 @@
 const COMFORT_DEFAULTS = { cold: 16, cool: 19, warm: 29, hot: 31.5, humid_dewpoint: 18, dry_humidity: 28 };
 const RADIATOR_DEFAULTS = { very_cold: 15, cold: 18, comfort: 24, warm: 26, outdoor_base: 10, outdoor_factor: 0.33, outdoor_max_shift: 3 };
 
-// Renk ve nefes süresi (sn). Süre CSS'te 1.15 ile çarpılır (bugünkü kartla aynı).
-const BANDS = {
-  ice:    { rgb: '120,215,255', anim: 'blue',   duration: 4.4 },
-  blue:   { rgb: '0,140,255',   anim: 'blue',   duration: 4.2 },
-  green:  { rgb: '40,190,100',  anim: 'green',  duration: 3.8 },
-  yellow: { rgb: '255,205,40',  anim: 'yellow', duration: 3.6 },
-  red:    { rgb: '255,55,55',   anim: 'red',    duration: 3.4 },
-  alarm:  { rgb: '255,55,55',   anim: 'red',    duration: 1.2 }
-};
+// Renkler core/bands.js içinde (BANDS).
 
 // Çiy noktası (Magnus formülü). Nem yoksa null.
 function dewPoint(t, rh) {
@@ -73,6 +65,3 @@ function radiatorBand(t, outdoor, b, lost) {
   return BANDS.red;
 }
 
-if (typeof module !== 'undefined') {
-  module.exports = { COMFORT_DEFAULTS, RADIATOR_DEFAULTS, BANDS, dewPoint, feelsLike, comfortKey, acBand, radiatorBand };
-}
