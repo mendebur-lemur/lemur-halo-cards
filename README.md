@@ -4,7 +4,7 @@ Türkçe · **[English](README.en.md)**
 
 Home Assistant için hareketli, renkli haleli sekiz kartlık bir aile. Her kartta ikon köşede durur, arkasındaki hale cihazın durumunu renkle anlatır: oda serin mi sıcak mı, hava temiz mi, robot temizliyor mu, kapı açık mı. Panona bakınca neyin yolunda olmadığını okumadan görürsün.
 
-![Lemur Halo Cards kullanımda](https://raw.githubusercontent.com/mendebur-lemur/lemur-halo-cards/main/docs/images/tr/demo.gif)
+![Lemur Halo Cards kullanımda](https://raw.githubusercontent.com/mendebur-lemur/lemur-halo-cards/main/docs/images/tr/demo.webp)
 
 **Hızlı kurulum:** [HACS'ta aç](https://my.home-assistant.io/redirect/hacs_repository/?owner=mendebur-lemur&repository=lemur-halo-cards&category=plugin) → İndir → tarayıcıyı yenile → panoda **Kart ekle** → "Lemur" ara. Adım adım anlatım ve videolar [aşağıda](#kurulum).
 
@@ -72,7 +72,7 @@ Home Assistant'ı yeniden başlatman gerekmez. HACS kartı panolarına kaynak ol
 
 Videoda iklim kartı ekleniyor ve cihaz olarak salon kliması seçiliyor:
 
-![Kartı panoya ekleme](https://raw.githubusercontent.com/mendebur-lemur/lemur-halo-cards/main/docs/images/tr/step-add-card.gif)
+![Kartı panoya ekleme](https://raw.githubusercontent.com/mendebur-lemur/lemur-halo-cards/main/docs/images/tr/step-add-card.webp)
 
 ### 3. Kartı ayarla
 
@@ -84,7 +84,7 @@ Kartın her ayarı görsel düzenleyicide. Düzenleme modunda karta tıklayınca
 
 Videoda kutulara adlar yazdırılıyor ve büyük simge değiştiriliyor:
 
-![Kartı ayarlama](https://raw.githubusercontent.com/mendebur-lemur/lemur-halo-cards/main/docs/images/tr/step-settings.gif)
+![Kartı ayarlama](https://raw.githubusercontent.com/mendebur-lemur/lemur-halo-cards/main/docs/images/tr/step-settings.webp)
 
 YAML ile eklemek istersen en kısa hali:
 
@@ -114,7 +114,7 @@ Kart seçicide hepsi **Lemur** ile başlar. Aşağıdaki videolar gerçek bir Ho
 
 Klima için hale, odanın hissedilen sıcaklığını gösterir: nem yüksekse aynı derece daha sıcak sayılır. Mavi serin, yeşil konforlu, turuncu sıcak, kırmızı çok sıcak. Petekte renk oda sıcaklığından gelir ve dış sıcaklık arttıkça eşikler kayar. Altta hedef sıcaklık, mod ve fan hızı.
 
-![İklim kartı](https://raw.githubusercontent.com/mendebur-lemur/lemur-halo-cards/main/docs/images/tr/climate.gif)
+![İklim kartı](https://raw.githubusercontent.com/mendebur-lemur/lemur-halo-cards/main/docs/images/tr/climate.webp)
 
 ```yaml
 type: custom:lemur-climate-card
@@ -134,7 +134,7 @@ outdoor_sensor: sensor.dis_sicaklik         # dış sıcaklık arttıkça renk e
 
 Herhangi bir sayısal sensör. Sensörün türüne göre (CO₂, PM2.5, PM10, VOC, hava kalitesi indeksi, sıcaklık, nem, pil, güç, ışık) sınırlar ve renkler hazır gelir; istersen kendi sınırlarını yazarsın. Altta en çok üç ek değer gösterilir; sağ üstteki düğmeye bir anahtar bağlanabilir.
 
-![Sensör kartı](https://raw.githubusercontent.com/mendebur-lemur/lemur-halo-cards/main/docs/images/tr/sensor.gif)
+![Sensör kartı](https://raw.githubusercontent.com/mendebur-lemur/lemur-halo-cards/main/docs/images/tr/sensor.webp)
 
 ```yaml
 type: custom:lemur-sensor-card
@@ -146,7 +146,7 @@ extra: [sensor.calisma_sicaklik, sensor.calisma_nem]
 
 Hava temizleyici (ya da fan) ve hava kalitesi sensörü bir arada. Hale sensörün değerine göre renk alır; temizleyici çalıştıkça kırmızıdan yeşile döner. Altta hız ve program.
 
-![Hava kartı](https://raw.githubusercontent.com/mendebur-lemur/lemur-halo-cards/main/docs/images/tr/air.gif)
+![Hava kartı](https://raw.githubusercontent.com/mendebur-lemur/lemur-halo-cards/main/docs/images/tr/air.webp)
 
 ```yaml
 type: custom:lemur-air-card
@@ -160,7 +160,7 @@ sensor: sensor.salon_pm25
 
 **Oda:** bir odanın ışıkları, iklim cihazı ve bir ek cihazı (TV gibi) tek kartta. Hale odanın konforunu gösterir. Sağ üstteki düğme bir şey açıksa hepsini kapatır, değilse ışıkları açar.
 
-![Robot süpürge ve oda kartı](https://raw.githubusercontent.com/mendebur-lemur/lemur-halo-cards/main/docs/images/tr/vacuum-room.gif)
+![Robot süpürge ve oda kartı](https://raw.githubusercontent.com/mendebur-lemur/lemur-halo-cards/main/docs/images/tr/vacuum-room.webp)
 
 ```yaml
 type: custom:lemur-vacuum-card
@@ -183,7 +183,7 @@ extra_entity: media_player.salon_tv
 
 **Güvenlik:** kapı, pencere, hareket, su ve duman sensörlerini bir grup olarak izler. Hepsi kapalıyken yeşil, açık bir şey varsa sarı, su ya da duman varsa kırmızı yanıp söner. Alarm paneli ve kilit de olur. Kilidi açmak ve alarmı kapatmak iki dokunuş ister.
 
-![Enerji ve güvenlik kartı](https://raw.githubusercontent.com/mendebur-lemur/lemur-halo-cards/main/docs/images/tr/energy-security.gif)
+![Enerji ve güvenlik kartı](https://raw.githubusercontent.com/mendebur-lemur/lemur-halo-cards/main/docs/images/tr/energy-security.webp)
 
 ```yaml
 type: custom:lemur-energy-card
@@ -206,7 +206,7 @@ name: Mutfak ve balkon
 
 **Kilit:** kilitliyken yeşil, açıkken sarı. Destekleyen kilitlerde **Kapıyı aç** düğmesi de çıkar.
 
-![Işık ve kilit kartı](https://raw.githubusercontent.com/mendebur-lemur/lemur-halo-cards/main/docs/images/tr/light-lock.gif)
+![Işık ve kilit kartı](https://raw.githubusercontent.com/mendebur-lemur/lemur-halo-cards/main/docs/images/tr/light-lock.webp)
 
 ```yaml
 type: custom:lemur-light-card

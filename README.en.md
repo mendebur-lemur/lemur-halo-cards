@@ -4,7 +4,7 @@
 
 A family of eight Home Assistant cards, each with an animated, coloured halo. The icon sits in the corner and the halo behind it tells you the device's state in colour: is the room cool or hot, is the air clean, is the robot cleaning, is a door open. One look at the dashboard shows what needs attention, without reading.
 
-![Lemur Halo Cards in use](https://raw.githubusercontent.com/mendebur-lemur/lemur-halo-cards/main/docs/images/en/demo.gif)
+![Lemur Halo Cards in use](https://raw.githubusercontent.com/mendebur-lemur/lemur-halo-cards/main/docs/images/en/demo.webp)
 
 **Quick install:** [Open in HACS](https://my.home-assistant.io/redirect/hacs_repository/?owner=mendebur-lemur&repository=lemur-halo-cards&category=plugin) → Download → refresh the browser → **Add card** on a dashboard → search "Lemur". Step-by-step guide with videos [below](#installation).
 
@@ -72,7 +72,7 @@ No Home Assistant restart is needed. HACS adds the card to your dashboards' reso
 
 In the video a climate card is added and the living room AC is chosen as its device:
 
-![Adding a card to the dashboard](https://raw.githubusercontent.com/mendebur-lemur/lemur-halo-cards/main/docs/images/en/step-add-card.gif)
+![Adding a card to the dashboard](https://raw.githubusercontent.com/mendebur-lemur/lemur-halo-cards/main/docs/images/en/step-add-card.webp)
 
 ### 3. Set up the card
 
@@ -84,7 +84,7 @@ Every option is in the visual editor. In edit mode, click the card to open it:
 
 In the video the boxes get names and the big icon is changed:
 
-![Setting up the card](https://raw.githubusercontent.com/mendebur-lemur/lemur-halo-cards/main/docs/images/en/step-settings.gif)
+![Setting up the card](https://raw.githubusercontent.com/mendebur-lemur/lemur-halo-cards/main/docs/images/en/step-settings.webp)
 
 The shortest YAML, if you prefer it:
 
@@ -114,7 +114,7 @@ In the card picker they all start with **Lemur**. The videos below were recorded
 
 For an AC the halo shows the room's feels-like temperature: with high humidity the same degree counts as warmer. Blue is cool, green comfortable, orange warm, red hot. For a radiator the colour comes from the room temperature, and the thresholds shift as it gets warmer outside. Below: target temperature, mode and fan speed.
 
-![Climate card](https://raw.githubusercontent.com/mendebur-lemur/lemur-halo-cards/main/docs/images/en/climate.gif)
+![Climate card](https://raw.githubusercontent.com/mendebur-lemur/lemur-halo-cards/main/docs/images/en/climate.webp)
 
 ```yaml
 type: custom:lemur-climate-card
@@ -134,7 +134,7 @@ outdoor_sensor: sensor.outdoor_temperature           # thresholds shift as it ge
 
 Any numeric sensor. Limits and colours come ready for the sensor's type (CO₂, PM2.5, PM10, VOC, air quality index, temperature, humidity, battery, power, illuminance), or you set your own. Up to three extra values appear below; a switch can be tied to the top-right button.
 
-![Sensor card](https://raw.githubusercontent.com/mendebur-lemur/lemur-halo-cards/main/docs/images/en/sensor.gif)
+![Sensor card](https://raw.githubusercontent.com/mendebur-lemur/lemur-halo-cards/main/docs/images/en/sensor.webp)
 
 ```yaml
 type: custom:lemur-sensor-card
@@ -146,7 +146,7 @@ extra: [sensor.office_temperature, sensor.office_humidity]
 
 An air purifier (or fan) together with an air-quality sensor. The halo follows the sensor; as the purifier works it turns from red to green. Below: speed and preset.
 
-![Air card](https://raw.githubusercontent.com/mendebur-lemur/lemur-halo-cards/main/docs/images/en/air.gif)
+![Air card](https://raw.githubusercontent.com/mendebur-lemur/lemur-halo-cards/main/docs/images/en/air.webp)
 
 ```yaml
 type: custom:lemur-air-card
@@ -160,7 +160,7 @@ sensor: sensor.living_room_pm25
 
 **Room:** a room's lights, climate device and one extra device (a TV, say) on one card. The halo shows the room's comfort. The top-right button turns everything off if something is on, otherwise it turns the lights on.
 
-![Vacuum and room cards](https://raw.githubusercontent.com/mendebur-lemur/lemur-halo-cards/main/docs/images/en/vacuum-room.gif)
+![Vacuum and room cards](https://raw.githubusercontent.com/mendebur-lemur/lemur-halo-cards/main/docs/images/en/vacuum-room.webp)
 
 ```yaml
 type: custom:lemur-vacuum-card
@@ -183,7 +183,7 @@ extra_entity: media_player.tv
 
 **Security:** watches door, window, motion, water and smoke sensors as a group. Green when all are closed, yellow when something is open, blinking red on water or smoke. Alarm panels and locks work too. Unlocking and disarming need two taps.
 
-![Energy and security cards](https://raw.githubusercontent.com/mendebur-lemur/lemur-halo-cards/main/docs/images/en/energy-security.gif)
+![Energy and security cards](https://raw.githubusercontent.com/mendebur-lemur/lemur-halo-cards/main/docs/images/en/energy-security.webp)
 
 ```yaml
 type: custom:lemur-energy-card
@@ -206,7 +206,7 @@ name: Kitchen and balcony
 
 **Lock:** green when locked, yellow when unlocked. Locks that support it also get an **Open door** button.
 
-![Light and lock cards](https://raw.githubusercontent.com/mendebur-lemur/lemur-halo-cards/main/docs/images/en/light-lock.gif)
+![Light and lock cards](https://raw.githubusercontent.com/mendebur-lemur/lemur-halo-cards/main/docs/images/en/light-lock.webp)
 
 ```yaml
 type: custom:lemur-light-card
