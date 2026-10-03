@@ -4,7 +4,9 @@ Türkçe · **[English](README.en.md)**
 
 Home Assistant için nefes alan, renkli haleli kart ailesi. Her kartta ikon köşede durur, arkasındaki hale cihazın durumunu renk ve ritimle anlatır: oda serin mi sıcak mı, hava temiz mi, robot temizliyor mu, kapı açık mı.
 
-> Geliştirme aşamasında. İlk sürüm henüz yayınlanmadı.
+![Koyu temada kartlar](https://raw.githubusercontent.com/mendebur-lemur/lemur-halo-cards/main/docs/images/cards-dark.png)
+
+![Açık temada kartlar](https://raw.githubusercontent.com/mendebur-lemur/lemur-halo-cards/main/docs/images/cards-light.png)
 
 - **Başka eklenti gerekmez.** HACS'tan tek seferde kurulur; mushroom, card-mod ya da başka bir kart gerektirmez. Bütün kartlar tek dosyada gelir.
 - **Her şey kart ayarlarından.** Cihazları ve sensörleri editörden seçersin, YAML yazman gerekmez.

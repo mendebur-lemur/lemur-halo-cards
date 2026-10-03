@@ -4,7 +4,9 @@
 
 A family of Home Assistant cards with a breathing, coloured halo. The icon sits in the corner and the halo behind it tells the device's state through colour and rhythm: is the room cool or hot, is the air clean, is the robot cleaning, is a door open.
 
-> In development. No release yet.
+![Cards in a dark theme](https://raw.githubusercontent.com/mendebur-lemur/lemur-halo-cards/main/docs/images/cards-dark.png)
+
+![Cards in a light theme](https://raw.githubusercontent.com/mendebur-lemur/lemur-halo-cards/main/docs/images/cards-light.png)
 
 - **No other add-ons needed.** One install from HACS; no mushroom, card-mod or other cards. All cards come in one file.
 - **Everything from the card editor.** Pick devices and sensors in the editor, no YAML needed.
