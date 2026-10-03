@@ -1,0 +1,14 @@
+name: Validate
+on: [push, pull_request]
+jobs:
+  hacs:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: hacs/action@main
+        with:
+          category: plugin
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: python3 build.py && node --check dist/lemur-climate-card.js && git diff --exit-code dist
