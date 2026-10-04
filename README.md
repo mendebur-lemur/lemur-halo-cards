@@ -34,6 +34,7 @@ Home Assistant için hareketli, renkli haleli sekiz kartlık bir aile. Her kartt
 - [Simgeler](#simgeler)
 - [Güncelleme](#güncelleme)
 - [Sorun giderme](#sorun-giderme)
+- [Lemur ailesi](#lemur-ailesi)
 
 ## Kurulum
 
@@ -327,6 +328,16 @@ Kart ayarların güncellemede değişmez.
 - **Hale hareket etmiyor.** Cihazında hareket azaltma (Reduce Motion) açıksa hale bilerek durur. `show_halo: false` ise hale hiç görünmez.
 - **Telefonda eski sürüm görünüyor.** Uygulamayı tamamen kapatıp aç; olmazsa uygulamanın ayarlarından ön yüz önbelleğini temizle.
 - **Hâlâ çözülmedi mi?** [Sorun bildir](https://github.com/mendebur-lemur/lemur-halo-cards/issues); Home Assistant sürümünü, tarayıcıyı ve kartın YAML'ını yazarsan hızlı bakarız.
+
+## Lemur ailesi
+
+Üçü de birbirinden bağımsız kurulur; birlikte kurulunca birbirini tamamlar.
+
+| | Ne yapar | Kurulum |
+|---|---|---|
+| **[Lemur Home Dashboard](https://github.com/mendebur-lemur/lemur-home-dashboard)** | Tek satırla kurulan, kendi yönetim paneli olan hazır tablet panosu. Odalar, ışıklar, senaryolar, iklim ve medya evdeki alanlardan kendiliğinden gelir. Panodaki iklim ve süpürge kartları Halo Cards'tandır ve pakete gömülü gelir. | [![HACS'ta aç](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=mendebur-lemur&repository=lemur-home-dashboard&category=integration) |
+| **[Lemur Light Effect Card](https://github.com/mendebur-lemur/lemur-light-effect-card)** | Efekt destekleyen bütün ışıkları oda oda yöneten efekt ekranı. | [![HACS'ta aç](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=mendebur-lemur&repository=lemur-light-effect-card&category=integration) |
+| **Lemur Halo Cards** (bu depo) | Durumu renkli haleyle anlatan sekiz kart: iklim, sensör, hava, süpürge, enerji, güvenlik, ışık ve kilit. | [![HACS'ta aç](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=mendebur-lemur&repository=lemur-halo-cards&category=plugin) |
 
 ## Teşekkür
 

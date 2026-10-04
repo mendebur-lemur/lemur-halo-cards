@@ -34,6 +34,7 @@ A family of eight Home Assistant cards, each with an animated, coloured halo. Th
 - [Icons](#icons)
 - [Updating](#updating)
 - [Troubleshooting](#troubleshooting)
+- [The Lemur family](#the-lemur-family)
 
 ## Installation
 
@@ -327,6 +328,16 @@ Your card settings are kept.
 - **The halo doesn't move.** With reduced motion turned on in your device's settings, the halo stays still on purpose. With `show_halo: false` there's no halo at all.
 - **The phone shows an old version.** Close the app completely and reopen it; if that doesn't help, clear the frontend cache in the app's settings.
 - **Still stuck?** [Open an issue](https://github.com/mendebur-lemur/lemur-halo-cards/issues); include your Home Assistant version, browser and the card's YAML and we'll take a look.
+
+## The Lemur family
+
+Each one installs on its own; installed together, they work hand in hand.
+
+| | What it does | Install |
+|---|---|---|
+| **[Lemur Home Dashboard](https://github.com/mendebur-lemur/lemur-home-dashboard)** | A ready-made tablet dashboard set up with one line, with its own admin panel. Rooms, lights, scenes, climate and media come from your areas on their own. The dashboard's climate and vacuum cards are Halo Cards, bundled with it. | [![Open in HACS](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=mendebur-lemur&repository=lemur-home-dashboard&category=integration) |
+| **[Lemur Light Effect Card](https://github.com/mendebur-lemur/lemur-light-effect-card)** | An effect screen that manages every effect-capable light room by room. | [![Open in HACS](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=mendebur-lemur&repository=lemur-light-effect-card&category=integration) |
+| **Lemur Halo Cards** (this repository) | Eight cards that tell the state with a coloured halo: climate, sensor, air, vacuum, energy, security, light and lock. | [![Open in HACS](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=mendebur-lemur&repository=lemur-halo-cards&category=plugin) |
 
 ## Thanks
 
