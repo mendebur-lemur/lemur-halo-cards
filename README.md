@@ -345,4 +345,8 @@ Kartın görsel fikri, Anashost'un [HA-Animated-cards](https://github.com/Anasho
 
 ## Lisans
 
-MIT
+Kod **[PolyForm Noncommercial 1.0.0](LICENSE)** lisansıyla yayınlanır: kişisel, ev, eğitim ve kâr amacı gütmeyen kullanım serbest; **ticari kullanım yasak**. Kodu kopyalayan, değiştiren ya da üzerine geliştirip paylaşan herkes lisans metnini ve `Required Notice` satırını (mendeburlemur ve bu deponun bağlantısı) korumak zorundadır.
+
+Görseller, videolar ve dokümanlar **[CC BY-NC-SA 4.0](LICENSE-DOCS.md)** lisansıyla yayınlanır: kaynak göstererek, ticari olmayan amaçla ve aynı lisansla paylaşılabilir.
+
+Ticari kullanım için izin istersen [bir issue aç](https://github.com/mendebur-lemur/lemur-halo-cards/issues). v0.2.0 ve önceki sürümler MIT lisansıyla yayınlanmıştı; o sürümler için MIT geçerli kalır.

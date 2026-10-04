@@ -345,4 +345,8 @@ The visual idea for these cards was inspired by Anashost's [HA-Animated-cards](h
 
 ## License
 
-MIT
+The code is licensed under **[PolyForm Noncommercial 1.0.0](LICENSE)**: personal, home, educational and non-profit use is allowed; **commercial use is not**. Anyone who copies, changes or builds on the code and shares it must keep the license text and the `Required Notice` line (mendeburlemur and a link to this repository).
+
+Images, videos and documentation are licensed under **[CC BY-NC-SA 4.0](LICENSE-DOCS.md)**: they can be shared with credit, for non-commercial purposes and under the same license.
+
+For commercial use, ask for permission by [opening an issue](https://github.com/mendebur-lemur/lemur-halo-cards/issues). v0.2.0 and earlier were released under the MIT license; MIT still applies to those versions.
