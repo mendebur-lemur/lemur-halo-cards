@@ -23,7 +23,7 @@ parts = [(src / "core" / f).read_text(encoding="utf-8") for f in CORE]
 parts += [(src / "cards" / f).read_text(encoding="utf-8") for f in CARDS if (src / "cards" / f).exists()]
 body = "\n".join(parts).replace("const CARD_VERSION = '0.0.0';", f"const CARD_VERSION = '{version}';")
 
-out = f"""/*! Lemur Halo Cards v{version} | PolyForm-Noncommercial-1.0.0 | {REPO} */
+out = f"""/*! Lemur Halo Cards v{version} | GPL-3.0 | {REPO} */
 (() => {{
 if (window.__lemurCardsLoaded) return;
 window.__lemurCardsLoaded = true;
